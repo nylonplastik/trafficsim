@@ -21,10 +21,12 @@
 package trafficSim;
 
 // imports {{{
+
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Hashtable;
+
 //}}}
 
 /**
@@ -64,7 +66,7 @@ public class ClientView implements Observer  //{{{
     public ClientView() //{{{
     {
         p_controller    = null;
-        p_observerCars  = new LinkedList();
+        p_observerCars  = new LinkedList<Car>();
         p_borderCrosses = new LinkedList<LanesCross>();
         p_cars          = new LinkedList<Car>();
     } //}}}
@@ -80,7 +82,7 @@ public class ClientView implements Observer  //{{{
             p_observerCars.remove(car);
     } //}}}
     
-    public void update(Observable o, Object arg) //{{{
+	public void update(Observable o, Object arg) //{{{
     {
         if (! (o instanceof  Model))
             return;

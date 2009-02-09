@@ -22,6 +22,7 @@ package gui;
 
 /* Imports {{{ */
 
+import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
@@ -34,27 +35,62 @@ import javax.swing.*;
  *
  */
 @SuppressWarnings("serial")
-public class TrafficSimFrame extends JFrame
-    implements ActionListener
+public class TrafficSimFrame
+	extends JFrame
+    implements ActionListener, ComponentListener
 {
-    JMenuItem quit_menu_item = null;
-
-    public TrafficSimFrame(String title)
+	private JMenuItem quit_menu_item = null;
+	private JMenuItem map_editor_menu_item = null;
+	
+	/**
+	 * Initializes frame
+	 */
+	protected void initFrame()
     {
-        super(title);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JMenuBar menu_bar = new JMenuBar();
         JMenu file_menu = new JMenu("File");
         file_menu.setMnemonic(KeyEvent.VK_F);
         menu_bar.add(file_menu);
+        map_editor_menu_item = new JMenuItem("Map Editor...", KeyEvent.VK_M);
+        map_editor_menu_item.setAccelerator(
+        		KeyStroke.getKeyStroke(KeyEvent.VK_M,ActionEvent.CTRL_MASK));
+        map_editor_menu_item.addActionListener(this);
+        file_menu.add(map_editor_menu_item);
+        file_menu.addSeparator();
         quit_menu_item = new JMenuItem("Quit", KeyEvent.VK_Q);
-        quit_menu_item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
+        quit_menu_item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, 
+        		ActionEvent.CTRL_MASK));
         quit_menu_item.addActionListener(this);
         file_menu.add(quit_menu_item);
         setJMenuBar(menu_bar);
         setEnabled(true);
+        setLayout(new BorderLayout());
+        // TODO: is this really needed ? ... 
+        // TODO: must test this under more conformant wm ... 
+        // addComponentListener(this);
         setContentPane(new TrafficSimMainPanel());
     }
+	
+    public TrafficSimFrame() throws HeadlessException {
+		super();
+		initFrame();
+	}
+
+	public TrafficSimFrame(GraphicsConfiguration gc) {
+		super(gc);
+		initFrame();
+	}
+
+	public TrafficSimFrame(String title, GraphicsConfiguration gc) {
+		super(title, gc);
+		initFrame();
+	}
+
+	public TrafficSimFrame(String title) throws HeadlessException {
+		super(title);
+		initFrame();
+	}
 
     public void actionPerformed(ActionEvent e)
     {
@@ -64,6 +100,23 @@ public class TrafficSimFrame extends JFrame
         }
 
     }
+
+	@Override
+	public void componentHidden(ComponentEvent e) {
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent e) {		
+	}
+
+	@Override
+	public void componentResized(ComponentEvent e) {
+		doLayout();
+	}
+
+	@Override
+	public void componentShown(ComponentEvent e) {
+	}
 
 }
 

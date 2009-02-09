@@ -42,7 +42,7 @@ public class Main //{{{
         m.addLane(1, 0, 50, 200);
         m.addParking(m.getLanes().get(0), m.getLanes().get(1));
         
-        // Create client class containing the modek, client's view and controller
+        // Create client class containing the model, client's view and controller
         ClientView v = new ClientView();
         Client c = new Client(m, new ClientController1(m, v), v);
         
