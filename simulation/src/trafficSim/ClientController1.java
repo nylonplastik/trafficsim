@@ -29,17 +29,18 @@ import java.util.LinkedList;
  */
 public class ClientController1 implements IController
 {       
-    private Model            p_model;
-    private ClientView       p_view;
-    private LinkedList<Car>  p_controlledCars;
-    private static final int SAFE_DISTANCE = 10;        // safe distance between the cars
+    private Model                      p_model;
+    private ClientViewClientSide       p_view;
+    private LinkedList<Car>            p_controlledCars;
+    // safe distance between the cars
+    private static final int           SAFE_DISTANCE = 10;  
     
-    public ClientController1(Model model, ClientView view)
+    
+    public ClientController1(Model model, ClientViewClientSide view)
     {
         p_model          = model;
         p_view           = view;
         p_controlledCars = new LinkedList<Car>();
-        p_model.addObserver(p_view);
         Car newCar;
         LinkedList<Parking> parkings;
         
@@ -64,7 +65,7 @@ public class ClientController1 implements IController
      */
     public void viewChanged()
     {
-        LinkedList<Car> carsInView = p_view.p_cars;
+        LinkedList<Car> carsInView = p_view.data.cars;
         Car car;
         
         // for each controlled car in client's view
@@ -108,11 +109,5 @@ public class ClientController1 implements IController
                 
             }        
         }
-    }
-    
-    @Override
-    public void finalize() throws Throwable
-    {
-        p_model.deleteObserver(p_view);
     }
 }

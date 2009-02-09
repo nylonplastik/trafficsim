@@ -27,17 +27,23 @@ package trafficSim;
 public class Client //{{{
 {
     // Variables {{{
-    private IController p_controller;
-    private Model       p_model;
-    private ClientView  p_view;
+    private ClientViewServerSide p_serverSideView;
+    private Model                p_model;
+    
+    // TODO: this field should be removed, references to it replaced by 
+    // communication with client process.
+    private ClientViewClientSide p_clientSideView;
     //}}}
 
-    public Client(Model model, IController controller, ClientView clientView)//{{{
+    public Client(
+            Model model, 
+            ClientViewClientSide clientSideView, 
+            ClientViewServerSide serverSideView
+            )//{{{
     {
-        p_view =clientView;
-        p_view.setController(controller);
-        p_model = model;
-        p_controller = controller;
+        p_serverSideView = serverSideView;
+        p_model          = model;
+        p_clientSideView = clientSideView;
     }//}}}
 }//}}}
 
