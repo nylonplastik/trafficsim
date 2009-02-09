@@ -16,27 +16,40 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package miasto_prototyp_klas;
+package trafficSim;
+
 
 /**
  *
  * @author Adam Rutkowski
  */
-public class Client //{{{
+public class Main //{{{
 {
-    // Variables {{{
-    private IController p_controller;
-    private Model       p_model;
-    private ClientView  p_view;
-    //}}}
 
-    public Client(Model model, IController controller, ClientView clientView)//{{{
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) //{{{
     {
-        p_view =clientView;
-        p_view.setController(controller);
-        p_model = model;
-        p_controller = controller;
+        // Create simple model
+        Model m = new Model();
+        
+        m.addCross(0);
+        m.addCross(1);
+        m.addLane(0, 1, 50, 200);
+        m.addLane(1, 0, 50, 200);
+        m.addParking(m.getLanes().get(0), m.getLanes().get(1));
+        
+        // Create client class containing the modek, client's view and controller
+        ClientView v = new ClientView();
+        Client c = new Client(m, new ClientController1(m, v), v);
+        
+        // Create time controller
+        TimeController tc = TimeController.getTimeController(m);
+        Thread timeControlThread = new Thread(tc);
+        timeControlThread.start();
     }//}}}
+
 }//}}}
 
 /* vim: set ts=4 sw=4 sts=4 et foldmethod=marker: */

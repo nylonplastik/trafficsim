@@ -16,17 +16,18 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-public class TrafficSim
+package trafficSim;
+
+/**
+ *
+ * @author Adam Rutkowski
+ */
+public interface IController //{{{
 {
-
     /**
-     * Simulation main
+     * Method invoked by client view on its update.
      */
-    public static void main(String []args)
-    {
-        
-    }
+    public void viewChanged();
+}//}}}
 
-}
-
-/* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */
+/* vim: set ts=4 sw=4 sts=4 et foldmethod=marker: */

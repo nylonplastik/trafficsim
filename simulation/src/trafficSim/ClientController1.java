@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package miasto_prototyp_klas;
+package trafficSim;
 
 import java.util.Hashtable;
 import java.util.Iterator;

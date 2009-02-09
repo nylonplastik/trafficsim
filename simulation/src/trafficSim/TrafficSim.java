@@ -1,3 +1,5 @@
+package trafficSim;
+
 /*
     TrafficSim is simulation of road traffic
     Copyright (C) 2009  Mariusz Ceier, Adam Rutkowski
@@ -16,25 +18,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+public class TrafficSim
+{
 
-package miasto_prototyp_klas;
-
-/**
- * Position of car
- * @author Adam Rutkowski
- */
-public class Position {
-    public Lane     lane;
-    public Integer  coord;
-    public enum     e_info
+    /**
+     * Simulation main
+     */
+    public static void main(String []args)
     {
-        OK,             // lane and coord fields describe accurate position after time
-        OUT_OF_RANGE,   // planned route is to short, the car will get out
-        NOT_DRIVING     // the car is not on the street
-    };
-    e_info          info;
+        
+    }
+
 }
+
+/* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */

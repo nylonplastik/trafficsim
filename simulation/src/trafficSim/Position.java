@@ -16,18 +16,25 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package miasto_prototyp_klas;
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package trafficSim;
 
 /**
- *
+ * Position of car
  * @author Adam Rutkowski
  */
-public interface IController //{{{
-{
-    /**
-     * Method invoked by client view on its update.
-     */
-    public void viewChanged();
-}//}}}
-
-/* vim: set ts=4 sw=4 sts=4 et foldmethod=marker: */
+public class Position {
+    public Lane     lane;
+    public Integer  coord;
+    public enum     e_info
+    {
+        OK,             // lane and coord fields describe accurate position after time
+        OUT_OF_RANGE,   // planned route is to short, the car will get out
+        NOT_DRIVING     // the car is not on the street
+    };
+    e_info          info;
+}

@@ -1,4 +1,3 @@
-package miasto_prototyp_klas;
 /*
     TrafficSim is simulation of road traffic
     Copyright (C) 2009  Mariusz Ceier, Adam Rutkowski
@@ -17,29 +16,27 @@ package miasto_prototyp_klas;
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+package trafficSim;
+
 /**
- * Lights state controller - updates lights state
  *
- * @author Mariusz Ceier
+ * @author Adam Rutkowski
  */
- 
-public class LightsStateController //{{{
-    implements IController
+public class Client //{{{
 {
     // Variables {{{
-    private Model p_model;
+    private IController p_controller;
+    private Model       p_model;
+    private ClientView  p_view;
     //}}}
 
-    public LightsStateController(Model model)//{{{
+    public Client(Model model, IController controller, ClientView clientView)//{{{
     {
+        p_view =clientView;
+        p_view.setController(controller);
         p_model = model;
+        p_controller = controller;
     }//}}}
-
-    // FIXME: ???
-    public void viewChanged() //{{{
-    {
-    }//}}}
-
 }//}}}
 
-/* vim: set ts=4 sts=4 sw=4 et foldmethod=marker: */
+/* vim: set ts=4 sw=4 sts=4 et foldmethod=marker: */
