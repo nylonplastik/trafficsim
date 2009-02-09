@@ -24,43 +24,46 @@ package gui;
 
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
 
 // }}}
 
 @SuppressWarnings("serial")
-public class TrafficSimMainPanel
-    extends JPanel
-    implements ActionListener
+public class TrafficSimServersPanel
+	extends JPanel
+	implements ActionListener
 {
- 
-	private JTabbedPane tabs_panel = null;
 
-    protected void initPanel()
-    {
-    	tabs_panel = new JTabbedPane();
-    	tabs_panel.addTab("Servers", new TrafficSimServersPanel());
-    	tabs_panel.addTab("Clients", new TrafficSimClientsPanel());
-    	add(tabs_panel);
-    }
-    
-	public TrafficSimMainPanel() {
+	private JButton create_new_server = null;
+	private JList servers_list = null;
+	private JScrollPane servers_pane = null;
+	
+	protected void initPanel()
+	{
+		create_new_server = new JButton("Create new server");
+		create_new_server.addActionListener(this);
+		servers_list = new JList();
+		servers_pane = new JScrollPane(servers_list);
+		add(create_new_server);
+		add(servers_pane);
+	}
+
+	public TrafficSimServersPanel() {
 		super();
 		initPanel();
 	}
 
-	public TrafficSimMainPanel(boolean isDoubleBuffered) {
+	public TrafficSimServersPanel(boolean isDoubleBuffered) {
 		super(isDoubleBuffered);
 		initPanel();
 	}
 
-	public TrafficSimMainPanel(LayoutManager layout, boolean isDoubleBuffered) {
+	public TrafficSimServersPanel(LayoutManager layout, boolean isDoubleBuffered) {
 		super(layout, isDoubleBuffered);
 		initPanel();
 	}
 
-	public TrafficSimMainPanel(LayoutManager layout) {
+	public TrafficSimServersPanel(LayoutManager layout) {
 		super(layout);
 		initPanel();
 	}
@@ -68,8 +71,7 @@ public class TrafficSimMainPanel
 	@Override
 	public void actionPerformed(ActionEvent e) {
 	}
-    
+	
 }
-
 
 /* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */

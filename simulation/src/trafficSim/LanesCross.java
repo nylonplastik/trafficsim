@@ -21,9 +21,11 @@
 package trafficSim;
 
 // imports {{{
+
 import java.util.*;
 import java.util.Hashtable;
 import java.util.Observable;
+
 // }}}
 
 /**
@@ -40,7 +42,7 @@ public class LanesCross extends Observable //{{{
     private static int    s_count;
     private int           p_id;
     
-    /* adjecent lane crosses with lanes to them */
+    /* adjacent lane crosses with lanes to them */
     private Hashtable <Integer,Lane>    p_adjecentCrosses = new Hashtable<Integer, Lane>();
     private LinkedList<Lane>            p_incomingLanes = new LinkedList<Lane>();
     // }}}

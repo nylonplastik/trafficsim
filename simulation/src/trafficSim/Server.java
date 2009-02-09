@@ -48,6 +48,7 @@ public class Server implements Runnable //{{{
         p_serverName = serverName;
     }//}}}
     
+    @SuppressWarnings("serial")
     private static class InfoRequestPacket //{{{
         implements Protocol.Packet
     {

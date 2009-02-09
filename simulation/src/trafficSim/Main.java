@@ -52,7 +52,7 @@ public class Main //{{{
         clientSideView.setServerSideView(v);
         
         Client c = new Client(m, clientSideView, v);
-        
+   
         // Create time controller
         TimeController tc = TimeController.getTimeController(m);
         Thread timeControlThread = new Thread(tc);
