@@ -48,7 +48,7 @@ public class TrafficSim implements Runnable
      */
     public void run()
     {
-        TrafficSimFrame frame = new TrafficSimFrame("Simulation of road traffic");
+        TrafficSimMainFrame frame = new TrafficSimMainFrame("Simulation of road traffic");
         frame.pack();
         frame.setVisible(true);
     }

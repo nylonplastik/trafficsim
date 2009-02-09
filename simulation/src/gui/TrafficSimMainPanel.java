@@ -42,7 +42,7 @@ public class TrafficSimMainPanel
     	tabs_panel = new JTabbedPane();
     	tabs_panel.addTab("Servers", new TrafficSimServersPanel());
     	tabs_panel.addTab("Clients", new TrafficSimClientsPanel());
-    	add(tabs_panel,BorderLayout.CENTER);
+    	add(tabs_panel);
     }
     
 	public TrafficSimMainPanel() {

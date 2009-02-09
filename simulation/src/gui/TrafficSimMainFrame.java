@@ -35,7 +35,7 @@ import javax.swing.*;
  *
  */
 @SuppressWarnings("serial")
-public class TrafficSimFrame
+public class TrafficSimMainFrame
 	extends JFrame
     implements ActionListener, ComponentListener
 {
@@ -56,6 +56,8 @@ public class TrafficSimFrame
         map_editor_menu_item.setAccelerator(
         		KeyStroke.getKeyStroke(KeyEvent.VK_M,ActionEvent.CTRL_MASK));
         map_editor_menu_item.addActionListener(this);
+        map_editor_menu_item.setToolTipText("Map editor not implemented yet");
+        map_editor_menu_item.setEnabled(false);
         file_menu.add(map_editor_menu_item);
         file_menu.addSeparator();
         quit_menu_item = new JMenuItem("Quit", KeyEvent.VK_Q);
@@ -65,29 +67,30 @@ public class TrafficSimFrame
         file_menu.add(quit_menu_item);
         setJMenuBar(menu_bar);
         setEnabled(true);
-        setLayout(new BorderLayout());
+        setResizable(true);
+        setUndecorated(true);
         // TODO: is this really needed ? ... 
         // TODO: must test this under more conformant wm ... 
         // addComponentListener(this);
         setContentPane(new TrafficSimMainPanel());
     }
 	
-    public TrafficSimFrame() throws HeadlessException {
+    public TrafficSimMainFrame() throws HeadlessException {
 		super();
 		initFrame();
 	}
 
-	public TrafficSimFrame(GraphicsConfiguration gc) {
+	public TrafficSimMainFrame(GraphicsConfiguration gc) {
 		super(gc);
 		initFrame();
 	}
 
-	public TrafficSimFrame(String title, GraphicsConfiguration gc) {
+	public TrafficSimMainFrame(String title, GraphicsConfiguration gc) {
 		super(title, gc);
 		initFrame();
 	}
 
-	public TrafficSimFrame(String title) throws HeadlessException {
+	public TrafficSimMainFrame(String title) throws HeadlessException {
 		super(title);
 		initFrame();
 	}
