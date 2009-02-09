@@ -1,5 +1,3 @@
-package trafficSim;
-
 /*
     TrafficSim is simulation of road traffic
     Copyright (C) 2009  Mariusz Ceier, Adam Rutkowski
@@ -19,6 +17,8 @@ package trafficSim;
     You should have received a copy of the GNU General Public License
     along with TrafficSim.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+package trafficSim;
 
 import gui.*;
 import javax.swing.*;
