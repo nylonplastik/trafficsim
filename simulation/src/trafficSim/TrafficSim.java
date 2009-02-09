@@ -4,29 +4,54 @@ package trafficSim;
     TrafficSim is simulation of road traffic
     Copyright (C) 2009  Mariusz Ceier, Adam Rutkowski
 
-    This program is free software: you can redistribute it and/or modify
+    This file is part of TrafficSim
+
+    TrafficSim is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
+    TrafficSim is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    along with TrafficSim.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-public class TrafficSim
+import gui.*;
+import javax.swing.*;
+
+public class TrafficSim implements Runnable
 {
 
     /**
      * Simulation main
+     *
+     * @param args command line arguments, currently not parsed
      */
-    public static void main(String []args)
+    public static void main(String []args) throws java.lang.reflect.InvocationTargetException
     {
-        
+        try
+        {
+            SwingUtilities.invokeAndWait(new TrafficSim());
+        } 
+        catch(InterruptedException e)
+        {
+            // Just ignore it
+        }
+    }
+
+    /**
+     * Shows main frame 
+     *
+     */
+    public void run()
+    {
+        TrafficSimFrame frame = new TrafficSimFrame("Simulation of road traffic");
+        frame.pack();
+        frame.setVisible(true);
     }
 
 }
