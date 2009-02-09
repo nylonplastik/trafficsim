@@ -1,4 +1,3 @@
-package trafficSim;
 /*
     TrafficSim is simulation of road traffic
     Copyright (C) 2009  Mariusz Ceier, Adam Rutkowski
@@ -16,6 +15,8 @@ package trafficSim;
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+package trafficSim;
 
 /**
  * Lights state controller - updates lights state
