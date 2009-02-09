@@ -34,6 +34,7 @@ import javax.swing.*;
  * @class TrafficSimFrame
  *
  */
+@SuppressWarnings("serial")
 public class TrafficSimFrame extends JFrame
     implements ActionListener
 {
@@ -53,13 +54,14 @@ public class TrafficSimFrame extends JFrame
         file_menu.add(quit_menu_item);
         setJMenuBar(menu_bar);
         setEnabled(true);
+        setContentPane(new TrafficSimMainPanel());
     }
 
     public void actionPerformed(ActionEvent e)
     {
         if (e.getSource() == quit_menu_item)
         {
-            this.setVisible(false);
+            this.dispose();
         }
 
     }
