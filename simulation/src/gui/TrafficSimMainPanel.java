@@ -22,6 +22,7 @@ package gui;
 
 import javax.swing.*;
 
+@SuppressWarnings("serial")
 public class TrafficSimMainPanel
     extends JPanel
 {

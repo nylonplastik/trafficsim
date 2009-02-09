@@ -18,8 +18,6 @@
     along with TrafficSim.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package trafficSim;
-
 import gui.*;
 import javax.swing.*;
 
