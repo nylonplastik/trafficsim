@@ -1,3 +1,5 @@
+package trafficSim;
+
 /*
     TrafficSim is simulation of road traffic
     Copyright (C) 2009  Mariusz Ceier, Adam Rutkowski
