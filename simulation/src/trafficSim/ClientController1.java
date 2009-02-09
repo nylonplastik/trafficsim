@@ -20,11 +20,8 @@
 
 package trafficSim;
 
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.SortedMap;
 
 /**
  * Singleton class responsible for somulation control.

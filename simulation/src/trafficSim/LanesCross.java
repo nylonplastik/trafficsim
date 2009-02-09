@@ -34,6 +34,9 @@ import java.util.Observable;
 public class LanesCross extends Observable //{{{
 {
     // Variables {{{
+    public final int    X_coordinate;
+    public final int    Y_coordinate;
+    
     private static int    s_count;
     private int           p_id;
     
@@ -50,11 +53,15 @@ public class LanesCross extends Observable //{{{
     public LanesCross()//{{{
     {
         p_id = s_count++;
+        X_coordinate = 0;
+        Y_coordinate = 0;
     }//}}}
     
-    public LanesCross(int id)//{{{
+    public LanesCross(int id, int X, int Y)//{{{
     {
         p_id = id;
+        X_coordinate = X;
+        Y_coordinate = Y;        
         s_count++;
     }//}}}
     

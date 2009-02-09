@@ -77,9 +77,9 @@ public class Model extends Observable //{{{
         p_parkings = new LinkedList<Parking>();
     }//}}}
     
-    public void addCross(int id)//{{{
+    public void addCross(int id, int X, int Y)//{{{
     {
-        p_crosses.put(id, new LanesCross(id) );
+        p_crosses.put(id, new LanesCross(id, X, Y) );
         this.setChanged();
         //this.notifyObservers(WhatHasChanged.Crosses);
     }//}}}
