@@ -1,4 +1,6 @@
 *.class
 simulation/nbproject/private
 simulation/nbproject/private/*
+simulation/build.xml
+simulation/dist/*
 
