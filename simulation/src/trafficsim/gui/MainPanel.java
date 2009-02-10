@@ -30,7 +30,7 @@ import javax.swing.*;
 // }}}
 
 @SuppressWarnings("serial")
-public class TrafficSimMainPanel
+public class MainPanel
     extends JPanel
     implements ActionListener
 {
@@ -40,27 +40,27 @@ public class TrafficSimMainPanel
     protected void initPanel()
     {
     	tabs_panel = new JTabbedPane();
-    	tabs_panel.addTab("Servers", new TrafficSimServersPanel());
-    	tabs_panel.addTab("Clients", new TrafficSimClientsPanel());
+    	tabs_panel.addTab("Servers", new ServersPanel());
+    	tabs_panel.addTab("Clients", new ClientsPanel());
     	add(tabs_panel);
     }
     
-	public TrafficSimMainPanel() {
+	public MainPanel() {
 		super();
 		initPanel();
 	}
 
-	public TrafficSimMainPanel(boolean isDoubleBuffered) {
+	public MainPanel(boolean isDoubleBuffered) {
 		super(isDoubleBuffered);
 		initPanel();
 	}
 
-	public TrafficSimMainPanel(LayoutManager layout, boolean isDoubleBuffered) {
+	public MainPanel(LayoutManager layout, boolean isDoubleBuffered) {
 		super(layout, isDoubleBuffered);
 		initPanel();
 	}
 
-	public TrafficSimMainPanel(LayoutManager layout) {
+	public MainPanel(LayoutManager layout) {
 		super(layout);
 		initPanel();
 	}

@@ -35,7 +35,7 @@ import javax.swing.*;
  *
  */
 @SuppressWarnings("serial")
-public class TrafficSimMainFrame
+public class MainFrame
 	extends JFrame
     implements ActionListener, ComponentListener
 {
@@ -72,25 +72,25 @@ public class TrafficSimMainFrame
         // TODO: is this really needed ? ... 
         // TODO: must test this under more conformant wm ... 
         // addComponentListener(this);
-        setContentPane(new TrafficSimMainPanel());
+        setContentPane(new MainPanel());
     }
 	
-    public TrafficSimMainFrame() throws HeadlessException {
+    public MainFrame() throws HeadlessException {
 		super();
 		initFrame();
 	}
 
-	public TrafficSimMainFrame(GraphicsConfiguration gc) {
+	public MainFrame(GraphicsConfiguration gc) {
 		super(gc);
 		initFrame();
 	}
 
-	public TrafficSimMainFrame(String title, GraphicsConfiguration gc) {
+	public MainFrame(String title, GraphicsConfiguration gc) {
 		super(title, gc);
 		initFrame();
 	}
 
-	public TrafficSimMainFrame(String title) throws HeadlessException {
+	public MainFrame(String title) throws HeadlessException {
 		super(title);
 		initFrame();
 	}

@@ -29,7 +29,7 @@ import javax.swing.*;
 // }}}
 
 @SuppressWarnings("serial")
-public class TrafficSimServersPanel
+public class ServersPanel
 	extends JPanel
 	implements ActionListener
 {
@@ -48,22 +48,22 @@ public class TrafficSimServersPanel
 		add(servers_pane);
 	}
 
-	public TrafficSimServersPanel() {
+	public ServersPanel() {
 		super();
 		initPanel();
 	}
 
-	public TrafficSimServersPanel(boolean isDoubleBuffered) {
+	public ServersPanel(boolean isDoubleBuffered) {
 		super(isDoubleBuffered);
 		initPanel();
 	}
 
-	public TrafficSimServersPanel(LayoutManager layout, boolean isDoubleBuffered) {
+	public ServersPanel(LayoutManager layout, boolean isDoubleBuffered) {
 		super(layout, isDoubleBuffered);
 		initPanel();
 	}
 
-	public TrafficSimServersPanel(LayoutManager layout) {
+	public ServersPanel(LayoutManager layout) {
 		super(layout);
 		initPanel();
 	}
