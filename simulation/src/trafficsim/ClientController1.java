@@ -18,7 +18,7 @@
     along with TrafficSim.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package trafficSim;
+package trafficsim;
 
 import java.util.Iterator;
 import java.util.LinkedList;

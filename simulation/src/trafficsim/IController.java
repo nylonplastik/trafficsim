@@ -18,33 +18,18 @@
     along with TrafficSim.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package trafficSim;
+package trafficsim;
 
 /**
  *
  * @author Adam Rutkowski
  */
-public class Client //{{{
+public interface IController //{{{
 {
-    // Variables {{{
-    private ClientViewServerSide p_serverSideView;
-    private Model                p_model;
-    
-    // TODO: this field should be removed, references to it replaced by 
-    // communication with client process.
-    private ClientViewClientSide p_clientSideView;
-    //}}}
-
-    public Client(
-            Model model, 
-            ClientViewClientSide clientSideView, 
-            ClientViewServerSide serverSideView
-            )//{{{
-    {
-        p_serverSideView = serverSideView;
-        p_model          = model;
-        p_clientSideView = clientSideView;
-    }//}}}
+    /**
+     * Method invoked by client view on its update.
+     */
+    public void viewChanged();
 }//}}}
 
 /* vim: set ts=4 sw=4 sts=4 et foldmethod=marker: */

@@ -22,7 +22,7 @@
  * and open the template in the editor.
  */
 
-package trafficSim;
+package trafficsim;
 
 /**
  * Position of car

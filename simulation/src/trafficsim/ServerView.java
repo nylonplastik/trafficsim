@@ -18,18 +18,26 @@
     along with TrafficSim.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package trafficSim;
+package trafficsim;
+
+// imports {{{
+import java.util.Observable;
+import java.util.Observer;
+// }}}
 
 /**
  *
  * @author Adam Rutkowski
  */
-public interface IController //{{{
+public class ServerView implements Observer //{{{
 {
-    /**
-     * Method invoked by client view on its update.
-     */
-    public void viewChanged();
+
+    // FIXME: ???
+    public void update(Observable o, Object arg)//{{{
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }//}}}
+
 }//}}}
 
 /* vim: set ts=4 sw=4 sts=4 et foldmethod=marker: */

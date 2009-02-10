@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package trafficSim;
+package trafficsim;
 
 /**
  * Lights state controller - updates lights state
