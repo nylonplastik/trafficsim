@@ -42,7 +42,7 @@ public class ClientViewData { //{{{
     
     public ClientViewData() //{{{
     {
-        observedCars  = new LinkedList();
+        observedCars  = new LinkedList<Car>();
         borderCrosses = new LinkedList<LanesCross>();
         cars          = new LinkedList<Car>();
         lanes         = new LinkedList<Lane>();

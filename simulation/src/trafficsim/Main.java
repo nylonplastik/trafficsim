@@ -51,7 +51,8 @@ public class Main //{{{
         clientSideView.setController(clientController);
         clientSideView.setServerSideView(v);
         
-        Client c = new Client(m, clientSideView, v);
+        @SuppressWarnings("unused")
+		Client c = new Client(m, clientSideView, v);
    
         // Create time controller
         TimeController tc = TimeController.getTimeController(m);
