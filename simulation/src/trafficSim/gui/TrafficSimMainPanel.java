@@ -18,52 +18,49 @@
     along with TrafficSim.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package gui;
+package trafficSim.gui;
 
 // Imports {{{
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 
 // }}}
 
 @SuppressWarnings("serial")
-public class TrafficSimServersPanel
-	extends JPanel
-	implements ActionListener
+public class TrafficSimMainPanel
+    extends JPanel
+    implements ActionListener
 {
+ 
+	private JTabbedPane tabs_panel = null;
 
-	private JButton create_new_server = null;
-	private JList servers_list = null;
-	private JScrollPane servers_pane = null;
-	
-	protected void initPanel()
-	{
-		create_new_server = new JButton("Create new server");
-		create_new_server.addActionListener(this);
-		servers_list = new JList();
-		servers_pane = new JScrollPane(servers_list);
-		add(create_new_server);
-		add(servers_pane);
-	}
-
-	public TrafficSimServersPanel() {
+    protected void initPanel()
+    {
+    	tabs_panel = new JTabbedPane();
+    	tabs_panel.addTab("Servers", new TrafficSimServersPanel());
+    	tabs_panel.addTab("Clients", new TrafficSimClientsPanel());
+    	add(tabs_panel);
+    }
+    
+	public TrafficSimMainPanel() {
 		super();
 		initPanel();
 	}
 
-	public TrafficSimServersPanel(boolean isDoubleBuffered) {
+	public TrafficSimMainPanel(boolean isDoubleBuffered) {
 		super(isDoubleBuffered);
 		initPanel();
 	}
 
-	public TrafficSimServersPanel(LayoutManager layout, boolean isDoubleBuffered) {
+	public TrafficSimMainPanel(LayoutManager layout, boolean isDoubleBuffered) {
 		super(layout, isDoubleBuffered);
 		initPanel();
 	}
 
-	public TrafficSimServersPanel(LayoutManager layout) {
+	public TrafficSimMainPanel(LayoutManager layout) {
 		super(layout);
 		initPanel();
 	}
@@ -71,7 +68,8 @@ public class TrafficSimServersPanel
 	@Override
 	public void actionPerformed(ActionEvent e) {
 	}
-	
+    
 }
+
 
 /* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */

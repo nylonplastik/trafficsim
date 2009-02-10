@@ -18,7 +18,7 @@
     along with TrafficSim.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package gui;
+package trafficSim.gui;
 
 /* Imports {{{ */
 

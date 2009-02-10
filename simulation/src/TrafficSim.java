@@ -19,7 +19,7 @@
 */
 
 
-import gui.*;
+import trafficSim.gui.*;
 import javax.swing.*;
 
 public class TrafficSim implements Runnable
