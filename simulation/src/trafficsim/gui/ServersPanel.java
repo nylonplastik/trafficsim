@@ -70,6 +70,12 @@ public class ServersPanel
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource()==create_new_server)
+		{
+			CreateServerDialog create_dialog = new CreateServerDialog();
+			create_dialog.pack();
+			create_dialog.setVisible(true);
+		}
 	}
 	
 }
