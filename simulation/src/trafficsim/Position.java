@@ -38,16 +38,16 @@ public class Position {
         NOT_DRIVING     // the car is not on the street
     };
     e_info          info;
-	public void setLane(Lane lane) {
-		this.lane = lane;
-	}
-	public Lane getLane() {
-		return lane;
-	}
-	public void setCoord(Integer coord) {
-		this.coord = coord;
-	}
-	public Integer getCoord() {
-		return coord;
-	}
+    public void setLane(Lane lane) {
+        this.lane = lane;
+    }
+    public Lane getLane() {
+        return lane;
+    }
+    public void setCoord(Integer coord) {
+        this.coord = coord;
+    }
+    public Integer getCoord() {
+        return coord;
+    }
 }

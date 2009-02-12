@@ -74,7 +74,7 @@ public class TrafficSim implements Runnable
         clientSideView.setServerSideView(v);
         
         @SuppressWarnings("unused")
-		Client c = new Client(m, clientSideView, v);
+        Client c = new Client(m, clientSideView, v);
    
         // Create time controller
         TimeController tc = TimeController.getTimeController(m);
@@ -86,48 +86,48 @@ public class TrafficSim implements Runnable
         frame.pack();
         frame.addWindowListener(new WindowListener(){
 
-			@Override
-			public void windowActivated(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+            @Override
+            public void windowActivated(WindowEvent e) {
+                // TODO Auto-generated method stub
+                
+            }
 
-			@Override
-			public void windowClosed(WindowEvent e) {
-				timeControlThread.interrupt();
-				System.exit(0);
-			}
+            @Override
+            public void windowClosed(WindowEvent e) {
+                timeControlThread.interrupt();
+                System.exit(0);
+            }
 
-			@Override
-			public void windowClosing(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+            @Override
+            public void windowClosing(WindowEvent e) {
+                // TODO Auto-generated method stub
+                
+            }
 
-			@Override
-			public void windowDeactivated(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+                // TODO Auto-generated method stub
+                
+            }
 
-			@Override
-			public void windowDeiconified(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+                // TODO Auto-generated method stub
+                
+            }
 
-			@Override
-			public void windowIconified(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+            @Override
+            public void windowIconified(WindowEvent e) {
+                // TODO Auto-generated method stub
+                
+            }
 
-			@Override
-			public void windowOpened(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-        	
+            @Override
+            public void windowOpened(WindowEvent e) {
+                // TODO Auto-generated method stub
+                
+            }
+            
         });
         frame.setVisible(true);      
     }

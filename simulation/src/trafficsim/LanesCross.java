@@ -90,13 +90,13 @@ public class LanesCross extends Observable //{{{
        p_incomingLanes.add(lane);
     }//}}}
 
-	public int getX() {
-		return X_coordinate;
-	}
+    public int getX() {
+        return X_coordinate;
+    }
 
-	public int getY() {
-		return Y_coordinate;
-	}
+    public int getY() {
+        return Y_coordinate;
+    }
      
 }//}}}
 

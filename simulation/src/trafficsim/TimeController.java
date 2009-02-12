@@ -68,7 +68,7 @@ public class TimeController implements Runnable //{{{
                 catch (Exception ex)
                 {
                     // FIXME: should be break ?
-                	break;
+                    break;
                     //return;
                 }
             }
@@ -83,12 +83,12 @@ public class TimeController implements Runnable //{{{
         {
             while(true)
             {
-        	updateView();
+            updateView();
                 Thread.sleep(p_timeMilisecs);
             } 
         }
         catch (InterruptedException ex) {
-        	s_log.log(Level.SEVERE, "Interrupted", ex);
+            s_log.log(Level.SEVERE, "Interrupted", ex);
         }
     } //}}}
 } //}}}

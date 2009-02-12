@@ -32,94 +32,94 @@ public class CreateServerDialog
     extends JDialog
 {
 
-	protected void initDialog()
-	{
-	}
+    protected void initDialog()
+    {
+    }
 
-	public CreateServerDialog() {
-		super();
-		initDialog();
-	}
+    public CreateServerDialog() {
+        super();
+        initDialog();
+    }
 
-	public CreateServerDialog(Dialog owner, boolean modal) {
-		super(owner, modal);
-		initDialog();
-	}
+    public CreateServerDialog(Dialog owner, boolean modal) {
+        super(owner, modal);
+        initDialog();
+    }
 
-	public CreateServerDialog(Dialog owner, String title, boolean modal,
-			GraphicsConfiguration gc) {
-		super(owner, title, modal, gc);
-		initDialog();
-	}
+    public CreateServerDialog(Dialog owner, String title, boolean modal,
+            GraphicsConfiguration gc) {
+        super(owner, title, modal, gc);
+        initDialog();
+    }
 
-	public CreateServerDialog(Dialog owner, String title, boolean modal) {
-		super(owner, title, modal);
-		initDialog();
-	}
+    public CreateServerDialog(Dialog owner, String title, boolean modal) {
+        super(owner, title, modal);
+        initDialog();
+    }
 
-	public CreateServerDialog(Dialog owner, String title) {
-		super(owner, title);
-		initDialog();
-	}
+    public CreateServerDialog(Dialog owner, String title) {
+        super(owner, title);
+        initDialog();
+    }
 
-	public CreateServerDialog(Dialog owner) {
-		super(owner);
-		initDialog();
-	}
+    public CreateServerDialog(Dialog owner) {
+        super(owner);
+        initDialog();
+    }
 
-	public CreateServerDialog(Frame owner, boolean modal) {
-		super(owner, modal);
-		initDialog();
-	}
+    public CreateServerDialog(Frame owner, boolean modal) {
+        super(owner, modal);
+        initDialog();
+    }
 
-	public CreateServerDialog(Frame owner, String title, boolean modal,
-			GraphicsConfiguration gc) {
-		super(owner, title, modal, gc);
-		initDialog();
-	}
+    public CreateServerDialog(Frame owner, String title, boolean modal,
+            GraphicsConfiguration gc) {
+        super(owner, title, modal, gc);
+        initDialog();
+    }
 
-	public CreateServerDialog(Frame owner, String title, boolean modal) {
-		super(owner, title, modal);
-		initDialog();
-	}
+    public CreateServerDialog(Frame owner, String title, boolean modal) {
+        super(owner, title, modal);
+        initDialog();
+    }
 
-	public CreateServerDialog(Frame owner, String title) {
-		super(owner, title);
-		initDialog();
-	}
+    public CreateServerDialog(Frame owner, String title) {
+        super(owner, title);
+        initDialog();
+    }
 
-	public CreateServerDialog(Frame owner) {
-		super(owner);
-		initDialog();
-	}
+    public CreateServerDialog(Frame owner) {
+        super(owner);
+        initDialog();
+    }
 
-	public CreateServerDialog(Window owner, ModalityType modalityType) {
-		super(owner, modalityType);
-		initDialog();
-	}
+    public CreateServerDialog(Window owner, ModalityType modalityType) {
+        super(owner, modalityType);
+        initDialog();
+    }
 
-	public CreateServerDialog(Window owner, String title,
-			ModalityType modalityType, GraphicsConfiguration gc) {
-		super(owner, title, modalityType, gc);
-		initDialog();
-	}
+    public CreateServerDialog(Window owner, String title,
+            ModalityType modalityType, GraphicsConfiguration gc) {
+        super(owner, title, modalityType, gc);
+        initDialog();
+    }
 
-	public CreateServerDialog(Window owner, String title,
-			ModalityType modalityType) {
-		super(owner, title, modalityType);
-		initDialog();
-	}
+    public CreateServerDialog(Window owner, String title,
+            ModalityType modalityType) {
+        super(owner, title, modalityType);
+        initDialog();
+    }
 
-	public CreateServerDialog(Window owner, String title) {
-		super(owner, title);
-		initDialog();
-	}
+    public CreateServerDialog(Window owner, String title) {
+        super(owner, title);
+        initDialog();
+    }
 
-	public CreateServerDialog(Window owner) {
-		super(owner);
-		initDialog();
-	}
-	
+    public CreateServerDialog(Window owner) {
+        super(owner);
+        initDialog();
+    }
+    
 }
 
 /* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */
