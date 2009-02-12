@@ -35,39 +35,39 @@ public class MainPanel
     implements ActionListener
 {
  
-	private JTabbedPane tabs_panel = null;
+    private JTabbedPane tabs_panel = null;
 
     protected void initPanel()
     {
-    	tabs_panel = new JTabbedPane();
-    	tabs_panel.addTab("Servers", new ServersPanel());
-    	tabs_panel.addTab("Clients", new ClientsPanel());
-    	add(tabs_panel);
+        tabs_panel = new JTabbedPane();
+        tabs_panel.addTab("Servers", new ServersPanel());
+        tabs_panel.addTab("Clients", new ClientsPanel());
+        add(tabs_panel);
     }
     
-	public MainPanel() {
-		super();
-		initPanel();
-	}
+    public MainPanel() {
+        super();
+        initPanel();
+    }
 
-	public MainPanel(boolean isDoubleBuffered) {
-		super(isDoubleBuffered);
-		initPanel();
-	}
+    public MainPanel(boolean isDoubleBuffered) {
+        super(isDoubleBuffered);
+        initPanel();
+    }
 
-	public MainPanel(LayoutManager layout, boolean isDoubleBuffered) {
-		super(layout, isDoubleBuffered);
-		initPanel();
-	}
+    public MainPanel(LayoutManager layout, boolean isDoubleBuffered) {
+        super(layout, isDoubleBuffered);
+        initPanel();
+    }
 
-	public MainPanel(LayoutManager layout) {
-		super(layout);
-		initPanel();
-	}
+    public MainPanel(LayoutManager layout) {
+        super(layout);
+        initPanel();
+    }
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+    }
     
 }
 

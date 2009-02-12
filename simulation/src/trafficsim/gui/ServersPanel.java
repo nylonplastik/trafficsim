@@ -30,54 +30,54 @@ import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class ServersPanel
-	extends JPanel
-	implements ActionListener
+    extends JPanel
+    implements ActionListener
 {
 
-	private JButton create_new_server = null;
-	private JList servers_list = null;
-	private JScrollPane servers_pane = null;
-	
-	protected void initPanel()
-	{
-		create_new_server = new JButton("Create new server");
-		create_new_server.addActionListener(this);
-		servers_list = new JList();
-		servers_pane = new JScrollPane(servers_list);
-		add(create_new_server);
-		add(servers_pane);
-	}
+    private JButton create_new_server = null;
+    private JList servers_list = null;
+    private JScrollPane servers_pane = null;
+    
+    protected void initPanel()
+    {
+        create_new_server = new JButton("Create new server");
+        create_new_server.addActionListener(this);
+        servers_list = new JList();
+        servers_pane = new JScrollPane(servers_list);
+        add(create_new_server);
+        add(servers_pane);
+    }
 
-	public ServersPanel() {
-		super();
-		initPanel();
-	}
+    public ServersPanel() {
+        super();
+        initPanel();
+    }
 
-	public ServersPanel(boolean isDoubleBuffered) {
-		super(isDoubleBuffered);
-		initPanel();
-	}
+    public ServersPanel(boolean isDoubleBuffered) {
+        super(isDoubleBuffered);
+        initPanel();
+    }
 
-	public ServersPanel(LayoutManager layout, boolean isDoubleBuffered) {
-		super(layout, isDoubleBuffered);
-		initPanel();
-	}
+    public ServersPanel(LayoutManager layout, boolean isDoubleBuffered) {
+        super(layout, isDoubleBuffered);
+        initPanel();
+    }
 
-	public ServersPanel(LayoutManager layout) {
-		super(layout);
-		initPanel();
-	}
+    public ServersPanel(LayoutManager layout) {
+        super(layout);
+        initPanel();
+    }
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource()==create_new_server)
-		{
-			CreateServerDialog create_dialog = new CreateServerDialog();
-			create_dialog.pack();
-			create_dialog.setVisible(true);
-		}
-	}
-	
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource()==create_new_server)
+        {
+            CreateServerDialog create_dialog = new CreateServerDialog();
+            create_dialog.pack();
+            create_dialog.setVisible(true);
+        }
+    }
+    
 }
 
 /* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */

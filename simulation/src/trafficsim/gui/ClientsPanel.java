@@ -30,47 +30,47 @@ import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class ClientsPanel
-	extends JPanel
-	implements ActionListener
+    extends JPanel
+    implements ActionListener
 {
 
-	private JButton create_new_client = null;
-	private JList clients_list = null;
-	private JScrollPane clients_pane = null;
-	
-	protected void initPanel()
-	{
-		create_new_client = new JButton("Create new client");
-		create_new_client.addActionListener(this);
-		clients_list = new JList();
-		clients_pane = new JScrollPane(clients_list);
-		add(create_new_client);
-		add(clients_pane);
-	}
+    private JButton create_new_client = null;
+    private JList clients_list = null;
+    private JScrollPane clients_pane = null;
+    
+    protected void initPanel()
+    {
+        create_new_client = new JButton("Create new client");
+        create_new_client.addActionListener(this);
+        clients_list = new JList();
+        clients_pane = new JScrollPane(clients_list);
+        add(create_new_client);
+        add(clients_pane);
+    }
 
-	public ClientsPanel() {
-		super();
-		initPanel();
-	}
+    public ClientsPanel() {
+        super();
+        initPanel();
+    }
 
-	public ClientsPanel(boolean isDoubleBuffered) {
-		super(isDoubleBuffered);
-		initPanel();
-	}
+    public ClientsPanel(boolean isDoubleBuffered) {
+        super(isDoubleBuffered);
+        initPanel();
+    }
 
-	public ClientsPanel(LayoutManager layout, boolean isDoubleBuffered) {
-		super(layout, isDoubleBuffered);
-		initPanel();
-	}
+    public ClientsPanel(LayoutManager layout, boolean isDoubleBuffered) {
+        super(layout, isDoubleBuffered);
+        initPanel();
+    }
 
-	public ClientsPanel(LayoutManager layout) {
-		super(layout);
-		initPanel();
-	}
+    public ClientsPanel(LayoutManager layout) {
+        super(layout);
+        initPanel();
+    }
 
-	@Override
-	public void actionPerformed(ActionEvent e) {		
-	}	
+    @Override
+    public void actionPerformed(ActionEvent e) {        
+    }    
 }
 
 /* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */

@@ -49,45 +49,45 @@ public class ClientViewData { //{{{
         setCrosses(new Hashtable<Integer, LanesCross>());
     } //}}}
 
-	public void setObservedCars(LinkedList<Car> observedCars) {
-		this.observedCars = observedCars;
-	}
+    public void setObservedCars(LinkedList<Car> observedCars) {
+        this.observedCars = observedCars;
+    }
 
-	public LinkedList<Car> getObservedCars() {
-		return observedCars;
-	}
+    public LinkedList<Car> getObservedCars() {
+        return observedCars;
+    }
 
-	public void setCrosses(Hashtable<Integer, LanesCross> crosses) {
-		this.crosses = crosses;
-	}
+    public void setCrosses(Hashtable<Integer, LanesCross> crosses) {
+        this.crosses = crosses;
+    }
 
-	public Hashtable<Integer, LanesCross> getCrosses() {
-		return crosses;
-	}
+    public Hashtable<Integer, LanesCross> getCrosses() {
+        return crosses;
+    }
 
-	public void setLanes(LinkedList<Lane> lanes) {
-		this.lanes = lanes;
-	}
+    public void setLanes(LinkedList<Lane> lanes) {
+        this.lanes = lanes;
+    }
 
-	public LinkedList<Lane> getLanes() {
-		return lanes;
-	}
+    public LinkedList<Lane> getLanes() {
+        return lanes;
+    }
 
-	public void setCars(LinkedList<Car> cars) {
-		this.cars = cars;
-	}
+    public void setCars(LinkedList<Car> cars) {
+        this.cars = cars;
+    }
 
-	public LinkedList<Car> getCars() {
-		return cars;
-	}
+    public LinkedList<Car> getCars() {
+        return cars;
+    }
 
-	public void setBorderCrosses(LinkedList<LanesCross> borderCrosses) {
-		this.borderCrosses = borderCrosses;
-	}
+    public void setBorderCrosses(LinkedList<LanesCross> borderCrosses) {
+        this.borderCrosses = borderCrosses;
+    }
 
-	public LinkedList<LanesCross> getBorderCrosses() {
-		return borderCrosses;
-	}
+    public LinkedList<LanesCross> getBorderCrosses() {
+        return borderCrosses;
+    }
 } //}}}
 
 /* vim: set ts=4 sw=4 sts=4 et foldmethod=marker: */

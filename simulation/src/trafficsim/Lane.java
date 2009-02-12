@@ -41,14 +41,14 @@ public class Lane  //{{{
     private int                  p_speedLimit = Lane.UNLIMITED_SPEED;
     private int                  p_length = Lane.DEFAULT_LENGTH;
     private LanesCross           p_destination = null;
-    private LanesCross			 p_source = null;
+    private LanesCross           p_source = null;
     
     /**
      * Virtual lanes are inserted to the streets structure just to 
      * represent the fact that a car can get from the starting lanes cross
      * to the ending one by switching from one lane to an adjecent one.
      * Purpose of holding information about virtual lanes is to make it possible
-     * for graph algorithms to operate easily on streets structure.
+     * for graph algorithms to operate easily on streHets structure.
      */
     private boolean              p_isVirtual = false;
     
@@ -91,10 +91,10 @@ public class Lane  //{{{
     
     public Lane(LanesCross source,LanesCross destination) //{{{
     {
-    	p_speedLimit = Lane.UNLIMITED_SPEED;
-    	p_length = Lane.DEFAULT_LENGTH;
-    	p_destination = destination;
-    	p_source = source;
+        p_speedLimit = Lane.UNLIMITED_SPEED;
+        p_length = Lane.DEFAULT_LENGTH;
+        p_destination = destination;
+        p_source = source;
     } //}}}
     
     public Lane(int speedLimit, int length, LanesCross source, LanesCross destination) //{{{
@@ -112,11 +112,11 @@ public class Lane  //{{{
 
     public Lights addLights(int distance, LightsState state) //{{{
     {
-    	if (p_lights.containsKey(distance))
-    		return p_lights.get(distance);
-    	Lights lights = new Lights(this,distance,state);
-    	p_lights.put(distance,lights);
-    	return lights;
+        if (p_lights.containsKey(distance))
+            return p_lights.get(distance);
+        Lights lights = new Lights(this,distance,state);
+        p_lights.put(distance,lights);
+        return lights;
     } //}}}
     
     public boolean isEmpty() //{{{
@@ -142,16 +142,16 @@ public class Lane  //{{{
     
     public boolean hasLights(int distance) //{{{
     {
-    	return p_lights.containsKey(distance);
+        return p_lights.containsKey(distance);
     } //}}}
 
     public Lights getLights(int distance) //{{{
     {
-    	/*
-    	if (!p_lights.containsKey(distance))
-		return null;
-    	 */
-    	return p_lights.get(distance);
+        /*
+        if (!p_lights.containsKey(distance))
+        return null;
+         */
+        return p_lights.get(distance);
     } //}}}
     
     public boolean putCar(int coord, Car car) //{{{
@@ -190,7 +190,7 @@ public class Lane  //{{{
      */
     public LanesCross getLaneSource()
     {
-    	return p_source;
+        return p_source;
     }
     
     /**
@@ -199,7 +199,7 @@ public class Lane  //{{{
      */
     public LanesCross getLaneDestination()
     {
-    	return p_destination;
+        return p_destination;
     }
     
 } //}}}

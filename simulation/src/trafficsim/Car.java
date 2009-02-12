@@ -392,13 +392,13 @@ public class Car //{{{
             p_acceleration = newAcceleration;
     } //}}}
 
-	public void setObservedLanes(LinkedList<Lane> p_observedLanes) {
-		this.p_observedLanes = p_observedLanes;
-	}
+    public void setObservedLanes(LinkedList<Lane> p_observedLanes) {
+        this.p_observedLanes = p_observedLanes;
+    }
 
-	public LinkedList<Lane> getObservedLanes() {
-		return p_observedLanes;
-	}
+    public LinkedList<Lane> getObservedLanes() {
+        return p_observedLanes;
+    }
 } //}}}
 
 /* vim: set ts=4 sw=4 sts=4 et foldmethod=marker: */
