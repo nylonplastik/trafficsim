@@ -13,7 +13,6 @@ import trafficsim.Car;
 import trafficsim.Lane;
 import trafficsim.LanesCross;
 import trafficsim.Model;
-import trafficsim.Parking;
 import trafficsim.Position;
 
 @SuppressWarnings("serial")
@@ -46,15 +45,17 @@ public class SimulationCanvas extends Canvas implements Observer {
 
 	public void update(Graphics g)
 	{
-		if (model == null) return;
-		Collection<Lane> lanes = model.getLanes();
+		g.clearRect(0, 0, this.getWidth(), this.getHeight());
+		Model m = model;
+		if (m == null) return;
+		Collection<Lane> lanes = m.getLanes();
 		g.setColor(Color.BLACK);
 		for(Lane l : lanes)
 		{
-			g.drawLine(l.getLaneSource().X_coordinate,
-					   l.getLaneSource().Y_coordinate, 
-					   l.getLaneDestination().X_coordinate,
-					   l.getLaneDestination().Y_coordinate);
+			g.drawLine(l.getLaneSource().getX(),
+					   l.getLaneSource().getY(), 
+					   l.getLaneDestination().getX(),
+					   l.getLaneDestination().getY());
 		}
 		/*
 		for(Parking p : model.getParkings())
@@ -65,21 +66,21 @@ public class SimulationCanvas extends Canvas implements Observer {
 					   p.getLaneDestination().Y_coordinate);
 		}
 		*/
-		Collection<LanesCross> crosses = model.getLanesCrosses().values();
+		Collection<LanesCross> crosses = m.getLanesCrosses().values();
 		g.setColor(Color.RED);
 		for(LanesCross l : crosses)
 		{
-			g.fillOval(l.X_coordinate-5, l.Y_coordinate-5, 10, 10);
+			g.fillOval(l.getX()-5, l.getY()-5, 10, 10);
 		}
 		
 		g.setColor(Color.GREEN);
-		for(Car c : model.getCars())
+		for(Car c : m.getCars())
 		{
 			Position p = c.getPosition();
-			int x = p.lane.getLaneSource().X_coordinate;
-			int y = p.lane.getLaneSource().Y_coordinate;
-			x += c.getPosition().coord*(p.lane.getLaneDestination().X_coordinate - p.lane.getLaneSource().X_coordinate)/c.getPosition().lane.getLength();
-			y += c.getPosition().coord*(p.lane.getLaneDestination().Y_coordinate - p.lane.getLaneSource().Y_coordinate)/c.getPosition().lane.getLength();
+			int x = p.getLane().getLaneSource().getX();
+			int y = p.getLane().getLaneSource().getY();
+			x += c.getPosition().getCoord()*(p.getLane().getLaneDestination().getX() - p.getLane().getLaneSource().getX())/c.getPosition().getLane().getLength();
+			y += c.getPosition().getCoord()*(p.getLane().getLaneDestination().getY() - p.getLane().getLaneSource().getY())/c.getPosition().getLane().getLength();
 			g.fillRect(x-5,y-5,10,10);
 		}
 	}
@@ -89,9 +90,12 @@ public class SimulationCanvas extends Canvas implements Observer {
 	}
 
 	public void setModel(Model model) {
-		this.model.deleteObserver(this);
+		Model m = this.model;
+		if (m!=null)
+			m.deleteObserver(this);
 		this.model = model;
-		this.model.addObserver(this);
+		if (this.model!=null)
+			this.model.addObserver(this);
 	}
 
 	@Override

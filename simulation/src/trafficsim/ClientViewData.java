@@ -16,19 +16,19 @@ public class ClientViewData { //{{{
     
     // Variables {{{    
    
-    public LinkedList<Car>                    observedCars;
+    private LinkedList<Car>                    observedCars;
     
     /**
      * List of all lanes close enough to controlled cars.
      */
-    public Hashtable<Integer, LanesCross>      crosses;
+    private Hashtable<Integer, LanesCross>      crosses;
     
     /***
      * List of all lanes close enough to controlled cars.
      */
-    public LinkedList<Lane>                    lanes;
+    private LinkedList<Lane>                    lanes;
     
-    public LinkedList<Car>                     cars;     
+    private LinkedList<Car>                     cars;     
 
     /**
      * List of lane crosses which are on the border of this client view.
@@ -36,18 +36,58 @@ public class ClientViewData { //{{{
      *   are no adjecent lanes crosses, but becouse the client view is not
      *   wide enough to contain them).
      */
-    public LinkedList<LanesCross>             borderCrosses;
+    private LinkedList<LanesCross>             borderCrosses;
     
     //}}}
     
     public ClientViewData() //{{{
     {
-        observedCars  = new LinkedList<Car>();
-        borderCrosses = new LinkedList<LanesCross>();
-        cars          = new LinkedList<Car>();
-        lanes         = new LinkedList<Lane>();
-        crosses       = new Hashtable<Integer, LanesCross>();
+        setObservedCars(new LinkedList<Car>());
+        setBorderCrosses(new LinkedList<LanesCross>());
+        setCars(new LinkedList<Car>());
+        setLanes(new LinkedList<Lane>());
+        setCrosses(new Hashtable<Integer, LanesCross>());
     } //}}}
+
+	public void setObservedCars(LinkedList<Car> observedCars) {
+		this.observedCars = observedCars;
+	}
+
+	public LinkedList<Car> getObservedCars() {
+		return observedCars;
+	}
+
+	public void setCrosses(Hashtable<Integer, LanesCross> crosses) {
+		this.crosses = crosses;
+	}
+
+	public Hashtable<Integer, LanesCross> getCrosses() {
+		return crosses;
+	}
+
+	public void setLanes(LinkedList<Lane> lanes) {
+		this.lanes = lanes;
+	}
+
+	public LinkedList<Lane> getLanes() {
+		return lanes;
+	}
+
+	public void setCars(LinkedList<Car> cars) {
+		this.cars = cars;
+	}
+
+	public LinkedList<Car> getCars() {
+		return cars;
+	}
+
+	public void setBorderCrosses(LinkedList<LanesCross> borderCrosses) {
+		this.borderCrosses = borderCrosses;
+	}
+
+	public LinkedList<LanesCross> getBorderCrosses() {
+		return borderCrosses;
+	}
 } //}}}
 
 /* vim: set ts=4 sw=4 sts=4 et foldmethod=marker: */

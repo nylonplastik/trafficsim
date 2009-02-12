@@ -59,7 +59,7 @@ public class TimeController implements Runnable //{{{
         synchronized(p_model)
         {
             LinkedList<Car> cars  = p_model.getCars();
-            for (Car car : p_model.getCars())
+            for (Car car : cars)
             {
                 try
                 {
@@ -67,8 +67,9 @@ public class TimeController implements Runnable //{{{
                 }
                 catch (Exception ex)
                 {
-                    // FIXME: should be break ? 
-                    return;
+                    // FIXME: should be break ?
+                	break;
+                    //return;
                 }
             }
         }
@@ -78,14 +79,15 @@ public class TimeController implements Runnable //{{{
     
     public void run()  //{{{
     {
-        while(true)
-        {
-            updateView();
-            try {
+        try {
+        	while(true)
+        	{
+        		updateView();
                 Thread.sleep(p_timeMilisecs);
-            } catch (InterruptedException ex) {
-                s_log.log(Level.SEVERE, null, ex);
-            }
+            } 
+        }
+        catch (InterruptedException ex) {
+        	// s_log.log(Level.SEVERE, "Interrupted", ex);
         }
     } //}}}
 } //}}}
