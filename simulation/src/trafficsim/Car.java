@@ -379,6 +379,11 @@ public class Car //{{{
         return p_acceleration;
     } //}}}
     
+    public float getSpeed() //{{{
+    {
+        return p_speed;
+    } //}}}    	
+    
     public void changeAcceleration(float newAcceleration) //{{{
     {
         if (newAcceleration > p_maxAcceleration || -1.0*newAcceleration > p_maxAcceleration)

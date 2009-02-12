@@ -32,8 +32,21 @@ public class ClientController1 implements IController
     private Model                      p_model;
     private ClientViewClientSide       p_view;
     private LinkedList<Car>            p_controlledCars;
-    // safe distance between the cars
-    private static final int           SAFE_DISTANCE = 10;  
+    
+    // Safe distance between the cars to make one car start moving.
+    private static final int           SAFE_START_DISTANCE = 10;  
+   
+    // Each car performs prediction of other cars movement basing on their
+    // current speed and acceleration. This constant determines length of
+    // time period used to calculate future position of other car
+    private static final int           PREDICTION_TIME_FRAME = 3;
+    
+    // When other's car movenent prediction is done, the decission about
+    // speed reduction is made basing on predicted distance between one car
+    // and another after PREDICTION_TIME_FRAME. This constant determines a 
+    // treshold value of predicted distance between cars .
+    private static final int           SAFE_MOVE_DISTANCE = 10;  
+        
     
     
     public ClientController1(Model model, ClientViewClientSide view)
@@ -76,21 +89,23 @@ public class ClientController1 implements IController
             if (car.isParked())
             {
                  // if car is parked, try to leave the parking
-                if (car.canLeaveParking(SAFE_DISTANCE))
+                if (car.canLeaveParking(SAFE_START_DISTANCE))
                 {
-                    Lane laneOut = null;
                     int  distanceToNextCar;
                     Car nextCar = car.getNextCar();
                     LinkedList<Lane> carsPlannedRoute = car.getRoute();
                     
                     if (nextCar == null)
-                        distanceToNextCar = 2*SAFE_DISTANCE;
+                        distanceToNextCar = 2*SAFE_START_DISTANCE;
                     else
                         distanceToNextCar = car.getNextCarDistance();
                     
-                    if (distanceToNextCar > SAFE_DISTANCE && !carsPlannedRoute.isEmpty())
+                    if (distanceToNextCar > SAFE_START_DISTANCE && 
+                        !carsPlannedRoute.isEmpty()
+                        )
                     {
-                        // there is enough space on lane to move and we know where to go
+                        // there is enough space on lane to move and we know 
+                        // where to go.
                         car.startMoving(1);
                     }  
                 }
@@ -98,16 +113,36 @@ public class ClientController1 implements IController
             }
             else  // if (car.isParked()) 
             {
+                // Acceleration adjustment.
+
                 Car nextCar = car.getNextCar();
                 if (nextCar != null)
                 {
-                    // very simple move control
-                    int distanceToNextCar = car.getNextCarDistance();
-                    if (distanceToNextCar < SAFE_DISTANCE)
-                        car.changeAcceleration(car.getAcceleration()/2);
+                    int predictedDiscance =  distancePrediction(
+                                                car.getSpeed(), 
+                                                nextCar.getSpeed(), 
+                                                car.getNextCarDistance(), 
+                                                PREDICTION_TIME_FRAME
+                                                );
+                    if (predictedDiscance < SAFE_MOVE_DISTANCE)
+                    {
+                        int newAcc = predictedDiscance - SAFE_MOVE_DISTANCE;
+                        car.changeAcceleration(newAcc);
+                    }
                 }
                 
             }        
         }
+    }
+    
+    // Trying to predict distance between two cars basing on their current speed
+    // and current distance between them.
+    private static int distancePrediction(
+            float speed1, 
+            float speed2, 
+            int distance,
+            int timeFrame)
+    {
+        return (int)( distance + speed2*timeFrame - speed1*timeFrame);
     }
 }
