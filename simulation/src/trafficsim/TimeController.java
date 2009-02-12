@@ -83,7 +83,7 @@ public class TimeController implements Runnable //{{{
         {
             while(true)
             {
-            updateView();
+                updateView();
                 Thread.sleep(p_timeMilisecs);
             } 
         }
