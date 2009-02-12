@@ -23,6 +23,7 @@ public class EditorFrame extends JFrame
     private SimulationCanvas sim_canvas = null;
     private JPanel editor_panel = null;
     
+    private LanesCross selected_cross = null;
     private LanesCross moving_cross = null;
     
     protected void initFrame()
@@ -76,7 +77,28 @@ public class EditorFrame extends JFrame
     @Override
     public void mouseClicked(MouseEvent e) {
         // TODO Auto-generated method stub
-        sim_canvas.getModel().addCross(e.getX(), e.getY());
+        LanesCross last_selected_cross = selected_cross;
+        selected_cross = null;
+        for(LanesCross lc : sim_canvas.getModel().getLanesCrosses().values())
+        {
+            if ((-5<=lc.getX()-e.getX())&&(lc.getX()-e.getX()<=5)&&
+                (-5<=lc.getY()-e.getY())&&(lc.getY()-e.getY()<=5))
+            {
+                selected_cross = lc;
+                break;
+            }        
+        }
+        if (selected_cross==null)
+            sim_canvas.getModel().addCross(e.getX(), e.getY());
+        else
+        {
+            if ((last_selected_cross != null)&&
+                (last_selected_cross != selected_cross))
+            {
+                sim_canvas.getModel().addLane(last_selected_cross.getId(), selected_cross.getId(), 70, 700);
+            }
+        }
+        e.consume();
     }
 
     @Override

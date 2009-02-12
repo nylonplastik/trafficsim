@@ -54,14 +54,14 @@ public class LanesCross extends Observable //{{{
     
     public LanesCross()//{{{
     {
-        p_id = s_count++;
+        setId(s_count++);
         X_coordinate = 0;
         Y_coordinate = 0;
     }//}}}
     
     public LanesCross(int id, int X, int Y)//{{{
     {
-        p_id = id;
+        setId(id);
         X_coordinate = X;
         Y_coordinate = Y;        
         s_count++;
@@ -104,6 +104,14 @@ public class LanesCross extends Observable //{{{
 
     public void setY(int newY) {
         Y_coordinate = newY;
+    }
+
+    public void setId(int p_id) {
+        this.p_id = p_id;
+    }
+
+    public int getId() {
+        return p_id;
     }
     
 }//}}}

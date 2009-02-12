@@ -52,7 +52,7 @@ public class TrafficSim implements Runnable
      */
     public void run()
     {
-                // Create simple model
+        // Create simple model
         Model m = new Model();
         
         int cross1 = m.addCross(10,10);
