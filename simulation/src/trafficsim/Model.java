@@ -34,6 +34,8 @@ public class Model extends Observable //{{{
 {
     // Variables {{{
 
+	private int nextCrossId = 1;
+	
     /**
      * LinkedList of all lane crosses.
      */
@@ -77,10 +79,12 @@ public class Model extends Observable //{{{
         p_parkings = new LinkedList<Parking>();
     }//}}}
     
-    public void addCross(int id, int X, int Y)//{{{
+    public int addCross(int X, int Y)//{{{
     {
-        p_crosses.put(id, new LanesCross(id, X, Y) );
+    	int crossId = nextCrossId++;
+        p_crosses.put(crossId, new LanesCross(crossId, X, Y) );
         this.setChanged();
+        return crossId;
         //this.notifyObservers(WhatHasChanged.Crosses);
     }//}}}
     

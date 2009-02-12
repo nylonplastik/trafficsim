@@ -38,11 +38,11 @@ public class Main //{{{
         // Create simple model
         Model m = new Model();
         
-        m.addCross(0,10,10);
-        m.addCross(1,10,200);
-        m.addLane(0, 1, 50, 200);
-        m.addLane(1, 0, 50, 200);
-        m.addParking(m.getLanes().get(0), m.getLanes().get(1));
+        int cross1 = m.addCross(10,10);
+        int cross2 = m.addCross(10,200);
+        int lane1 = m.addLane(cross1, cross2, 50, 200);
+        int lane2 = m.addLane(cross2, cross1, 50, 200);
+        m.addParking(m.getLanes().get(lane1), m.getLanes().get(lane2));
         
         ClientViewClientSide clientSideView   = new ClientViewClientSide();
         ClientController1    clientController = 
