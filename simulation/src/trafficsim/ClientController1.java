@@ -91,7 +91,7 @@ public class ClientController1 implements IController
                     if (distanceToNextCar > SAFE_DISTANCE && !carsPlannedRoute.isEmpty())
                     {
                         // there is enough space on lane to move and we know where to go
-                        car.startMoving(5);
+                        car.startMoving(1);
                     }  
                 }
                 continue;
