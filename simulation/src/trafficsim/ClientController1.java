@@ -45,7 +45,7 @@ public class ClientController1 implements IController
     // speed reduction is made basing on predicted distance between one car
     // and another after PREDICTION_TIME_FRAME. This constant determines a 
     // treshold value of predicted distance between cars .
-    private static final int           SAFE_MOVE_DISTANCE = 10;  
+    private static final int           SAFE_MOVE_DISTANCE = 40;  
         
     
     
@@ -60,7 +60,7 @@ public class ClientController1 implements IController
         if (!(parkings = model.getParkings()).isEmpty())
         {
             // start one new cars on first available parking
-            for (int i = 0; i <2; i++) 
+            for (int i = 0; i <4; i++) 
             {
                 // new car parked on first parking
                 newCar = model.newCar(parkings.get(0));
@@ -124,11 +124,11 @@ public class ClientController1 implements IController
                                                 car.getNextCarDistance(), 
                                                 PREDICTION_TIME_FRAME
                                                 );
-                    if (predictedDiscance < SAFE_MOVE_DISTANCE)
-                    {
-                        int newAcc = predictedDiscance - SAFE_MOVE_DISTANCE;
-                        car.changeAcceleration(newAcc);
-                    }
+                   
+                    int newAcc = predictedDiscance - SAFE_MOVE_DISTANCE;
+                    if (car.getSpeed() + newAcc < 0)
+                        newAcc = (int) car.getSpeed();
+                    car.changeAcceleration(newAcc);
                 }
                 
             }        

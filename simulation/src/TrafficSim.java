@@ -58,10 +58,10 @@ public class TrafficSim implements Runnable
         int cross1 = m.addCross(10,10);
         int cross2 = m.addCross(200,200);
         int cross3 = m.addCross(200, 300);
-        int lane1id = m.addLane(cross1, cross2, 50, 2000);
-        int lane2id = m.addLane(cross2, cross1, 50, 2000);
-        int lane3id = m.addLane(cross2, cross3, 50, 2000);
-        int lane4id = m.addLane(cross3, cross2, 50, 2000);
+        int lane1id = m.addLane(cross1, cross2, 50, 200);
+        int lane2id = m.addLane(cross2, cross1, 50, 200);
+        int lane3id = m.addLane(cross2, cross3, 50, 200);
+        int lane4id = m.addLane(cross3, cross2, 50, 200);
         
         m.addParking(m.getLanes().get(lane1id), m.getLanes().get(lane2id));
         m.addParking(m.getLanes().get(lane3id), m.getLanes().get(lane4id));

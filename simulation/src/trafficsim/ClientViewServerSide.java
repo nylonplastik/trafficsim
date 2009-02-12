@@ -75,8 +75,7 @@ public class ClientViewServerSide implements Observer  //{{{
             return;
         Model model = (Model)o;
         
-        // TODO: it's possible that working on the main model object is faster
-        // than copying whole the data.
+        // TODO: it's a shallow copy only. Doesn't make much sense.
         synchronized  (model)
         {
             p_data.setCrosses((Hashtable<Integer, LanesCross>) model.getLanesCrosses().clone());
