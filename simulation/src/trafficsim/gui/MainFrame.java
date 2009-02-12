@@ -37,18 +37,18 @@ import trafficsim.Model;
  */
 @SuppressWarnings("serial")
 public class MainFrame
-	extends JFrame
+    extends JFrame
     implements ActionListener, ComponentListener
 {
     private Model model;
     
     private JMenuItem quit_menu_item = null;
-	private JMenuItem map_editor_menu_item = null;
-	
-	/**
-	 * Initializes frame
-	 */
-	protected void initFrame()
+    private JMenuItem map_editor_menu_item = null;
+    
+    /**
+     * Initializes frame
+     */
+    protected void initFrame()
     {
         
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -58,7 +58,7 @@ public class MainFrame
         menu_bar.add(file_menu);
         map_editor_menu_item = new JMenuItem("Map Editor...", KeyEvent.VK_M);
         map_editor_menu_item.setAccelerator(
-        		KeyStroke.getKeyStroke(KeyEvent.VK_M,ActionEvent.CTRL_MASK));
+                KeyStroke.getKeyStroke(KeyEvent.VK_M,ActionEvent.CTRL_MASK));
         map_editor_menu_item.addActionListener(this);
         map_editor_menu_item.setToolTipText("Map editor not implemented yet");
         map_editor_menu_item.setEnabled(true);
@@ -66,7 +66,7 @@ public class MainFrame
         file_menu.addSeparator();
         quit_menu_item = new JMenuItem("Quit", KeyEvent.VK_Q);
         quit_menu_item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, 
-        		ActionEvent.CTRL_MASK));
+                ActionEvent.CTRL_MASK));
         quit_menu_item.addActionListener(this);
         file_menu.add(quit_menu_item);
         setJMenuBar(menu_bar);
@@ -80,26 +80,26 @@ public class MainFrame
         
         model = null;
     }
-	
+    
     public MainFrame() throws HeadlessException {
-		super();
-		initFrame();
-	}
+        super();
+        initFrame();
+    }
 
-	public MainFrame(GraphicsConfiguration gc) {
-		super(gc);
-		initFrame();
-	}
+    public MainFrame(GraphicsConfiguration gc) {
+        super(gc);
+        initFrame();
+    }
 
-	public MainFrame(String title, GraphicsConfiguration gc) {
-		super(title, gc);
-		initFrame();
-	}
+    public MainFrame(String title, GraphicsConfiguration gc) {
+        super(title, gc);
+        initFrame();
+    }
 
-	public MainFrame(String title) throws HeadlessException {
-		super(title);
-		initFrame();
-	}
+    public MainFrame(String title) throws HeadlessException {
+        super(title);
+        initFrame();
+    }
 
     public void actionPerformed(ActionEvent e)
     {
@@ -109,11 +109,11 @@ public class MainFrame
         } else
         if (e.getSource() == map_editor_menu_item)
         {
-        	EditorFrame editor = new EditorFrame("Map editor");
+            EditorFrame editor = new EditorFrame("Map editor");
             editor.setModel(model);
-        	editor.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        	editor.pack();
-        	editor.setVisible(true);
+            editor.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            editor.pack();
+            editor.setVisible(true);
         }
 
     }    
@@ -123,22 +123,22 @@ public class MainFrame
         model = m;
     }
 
-	@Override
-	public void componentHidden(ComponentEvent e) {
-	}
+    @Override
+    public void componentHidden(ComponentEvent e) {
+    }
 
-	@Override
-	public void componentMoved(ComponentEvent e) {		
-	}
+    @Override
+    public void componentMoved(ComponentEvent e) {        
+    }
 
-	@Override
-	public void componentResized(ComponentEvent e) {
-		doLayout();
-	}
+    @Override
+    public void componentResized(ComponentEvent e) {
+        doLayout();
+    }
 
-	@Override
-	public void componentShown(ComponentEvent e) {
-	}
+    @Override
+    public void componentShown(ComponentEvent e) {
+    }
 
 }
 

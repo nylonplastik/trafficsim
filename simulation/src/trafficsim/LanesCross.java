@@ -90,22 +90,22 @@ public class LanesCross extends Observable //{{{
        p_incomingLanes.add(lane);
     }//}}}
 
-	public int getX() {
-		return X_coordinate;
-	}
+    public int getX() {
+        return X_coordinate;
+    }
 
-	public void setX(int newX) {
-		X_coordinate = newX;
-	}
+    public void setX(int newX) {
+        X_coordinate = newX;
+    }
 
-	public int getY() {
-		return Y_coordinate;
-	}
+    public int getY() {
+        return Y_coordinate;
+    }
 
-	public void setY(int newY) {
-		Y_coordinate = newY;
-	}
-     
+    public void setY(int newY) {
+        Y_coordinate = newY;
+    }
+    
 }//}}}
 
 /* vim: set ts=4 sw=4 sts=4 et foldmethod=marker: */

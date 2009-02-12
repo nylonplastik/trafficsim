@@ -34,8 +34,8 @@ public class Model extends Observable //{{{
 {
     // Variables {{{
 
-	private int nextCrossId = 1;
-	
+    private int nextCrossId = 1;
+    
     /**
      * LinkedList of all lane crosses.
      */
@@ -81,7 +81,7 @@ public class Model extends Observable //{{{
     
     public int addCross(int X, int Y)//{{{
     {
-    	int crossId = nextCrossId++;
+        int crossId = nextCrossId++;
         p_crosses.put(crossId, new LanesCross(crossId, X, Y) );
         this.setChanged();
         return crossId;
@@ -110,7 +110,7 @@ public class Model extends Observable //{{{
     
     public Parking addParking(Lane lane_to_cross, Lane lane_to_parking)//{{{
     {
-    	Parking parking = new Parking(lane_to_cross, lane_to_parking);
+        Parking parking = new Parking(lane_to_cross, lane_to_parking);
         p_parkings.add(parking);
         this.setChanged();
         return parking;
