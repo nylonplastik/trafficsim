@@ -39,7 +39,7 @@ public class TimeController implements Runnable //{{{
     private static TimeController  s_controller = null;
     private Model   p_model;
     private int     p_timeTick = 1;
-    private int     p_timeMilisecs = 1000;
+    private int     p_timeMilisecs = 100;
     //}}}
     
     private TimeController(Model model) //{{{
@@ -79,15 +79,16 @@ public class TimeController implements Runnable //{{{
     
     public void run()  //{{{
     {
-        try {
-        	while(true)
-        	{
-        		updateView();
+        try 
+        {
+            while(true)
+            {
+        	updateView();
                 Thread.sleep(p_timeMilisecs);
             } 
         }
         catch (InterruptedException ex) {
-        	// s_log.log(Level.SEVERE, "Interrupted", ex);
+        	s_log.log(Level.SEVERE, "Interrupted", ex);
         }
     } //}}}
 } //}}}
