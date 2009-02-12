@@ -57,7 +57,7 @@ public class MainFrame
         		KeyStroke.getKeyStroke(KeyEvent.VK_M,ActionEvent.CTRL_MASK));
         map_editor_menu_item.addActionListener(this);
         map_editor_menu_item.setToolTipText("Map editor not implemented yet");
-        map_editor_menu_item.setEnabled(false);
+        map_editor_menu_item.setEnabled(true);
         file_menu.add(map_editor_menu_item);
         file_menu.addSeparator();
         quit_menu_item = new JMenuItem("Quit", KeyEvent.VK_Q);
@@ -100,6 +100,13 @@ public class MainFrame
         if (e.getSource() == quit_menu_item)
         {
             this.dispose();
+        } else
+        if (e.getSource() == map_editor_menu_item)
+        {
+        	EditorFrame editor = new EditorFrame("Map editor");
+        	editor.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        	editor.pack();
+        	editor.setVisible(true);
         }
 
     }
