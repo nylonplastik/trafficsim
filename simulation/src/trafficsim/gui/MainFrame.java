@@ -68,7 +68,7 @@ public class MainFrame
         setJMenuBar(menu_bar);
         setEnabled(true);
         setResizable(true);
-        setUndecorated(true);
+        // setUndecorated(true);
         // TODO: is this really needed ? ... 
         // TODO: must test this under more conformant wm ... 
         // addComponentListener(this);

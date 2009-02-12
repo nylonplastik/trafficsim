@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GraphicsConfiguration;
 import java.util.Collection;
+import java.util.Observable;
+import java.util.Observer;
 
 import trafficsim.Car;
 import trafficsim.Lane;
@@ -14,13 +16,14 @@ import trafficsim.Model;
 import trafficsim.Position;
 
 @SuppressWarnings("serial")
-public class SimulationCanvas extends Canvas {
+public class SimulationCanvas extends Canvas implements Observer {
 
 	private Model model = null;
 	
 	protected void initCanvas(Model m)
 	{
 		model = m;
+		model.addObserver(this);
 		setBackground(Color.WHITE);
 		setPreferredSize(new Dimension(640,480));
 	}
@@ -76,5 +79,11 @@ public class SimulationCanvas extends Canvas {
 
 	public void setModel(Model model) {
 		this.model = model;
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		this.invalidate();
+		this.repaint();
 	}
 }
