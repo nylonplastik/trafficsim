@@ -113,10 +113,10 @@ public class Lane  //{{{
     public Lights addLights(int distance, LightsState state) //{{{
     {
     	if (p_lights.containsKey(distance))
-		return p_lights.get(distance);
+    		return p_lights.get(distance);
     	Lights lights = new Lights(this,distance,state);
     	p_lights.put(distance,lights);
-	return lights;
+    	return lights;
     } //}}}
     
     public boolean isEmpty() //{{{

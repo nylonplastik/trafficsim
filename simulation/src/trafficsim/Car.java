@@ -60,7 +60,7 @@ public class Car //{{{
     /**
      * list of lanes that this car is observing
      */
-    private LinkedList<Lane>   p_observedLanes;
+    private LinkedList<Lane>   p_observedLanes = null;
     
 
     /**
@@ -81,7 +81,7 @@ public class Car //{{{
     public void park(Parking parking) //{{{
     {
         p_currentParking = parking;
-        p_position.lane = null;
+        p_position.setLane(null);
         p_position.info = Position.e_info.NOT_DRIVING;
         parking.park(this);
     } //}}}
@@ -106,9 +106,9 @@ public class Car //{{{
            // and set it as the only element of planned route
            p_currentParking.carIsLeaving(this);
            p_currentParking = null;
-           p_position.lane = p_plannedRoute.get(0);
+           p_position.setLane(p_plannedRoute.get(0));
            p_plannedRoute.remove(0);
-           p_position.coord = 0;
+           p_position.setCoord(0);
            return true;
        }
        else
@@ -132,20 +132,20 @@ public class Car //{{{
         // if position has been calculated successfully - set the new position
         if (newPosition.info == Position.e_info.OK)
         {
-            if (p_position.lane != newPosition.lane)  // car approached new lane?
+            if (p_position.getLane() != newPosition.getLane())  // car approached new lane?
             {
                 // try to put the car on new lane
-                p_position.lane.carIsLeaving(this.p_position.coord);
-                if (!newPosition.lane.putCar(newPosition.coord, this))
+                p_position.getLane().carIsLeaving(this.p_position.getCoord());
+                if (!newPosition.getLane().putCar(newPosition.getCoord(), this))
                     return;
             }
             else
                 // try to move car on current lane
-                if (!p_position.lane.moveCar(p_position.coord, newPosition.coord))
+                if (!p_position.getLane().moveCar(p_position.getCoord(), newPosition.getCoord()))
                     return;
             
-            p_position.lane  = newPosition.lane;
-            p_position.coord = newPosition.coord;
+            p_position.setLane(newPosition.getLane());
+            p_position.setCoord(newPosition.getCoord());
             p_speed += p_acceleration * timeUnits;
         }
     } //}}}
@@ -184,10 +184,10 @@ public class Car //{{{
     public Position positionAfterTime(int timePeriod, int periodsCount) //{{{
     {
         Position result = new Position();
-        result.lane = p_position.lane;
-        result.coord = p_position.coord;
+        result.setLane(p_position.getLane());
+        result.setCoord(p_position.getCoord());
         
-        if (p_position.lane == null)
+        if (p_position.getLane() == null)
         {
             result.info = Position.e_info.NOT_DRIVING;
             return result;
@@ -198,7 +198,7 @@ public class Car //{{{
         
         for (int i=0; i<periodsCount; i++)
         {
-            newCoordinate = result.coord + (int)(timePeriod * speed);
+            newCoordinate = result.getCoord() + (int)(timePeriod * speed);
             speed +=  (timePeriod * p_acceleration);   
             if (speed > p_maxSpeed)
             {
@@ -212,14 +212,14 @@ public class Car //{{{
             }
             
             result.info = Position.e_info.OK;
-            if (newCoordinate <= result.lane.getLength())
+            if (newCoordinate <= result.getLane().getLength())
             {
-                result.coord = newCoordinate;
+                result.setCoord(newCoordinate);
             }
             else
             {
                 /* calculate on which lane we are at the moment */
-                int sum = result.lane.getLength();
+                int sum = result.getLane().getLength();
                 while(sum <= newCoordinate)
                 {
                     // get the next lane in g
@@ -228,17 +228,17 @@ public class Car //{{{
                         result.info = Position.e_info.OUT_OF_RANGE;
                         return result;
                     }
-                    else if (p_plannedRoute.indexOf(result.lane) == p_plannedRoute.size())
+                    else if (p_plannedRoute.indexOf(result.getLane()) == p_plannedRoute.size())
                     {
                         result.info = Position.e_info.OUT_OF_RANGE;
                         return result;                        
                     }
                     else
-                        result.lane = p_plannedRoute.get(p_plannedRoute.indexOf(result.lane));
+                        result.setLane(p_plannedRoute.get(p_plannedRoute.indexOf(result.getLane())));
                     
-                    sum += result.lane.getLength();
+                    sum += result.getLane().getLength();
                 }
-                result.coord = newCoordinate - (sum - result.lane.getLength());
+                result.setCoord(newCoordinate - (sum - result.getLane().getLength()));
             } 
         }
         return result;
@@ -255,31 +255,31 @@ public class Car //{{{
      */
     public Car getNextCar() //{{{
     {
-        if (p_position.lane != null)    // car is on some lane
+        if (p_position.getLane() != null)    // car is on some lane
         {
-            SortedMap<Integer, Car> carsOnLane = p_position.lane.getCars();
+            SortedMap<Integer, Car> carsOnLane = p_position.getLane().getCars();
 
             // is the lane empty?
             if (carsOnLane.isEmpty() == false)
                 // is the car on this lane? (if no, something is wrong)
                 if (carsOnLane.containsValue(this))
                     // is 'car' not the last car on the lane?
-                    if (carsOnLane.lastKey() != p_position.coord)
+                    if (carsOnLane.lastKey() != p_position.getCoord())
                     {
                         // get the part of car list startin with this car
-                        Iterator<Car> iter = carsOnLane.tailMap(p_position.coord).values().iterator();
+                        Iterator<Car> iter = carsOnLane.tailMap(p_position.getCoord()).values().iterator();
                         // get this car element of the list
                         iter.next();
                         // get next element of the list
                         Car next = iter.next();
                         // caluculate distance to that car
-                        p_nextCarDistance = next.getPosition().coord - p_position.coord;
+                        p_nextCarDistance = next.getPosition().getCoord() - p_position.getCoord();
                         // return the next car
                         return next;
                     }
             // preceding car not found on current lane. Calculate distance from
             // this car to the end of the lane for use in further calculations.
-            p_nextCarDistance = p_position.lane.getLength() - p_position.coord;
+            p_nextCarDistance = p_position.getLane().getLength() - p_position.getCoord();
         }
         else
             p_nextCarDistance = 0; //since the car is not riding, the distance 
@@ -305,7 +305,7 @@ public class Car //{{{
             if (i==p_plannedRoute.size())     // whole planned car route is empty
                 return null;
             // distance to the next car is increased by that car position on its lane
-            p_nextCarDistance = laneOnRoute.getFirstCar().getPosition().coord;
+            p_nextCarDistance = laneOnRoute.getFirstCar().getPosition().getCoord();
             return laneOnRoute.getFirstCar();  
         }
         else
@@ -327,7 +327,7 @@ public class Car //{{{
     public void startMoving(float acceleration) //{{{
     {
         // check if we can move on
-        if ( p_position.lane != null || 
+        if ( p_position.getLane() != null || 
              p_plannedRoute.isEmpty() || 
              !p_currentParking.canLeaveParking(this))
         {
@@ -339,8 +339,8 @@ public class Car //{{{
             return;
         
         // set up new position
-        p_position.lane  = p_plannedRoute.get(0);
-        p_position.coord = 0;
+        p_position.setLane(p_plannedRoute.get(0));
+        p_position.setCoord(0);
         p_position.info = Position.e_info.OK;
         p_plannedRoute.remove(0);
 
@@ -373,6 +373,14 @@ public class Car //{{{
         else
             p_acceleration = newAcceleration;
     } //}}}
+
+	public void setObservedLanes(LinkedList<Lane> p_observedLanes) {
+		this.p_observedLanes = p_observedLanes;
+	}
+
+	public LinkedList<Lane> getObservedLanes() {
+		return p_observedLanes;
+	}
 } //}}}
 
 /* vim: set ts=4 sw=4 sts=4 et foldmethod=marker: */

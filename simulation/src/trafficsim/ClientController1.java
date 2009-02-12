@@ -65,7 +65,7 @@ public class ClientController1 implements IController
      */
     public void viewChanged()
     {
-        LinkedList<Car> carsInView = p_view.data.cars;
+        LinkedList<Car> carsInView = p_view.data.getCars();
         Car car;
         
         // for each controlled car in client's view

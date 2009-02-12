@@ -19,6 +19,9 @@
 */
 
 
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+
 import trafficsim.gui.*;
 import trafficsim.*;
 import javax.swing.*;
@@ -70,13 +73,58 @@ public class TrafficSim implements Runnable
    
         // Create time controller
         TimeController tc = TimeController.getTimeController(m);
-        Thread timeControlThread = new Thread(tc);
+        final Thread timeControlThread = new Thread(tc);
         timeControlThread.start();
         
         MainFrame frame = new MainFrame("Simulation of road traffic");
         frame.setModel(m);
         frame.pack();
-        frame.setVisible(true);
+        frame.addWindowListener(new WindowListener(){
+
+			@Override
+			public void windowActivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void windowClosed(WindowEvent e) {
+				timeControlThread.interrupt();
+				System.exit(0);
+			}
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void windowIconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void windowOpened(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+        	
+        });
+        frame.setVisible(true);      
     }
 
 }

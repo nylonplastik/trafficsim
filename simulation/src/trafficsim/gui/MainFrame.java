@@ -40,9 +40,9 @@ public class MainFrame
 	extends JFrame
     implements ActionListener, ComponentListener
 {
-        private Model model;
+    private Model model;
     
-        private JMenuItem quit_menu_item = null;
+    private JMenuItem quit_menu_item = null;
 	private JMenuItem map_editor_menu_item = null;
 	
 	/**
@@ -50,6 +50,7 @@ public class MainFrame
 	 */
 	protected void initFrame()
     {
+        
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JMenuBar menu_bar = new JMenuBar();
         JMenu file_menu = new JMenu("File");
@@ -109,10 +110,10 @@ public class MainFrame
         if (e.getSource() == map_editor_menu_item)
         {
         	EditorFrame editor = new EditorFrame("Map editor");
+            editor.setModel(model);
         	editor.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         	editor.pack();
         	editor.setVisible(true);
-                editor.setModel(model);
         }
 
     }    

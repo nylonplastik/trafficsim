@@ -60,13 +60,13 @@ public class ClientViewServerSide implements Observer  //{{{
     
     public void addObservedCar(Car car) //{{{
     {
-        p_data.observedCars.add(car);
+        p_data.getObservedCars().add(car);
     } //}}}
     
     public void delObservedCar(Car car) //{{{
     {
-        if (p_data.observedCars.contains(car))
-            p_data.observedCars.remove(car);
+        if (p_data.getObservedCars().contains(car))
+            p_data.getObservedCars().remove(car);
     } //}}}
     
     public void update(Observable o, Object arg) //{{{
@@ -79,10 +79,9 @@ public class ClientViewServerSide implements Observer  //{{{
         // than copying whole the data.
         synchronized  (model)
         {
-            p_data.crosses = 
-               (Hashtable<Integer, LanesCross>) model.getLanesCrosses().clone();
-            p_data.lanes   = (LinkedList<Lane>) model.getLanes().clone();
-            p_data.cars    = (LinkedList<Car>) model.getCars().clone();
+            p_data.setCrosses((Hashtable<Integer, LanesCross>) model.getLanesCrosses().clone());
+            p_data.setLanes((LinkedList<Lane>) model.getLanes().clone());
+            p_data.setCars((LinkedList<Car>) model.getCars().clone());
         }
          
         // TODO : add some real client view creation        
