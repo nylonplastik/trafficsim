@@ -92,7 +92,7 @@ public class Model extends Observable //{{{
         LanesCross cStart = p_crosses.get(start);
         LanesCross cEnd = p_crosses.get(end);
         
-        Lane newLane = new Lane(maxSpeed, length, cEnd);
+        Lane newLane = new Lane(maxSpeed, length, cStart, cEnd);
         
         cStart.addConnection(end, newLane );
         cEnd.addIncoming(newLane);

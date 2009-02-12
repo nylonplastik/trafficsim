@@ -40,7 +40,8 @@ public class Lane  //{{{
     private static final int     DEFAULT_LENGTH = 100;
     private int                  p_speedLimit = Lane.UNLIMITED_SPEED;
     private int                  p_length = Lane.DEFAULT_LENGTH;
-    private LanesCross           p_destination;
+    private LanesCross           p_destination = null;
+    private LanesCross			 p_source = null;
     
     /**
      * Virtual lanes are inserted to the streets structure just to 
@@ -88,18 +89,20 @@ public class Lane  //{{{
         return p_isVirtual;
     } //}}}
     
-    public Lane(LanesCross destination) //{{{
+    public Lane(LanesCross source,LanesCross destination) //{{{
     {
     	p_speedLimit = Lane.UNLIMITED_SPEED;
-	p_length = Lane.DEFAULT_LENGTH;
-	p_destination = destination;
+    	p_length = Lane.DEFAULT_LENGTH;
+    	p_destination = destination;
+    	p_source = source;
     } //}}}
     
-    public Lane(int speedLimit, int length, LanesCross destination) //{{{
+    public Lane(int speedLimit, int length, LanesCross source, LanesCross destination) //{{{
     {
         p_speedLimit = speedLimit;
         p_length = length;
         p_destination = destination;
+        p_source = source;
     } //}}}
     
     public void addAdjecent(Lane lane) //{{{
@@ -144,8 +147,8 @@ public class Lane  //{{{
     	/*
     	if (!p_lights.containsKey(distance))
 		return null;
-	*/
-	return p_lights.get(distance);
+    	 */
+    	return p_lights.get(distance);
     } //}}}
     
     public boolean putCar(int coord, Car car) //{{{
@@ -178,6 +181,24 @@ public class Lane  //{{{
         else return false;
     }
 
+    /**
+     * 
+     * @return source of lane
+     */
+    public LanesCross getLaneSource()
+    {
+    	return p_source;
+    }
+    
+    /**
+     * 
+     * @return destination of lane
+     */
+    public LanesCross getLaneDestination()
+    {
+    	return p_destination;
+    }
+    
 } //}}}
 
 /* vim: set ts=4 sw=4 sts=4 et foldmethod=marker: */
