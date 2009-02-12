@@ -8,7 +8,6 @@ import java.awt.HeadlessException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import trafficsim.Car;
 import trafficsim.Model;
 
 @SuppressWarnings("serial")
