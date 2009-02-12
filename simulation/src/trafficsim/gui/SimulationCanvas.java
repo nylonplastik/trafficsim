@@ -13,6 +13,7 @@ import trafficsim.Car;
 import trafficsim.Lane;
 import trafficsim.LanesCross;
 import trafficsim.Model;
+import trafficsim.Parking;
 import trafficsim.Position;
 
 @SuppressWarnings("serial")
@@ -47,6 +48,7 @@ public class SimulationCanvas extends Canvas implements Observer {
 	{
 		if (model == null) return;
 		Collection<Lane> lanes = model.getLanes();
+		g.setColor(Color.BLACK);
 		for(Lane l : lanes)
 		{
 			g.drawLine(l.getLaneSource().X_coordinate,
@@ -54,6 +56,15 @@ public class SimulationCanvas extends Canvas implements Observer {
 					   l.getLaneDestination().X_coordinate,
 					   l.getLaneDestination().Y_coordinate);
 		}
+		/*
+		for(Parking p : model.getParkings())
+		{
+			g.drawLine(p.getLaneSource().X_coordinate,
+					   p.getLaneSource().Y_coordinate, 
+					   p.getLaneDestination().X_coordinate,
+					   p.getLaneDestination().Y_coordinate);
+		}
+		*/
 		Collection<LanesCross> crosses = model.getLanesCrosses().values();
 		g.setColor(Color.RED);
 		for(LanesCross l : crosses)
@@ -67,8 +78,8 @@ public class SimulationCanvas extends Canvas implements Observer {
 			Position p = c.getPosition();
 			int x = p.lane.getLaneSource().X_coordinate;
 			int y = p.lane.getLaneSource().Y_coordinate;
-			x += c.getPosition().coord*(p.lane.getLaneDestination().X_coordinate - p.lane.getLaneSource().X_coordinate);
-			y += c.getPosition().coord*(p.lane.getLaneDestination().Y_coordinate - p.lane.getLaneSource().Y_coordinate);
+			x += c.getPosition().coord*(p.lane.getLaneDestination().X_coordinate - p.lane.getLaneSource().X_coordinate)/c.getPosition().lane.getLength();
+			y += c.getPosition().coord*(p.lane.getLaneDestination().Y_coordinate - p.lane.getLaneSource().Y_coordinate)/c.getPosition().lane.getLength();
 			g.fillRect(x-5,y-5,10,10);
 		}
 	}
@@ -78,12 +89,13 @@ public class SimulationCanvas extends Canvas implements Observer {
 	}
 
 	public void setModel(Model model) {
+		this.model.deleteObserver(this);
 		this.model = model;
+		this.model.addObserver(this);
 	}
 
 	@Override
 	public void update(Observable o, Object arg) {
-		this.invalidate();
 		this.repaint();
 	}
 }

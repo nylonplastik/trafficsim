@@ -102,10 +102,12 @@ public class Model extends Observable //{{{
         //this.notifyObservers(WhatHasChanged.Lanes);
     }//}}}
     
-    public void addParking(Lane lane_to_cross, Lane lane_to_parking)//{{{
+    public Parking addParking(Lane lane_to_cross, Lane lane_to_parking)//{{{
     {
-        p_parkings.add(new Parking(lane_to_cross, lane_to_parking));
+    	Parking parking = new Parking(lane_to_cross, lane_to_parking);
+        p_parkings.add(parking);
         this.setChanged();
+        return parking;
         //this.notifyObservers(WhatHasChanged.Parkings);
     }//}}}
     
