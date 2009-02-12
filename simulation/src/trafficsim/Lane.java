@@ -134,7 +134,10 @@ public class Lane  //{{{
         if (p_carsOnLane.isEmpty())
             return null;
         else
-            return p_carsOnLane.get(0);
+        {
+            int firstCarCoordinate = p_carsOnLane.firstKey();
+            return p_carsOnLane.get(firstCarCoordinate);
+        }
     } //}}}
     
     public boolean hasLights(int distance) //{{{

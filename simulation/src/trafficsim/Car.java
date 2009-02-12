@@ -121,13 +121,13 @@ public class Car //{{{
      * @param timeUnits
      * @throws java.lang.Exception
      */
-    public void move(int timeUnits) //{{{
+    public void move(int timeMiliseconds) //{{{
     {
         if (p_position.info == Position.e_info.NOT_DRIVING)
             return;
         
         // check what will be the car position after one time period
-        Position newPosition = positionAfterTime(timeUnits, 1);
+        Position newPosition = positionAfterTime(timeMiliseconds, 1);
         
         // if position has been calculated successfully - set the new position
         if (newPosition.info == Position.e_info.OK)
@@ -146,7 +146,7 @@ public class Car //{{{
             
             p_position.setLane(newPosition.getLane());
             p_position.setCoord(newPosition.getCoord());
-            p_speed += p_acceleration * timeUnits;
+            p_speed += p_acceleration * timeMiliseconds;
         }
     } //}}}
     
@@ -174,11 +174,29 @@ public class Car //{{{
         return p_plannedRoute;
     } //}}}
     
-    public boolean canLeaveParking() //{{{
+    public boolean canLeaveParking(int safeDistance) //{{{
     {
         if (p_currentParking != null)
-            return p_currentParking.canLeaveParking(this);
-        else return false;
+            if (p_currentParking.canLeaveParking(this))
+            {
+                if (p_plannedRoute.isEmpty())
+                    return false;
+                
+                Lane laneOut = p_currentParking.laneOut();
+                if (p_plannedRoute.get(0) != laneOut)
+                    return false;
+                
+                getNextCar();
+                int nextDistance = getNextCarDistance();
+                if (nextDistance > laneOut.getLength())
+                    return true;
+                
+                if (nextDistance >= safeDistance)
+                    return true;
+                else
+                    return false;
+            }
+        return false;
     } //}}}  
     
     public Position positionAfterTime(int timePeriod, int periodsCount) //{{{

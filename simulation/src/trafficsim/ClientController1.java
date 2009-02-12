@@ -47,7 +47,7 @@ public class ClientController1 implements IController
         if (!(parkings = model.getParkings()).isEmpty())
         {
             // start one new cars on first available parking
-            for (int i = 0; i <1; i++) 
+            for (int i = 0; i <2; i++) 
             {
                 // new car parked on first parking
                 newCar = model.newCar(parkings.get(0));
@@ -76,7 +76,7 @@ public class ClientController1 implements IController
             if (car.isParked())
             {
                  // if car is parked, try to leave the parking
-                if (car.canLeaveParking())
+                if (car.canLeaveParking(SAFE_DISTANCE))
                 {
                     Lane laneOut = null;
                     int  distanceToNextCar;
