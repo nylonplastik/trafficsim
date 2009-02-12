@@ -36,8 +36,8 @@ import java.util.Observable;
 public class LanesCross extends Observable //{{{
 {
     // Variables {{{
-    private final int    X_coordinate;
-    private final int    Y_coordinate;
+    private int    X_coordinate;
+    private int    Y_coordinate;
     
     private static int    s_count;
     private int           p_id;
@@ -94,10 +94,18 @@ public class LanesCross extends Observable //{{{
         return X_coordinate;
     }
 
+    public void setX(int newX) {
+        X_coordinate = newX;
+    }
+
     public int getY() {
         return Y_coordinate;
     }
-     
+
+    public void setY(int newY) {
+        Y_coordinate = newY;
+    }
+    
 }//}}}
 
 /* vim: set ts=4 sw=4 sts=4 et foldmethod=marker: */
