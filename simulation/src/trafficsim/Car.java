@@ -382,7 +382,7 @@ public class Car //{{{
     public float getSpeed() //{{{
     {
         return p_speed;
-    } //}}}    	
+    } //}}}        
     
     public void changeAcceleration(float newAcceleration) //{{{
     {

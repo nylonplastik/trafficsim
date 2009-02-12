@@ -53,7 +53,7 @@ public class Lane  //{{{
     private boolean              p_isVirtual = false;
     
     /**
-     * list of adjecent lanes
+     * list of adjacent lanes
      */
     private LinkedList<Lane>     p_adjecentLines = new LinkedList<Lane>();
     
@@ -173,10 +173,24 @@ public class Lane  //{{{
         // if start and end position are the same, we're done.
         if (coord1 == coord2 && p_carsOnLane.containsKey(coord1))
             return true;
-        
-        // check if threre is a car on coord1 and if coord2 is free
-        if (p_carsOnLane.containsKey(coord1) && !p_carsOnLane.containsKey(coord2))
+
+        /*
+        // check if all coords from coord1+1 to coord2 are free
+        for(Integer d : p_carsOnLane.keySet())
         {
+            if ((d>coord1)&&(d<=coord2))
+                return false;
+            if (d>coord2)
+                break;
+        }
+        // They are so put car on coord2
+        p_carsOnLane.put(coord2, p_carsOnLane.get(coord1));
+        p_carsOnLane.remove(coord1);
+        return true;
+        */
+        // check if there is a car on coord1 and if coord2 is free
+        if (p_carsOnLane.containsKey(coord1) && !p_carsOnLane.containsKey(coord2))
+        {   
             p_carsOnLane.put(coord2, p_carsOnLane.get(coord1));
             p_carsOnLane.remove(coord1);
             return true;

@@ -122,7 +122,6 @@ public class EditorFrame extends JFrame
             if ((-5<=lc.getX()-e.getX())&&(lc.getX()-e.getX()<=5)&&
                 (-5<=lc.getY()-e.getY())&&(lc.getY()-e.getY()<=5))
             {
-                System.out.println("Found cross");
                 moving_cross = lc;
                 break;
             }        
