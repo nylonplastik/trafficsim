@@ -39,7 +39,7 @@ public class TimeController implements Runnable //{{{
     private static TimeController  s_controller = null;
     private Model   p_model;
     private int     p_timeTick = 1;
-    private int     p_timeMilisecs = 100;
+    private int     p_timeMilisecs = 1000;
     //}}}
     
     private TimeController(Model model) //{{{
