@@ -20,6 +20,7 @@
 
 
 import trafficsim.gui.*;
+import trafficsim.*;
 import javax.swing.*;
 
 public class TrafficSim implements Runnable
@@ -48,7 +49,32 @@ public class TrafficSim implements Runnable
      */
     public void run()
     {
+                // Create simple model
+        Model m = new Model();
+        
+        m.addCross(0,10,10);
+        m.addCross(1,200,200);
+        m.addLane(0, 1, 50, 200);
+        m.addLane(1, 0, 50, 200);
+        m.addParking(m.getLanes().get(0), m.getLanes().get(1));
+        
+        ClientViewClientSide clientSideView   = new ClientViewClientSide();
+        ClientController1    clientController = 
+                new ClientController1(m, clientSideView);
+        ClientViewServerSide v = new ClientViewServerSide(clientSideView, m);
+        clientSideView.setController(clientController);
+        clientSideView.setServerSideView(v);
+        
+        @SuppressWarnings("unused")
+		Client c = new Client(m, clientSideView, v);
+   
+        // Create time controller
+        TimeController tc = TimeController.getTimeController(m);
+        Thread timeControlThread = new Thread(tc);
+        timeControlThread.start();
+        
         MainFrame frame = new MainFrame("Simulation of road traffic");
+        frame.setModel(m);
         frame.pack();
         frame.setVisible(true);
     }

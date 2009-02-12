@@ -39,7 +39,7 @@ public class Main //{{{
         Model m = new Model();
         
         m.addCross(0,10,10);
-        m.addCross(1,20,20);
+        m.addCross(1,10,200);
         m.addLane(0, 1, 50, 200);
         m.addLane(1, 0, 50, 200);
         m.addParking(m.getLanes().get(0), m.getLanes().get(1));

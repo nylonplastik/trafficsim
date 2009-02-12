@@ -25,6 +25,7 @@ package trafficsim.gui;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import trafficsim.Model;
 
 /* }}} */
 
@@ -39,7 +40,9 @@ public class MainFrame
 	extends JFrame
     implements ActionListener, ComponentListener
 {
-	private JMenuItem quit_menu_item = null;
+        private Model model;
+    
+        private JMenuItem quit_menu_item = null;
 	private JMenuItem map_editor_menu_item = null;
 	
 	/**
@@ -73,6 +76,8 @@ public class MainFrame
         // TODO: must test this under more conformant wm ... 
         // addComponentListener(this);
         setContentPane(new MainPanel());
+        
+        model = null;
     }
 	
     public MainFrame() throws HeadlessException {
@@ -107,8 +112,14 @@ public class MainFrame
         	editor.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         	editor.pack();
         	editor.setVisible(true);
+                editor.setModel(model);
         }
 
+    }    
+    
+    public void setModel(Model m)
+    {
+        model = m;
     }
 
 	@Override
