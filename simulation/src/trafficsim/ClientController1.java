@@ -35,7 +35,7 @@ public class ClientController1 implements IController
     private LinkedList<Car>            p_controlledCars;
     
     // Safe distance between the cars to make one car start moving.
-    private static final int           SAFE_START_DISTANCE = 10;  
+    private static final int           SAFE_START_DISTANCE = 50;  
    
     // Each car performs prediction of other cars movement basing on their
     // current speed and acceleration. This constant determines length of
@@ -46,7 +46,7 @@ public class ClientController1 implements IController
     // speed reduction is made basing on predicted distance between one car
     // and another after PREDICTION_TIME_FRAME. This constant determines a 
     // treshold value of predicted distance between cars .
-    private static final int           SAFE_MOVE_DISTANCE = 10;  
+    private static final int           SAFE_MOVE_DISTANCE = 50;  
         
     
     
@@ -61,7 +61,7 @@ public class ClientController1 implements IController
         if (!(parkings = model.getParkings()).isEmpty())
         {
             // start one new cars on first available parking
-            for (int i = 0; i <6; i++) 
+            for (int i = 0; i <30; i++) 
             {
                 // new car parked on first parking
                 newCar = model.newCar(parkings.get(0));
@@ -107,19 +107,21 @@ public class ClientController1 implements IController
                     {
                         // there is enough space on lane to move and we know 
                         // where to go.
-                        car.startMoving(1);
+                        car.startMoving(3);
                     }  
                 }
                 continue;
             }
             else  // if (car.isParked()) 
             {
-                
+               
                 // Acceleration adjustment.
 
                 // Determining if there is a need to reduce speed because
                 // the net car os moving slowly.
                 Car nextCar = car.getNextCar();
+                
+                float newAcc;
                 if (nextCar != null)
                 {
                     int predictedDiscance =  distancePrediction(
@@ -129,13 +131,21 @@ public class ClientController1 implements IController
                                                 PREDICTION_TIME_FRAME
                                                 );
                    
-                    int newAcc = predictedDiscance - SAFE_MOVE_DISTANCE;
-                    if (car.getSpeed() + newAcc < 0)
-                        newAcc = (int) car.getSpeed();
-                    car.changeAcceleration(newAcc);
+                    if (predictedDiscance < SAFE_MOVE_DISTANCE)
+                    {
+                        double accCorection = accelerationToMove(
+                                                PREDICTION_TIME_FRAME,
+                                                SAFE_MOVE_DISTANCE - predictedDiscance);
+                        newAcc = (float) (car.getAcceleration() - accCorection);
+                        if (car.getSpeed() + newAcc < 0)
+                            newAcc = (int) car.getSpeed();
+                        if (newAcc > 3)
+                            newAcc = 3;
+                        car.changeAcceleration(newAcc);
+                    }
                 }
                 
-               
+              
                 // Determining if there is a need to reduce speed because
                 // we need to stop (end of route, red light, ...)
 
@@ -147,7 +157,11 @@ public class ClientController1 implements IController
                                                - currentPosition.getCoord();
                 
                 if (distanceToEnd == 0)
+                {
+                    if (car.getSpeed() > 0)
+                        car.changeAcceleration(car.getSpeed());
                     break;
+                }
                 
                 if (plannedRoute != null)
                 {
@@ -159,6 +173,7 @@ public class ClientController1 implements IController
                                                         car.getSpeed(), 
                                                         car.getAcceleration()
                                                         );
+                
                 // When approaching to the end, keep slowing down
                 if (acceleration < -1*car.getMaxAcceleration()/2 && distanceToEnd > car.getMaxAcceleration())
                     car.changeAcceleration((float)acceleration);
@@ -170,10 +185,9 @@ public class ClientController1 implements IController
                 // final stop
                 if (2*car.getSpeed() + car.getAcceleration() > distanceToEnd)
                 {
-                    float newAcc = distanceToEnd - 2*((int)(car.getSpeed()));
-                    car.changeAcceleration(newAcc);
-                }
-                    
+                    float newAcc2 = distanceToEnd - 2*((int)(car.getSpeed()));
+                    car.changeAcceleration(newAcc2);
+                }                 
  
                
             }        
@@ -209,6 +223,11 @@ public class ClientController1 implements IController
     private static double acccelerationToStopAt(double speed, int dist)
     {
         return speed/(1-2*dist/speed);
+    }
+    
+    private static double accelerationToMove(int time, int dist)
+    {
+        return 2*dist/(double)(time*time);
     }
 
 }

@@ -184,9 +184,11 @@ public class Lane implements Serializable //{{{
         if (coord1 == coord2 && this.carsOnLane.containsKey(coord1))
             return true;
 
-        /*
+        if (coord1 > coord2)
+            return false;
+
         // check if all coords from coord1+1 to coord2 are free
-        for(Integer d : p_carsOnLane.keySet())
+        for(Integer d : carsOnLane.keySet())
         {
             if ((d>coord1)&&(d<=coord2))
                 return false;
@@ -194,10 +196,10 @@ public class Lane implements Serializable //{{{
                 break;
         }
         // They are so put car on coord2
-        p_carsOnLane.put(coord2, p_carsOnLane.get(coord1));
-        p_carsOnLane.remove(coord1);
+        carsOnLane.put(coord2, carsOnLane.get(coord1));
+        carsOnLane.remove(coord1);
         return true;
-        */
+        /*
         // check if there is a car on coord1 and if coord2 is free
         if (this.carsOnLane.containsKey(coord1) && !this.carsOnLane.containsKey(coord2))
         {   
@@ -211,6 +213,7 @@ public class Lane implements Serializable //{{{
             return true;
         }
         else return false;
+        */
     }
 
     /**
