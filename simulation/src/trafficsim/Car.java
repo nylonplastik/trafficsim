@@ -218,7 +218,7 @@ public class Car //{{{
         for (int i=0; i<periodsCount; i++)
         {
             newCoordinate = result.getCoord() + (int)(timePeriod * speed);
-            speed +=  (timePeriod * p_acceleration);   
+            speed +=  (timePeriod * acceleration);   
             if (speed > p_maxSpeed)
             {
                 speed = p_maxSpeed;
@@ -227,7 +227,7 @@ public class Car //{{{
             else if (speed < 0)
             {
                 speed = 0;
-                acceleration =0;
+                acceleration = 0;
             }
             
             result.info = Position.e_info.OK;
@@ -254,7 +254,7 @@ public class Car //{{{
                         if (laneAterRoute == null)
                         {
                             result.setCoord(result.getLane().getLength());
-                            this.p_hasColided = true;  // Colision - end of
+                            this.p_hasColided = true;  // Collision - end of
                                                         //  route
                             return result;
                         }
@@ -297,13 +297,13 @@ public class Car //{{{
                     // is 'car' not the last car on the lane?
                     if (carsOnLane.lastKey() != p_position.getCoord())
                     {
-                        // get the part of car list startin with this car
+                        // get the part of car list starting with this car
                         Iterator<Car> iter = carsOnLane.tailMap(p_position.getCoord()).values().iterator();
                         // get this car element of the list
                         iter.next();
                         // get next element of the list
                         Car next = iter.next();
-                        // caluculate distance to that car
+                        // calculate distance to that car
                         p_nextCarDistance = next.getPosition().getCoord() - p_position.getCoord();
                         // return the next car
                         return next;

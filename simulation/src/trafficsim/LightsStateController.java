@@ -28,18 +28,26 @@ public class LightsStateController //{{{
     implements IController
 {
     // Variables {{{
-    private Model p_model;
+    private Model p_model = null;
     //}}}
 
     public LightsStateController(Model model)//{{{
     {
-        p_model = model;
+        setModel(model);
     }//}}}
 
     // FIXME: ???
     public void viewChanged() //{{{
     {
     }//}}}
+
+	public void setModel(Model p_model) {
+		this.p_model = p_model;
+	}
+
+	public Model getModel() {
+		return p_model;
+	}
 
 }//}}}
 
