@@ -302,12 +302,15 @@ public class Car implements Serializable //{{{
                         Iterator<Car> iter = carsOnLane.tailMap(this.position.getCoord()).values().iterator();
                         // get this car element of the list
                         iter.next();
-                        // get next element of the list
-                        Car next = iter.next();
-                        // calculate distance to that car
-                        this.nextCarDistance = next.getPosition().getCoord() - position.getCoord();
-                        // return the next car
-                        return next;
+                        if (iter.hasNext())
+                        {
+                        	// get next element of the list
+                        	Car next = iter.next();
+                        	// calculate distance to that car
+                        	this.nextCarDistance = next.getPosition().getCoord() - position.getCoord();
+                        	// return the next car
+                        	return next;
+                        }
                     }
             // preceding car not found on current lane. Calculate distance from
             // this car to the end of the lane for use in further calculations.
