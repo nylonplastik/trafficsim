@@ -55,23 +55,27 @@ public class ClientController1 implements IController
         p_model          = model;
         p_view           = view;
         p_controlledCars = new LinkedList<Car>();
+    }
+    
+    public void start()
+    {
         Car newCar;
         LinkedList<Parking> parkings;
         
-        if (!(parkings = model.getParkings()).isEmpty())
+        if (!(parkings = p_model.getParkings()).isEmpty())
         {
             // start one new cars on first available parking
             for (int i = 0; i <30; i++) 
             {
                 // new car parked on first parking
-                newCar = model.newCar(parkings.get(0));
+                newCar = p_model.newCar(parkings.get(0));
                 // car is trying to leave the parking
                 newCar.goToParkingOutQueue();
                 
                 p_controlledCars.add(newCar);
                 p_view.addObservedCar(newCar);  
             }
-        }
+        }        
     }
     
     /***

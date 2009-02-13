@@ -25,6 +25,9 @@
 
 package trafficsim;
 
+import java.util.LinkedList;
+
+
 /**
  *
  * @author Adam Rutkowski
@@ -35,6 +38,7 @@ public class ClientViewClientSide { //{{{
     public ClientViewData       data;
     
     private IController         p_controller;
+
     
     // TODO: this field should be removed and it's methods invocation replaced
     // by interprocess communication
@@ -55,7 +59,13 @@ public class ClientViewClientSide { //{{{
 
     public void addObservedCar(Car car)
     {
-        
+        if (p_serverSideView != null)
+            p_serverSideView.addObservedCar(car.getId());
+    }
+    
+    public void delObservedCar(Car car)
+    {
+        p_serverSideView.delObservedCar(car.getId());
     }
     
     // TODO: eventually this class should be made private when interprocess

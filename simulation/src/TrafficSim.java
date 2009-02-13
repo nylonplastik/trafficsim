@@ -89,6 +89,8 @@ public class TrafficSim implements Runnable
         clientSideView.setController(clientController);
         clientSideView.setServerSideView(v);
         
+        clientController.start();
+        
         @SuppressWarnings("unused")
         Client c = new Client(m, clientSideView, v);
    

@@ -21,10 +21,10 @@
 package trafficsim;
 
 // imports {{{
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Hashtable;
 //}}}
 
 /**
@@ -40,6 +40,9 @@ public class ClientViewServerSide implements Observer  //{{{
     private ClientViewData       p_data;
     
     private Model                p_model;
+        
+    private LinkedList<Car>      p_observedCars;
+     
     
     // TODO: this field should be removed and it's methods invocation replaced
     // by interprocess communication
@@ -55,18 +58,32 @@ public class ClientViewServerSide implements Observer  //{{{
         p_clientSideView = clientSideView;
         p_data           = new ClientViewData();
         p_model          = model;
+        p_observedCars   = new LinkedList<Car>();
         model.addObserver(this);
     } //}}}
     
-    public void addObservedCar(Car car) //{{{
-    {
-        p_data.getObservedCars().add(car);
+    public void addObservedCar(int carId) //{{{
+    { 
+        synchronized(p_model.getCars())
+        {
+            p_observedCars.add(p_model.getCars().get(carId));
+        }
     } //}}}
     
-    public void delObservedCar(Car car) //{{{
+    public void delObservedCar(int carId) //{{{
     {
-        if (p_data.getObservedCars().contains(car))
-            p_data.getObservedCars().remove(car);
+        Car car;
+        
+        synchronized (p_model.getCars())
+        {
+             car = p_model.getCars().get(carId);
+        }
+        
+        synchronized (car)
+        {
+            if (p_observedCars.contains(car))
+                p_observedCars.remove(car);
+        }
     } //}}}
     
     public void update(Observable o, Object arg) //{{{
@@ -75,16 +92,8 @@ public class ClientViewServerSide implements Observer  //{{{
             return;
         Model model = (Model)o;
         
-        // TODO: it's a shallow copy only. Doesn't make much sense.
-        synchronized  (model)
-        {
-            p_data.setCrosses((Hashtable<Integer, LanesCross>) model.getLanesCrosses().clone());
-            p_data.setLanes((LinkedList<Lane>) model.getLanes().clone());
-            p_data.setCars((LinkedList<Car>) model.getCars().clone());
-        }
-         
-        // TODO : add some real client view creation        
-        
+        createClientView(model);
+            
         updateClientSideView();
     } //}}}
     
@@ -99,6 +108,32 @@ public class ClientViewServerSide implements Observer  //{{{
         p_model.deleteObserver(this);
     }
         
+    private void createClientView(Model model)
+    {
+        p_data.getBorderCrosses().clear();
+        p_data.getCars().clear();
+        p_data.getCrosses().clear();
+        p_data.getLanes().clear();
+        p_data.getObservedCars().clear();
+        
+        
+        // TODO: it's a shallow copy only. Doesn't make much sense.
+        synchronized  (model)
+        {
+            p_data.setCrosses((Hashtable<Integer, LanesCross>) model.getLanesCrosses().clone());
+            p_data.setLanes((LinkedList<Lane>) model.getLanes().clone());
+            p_data.setCars((LinkedList<Car>) model.getCars().clone());
+        }
+         
+        // TODO : add some real client view creation        
+/*          
+        foreach (Car c : p_observedCars)
+        {
+            addClosestLanes()
+        }
+ */
+    }
+    
 } //}}}
 
 
