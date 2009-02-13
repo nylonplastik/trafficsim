@@ -22,8 +22,8 @@ package trafficsim;
 
 // imports {{{
 
+import java.io.Serializable;
 import java.util.*;
-import java.util.SortedMap;
 
 //}}}
 
@@ -33,16 +33,17 @@ import java.util.SortedMap;
  * 
  * @author Adam Rutkowski
  */
-public class Lane  //{{{
+@SuppressWarnings("serial")
+public class Lane implements Serializable //{{{
 {  
     // Variables {{{
     private static final int     UNLIMITED_SPEED = Integer.MAX_VALUE;
     private static final int     DEFAULT_LENGTH = 100;
-    private int                  p_speedLimit = Lane.UNLIMITED_SPEED;
-    private int                  p_length = Lane.DEFAULT_LENGTH;
-    private LanesCross           p_destination = null;
-    private LanesCross           p_source = null;
-    private Lane                 p_defaultNextLane = null;
+    private int                  speedLimit = Lane.UNLIMITED_SPEED;
+    private int                  length = Lane.DEFAULT_LENGTH;
+    private LanesCross           destination = null;
+    private LanesCross           source = null;
+    private Lane                 defaultNextLane = null;
     
     /**
      * Virtual lanes are inserted to the streets structure just to 
@@ -51,99 +52,107 @@ public class Lane  //{{{
      * Purpose of holding information about virtual lanes is to make it possible
      * for graph algorithms to operate easily on streHets structure.
      */
-    private boolean              p_isVirtual = false;
+    private boolean              isVirtual = false;
     
     /**
      * list of adjacent lanes
      */
-    private LinkedList<Lane>     p_adjecentLines = new LinkedList<Lane>();
+    private LinkedList<Lane>     adjacentLanes = new LinkedList<Lane>();
     
     /**
      * List of cars on this lane. The key is each car's coordinate on the lane.
      */
-    private SortedMap<Integer, Car>  p_carsOnLane = new TreeMap<Integer, Car>();
+    private SortedMap<Integer, Car>  carsOnLane = new TreeMap<Integer, Car>();
             
     /**
      * List of lights.
      */
-    private Hashtable<Integer, Lights>  p_lights = new Hashtable<Integer, Lights>();
+    private Hashtable<Integer, Lights>  lights = new Hashtable<Integer, Lights>();
     
     //}}}
     
     public int getSpeedLimit() //{{{
     {
-        return p_speedLimit;
+        return this.speedLimit;
     } //}}}
     
     public int getLength() //{{{
     {    
-        return p_length;
+        return this.length;
     } //}}}
     
     public SortedMap<Integer, Car> getCars() //{{{
     {
-        return p_carsOnLane;
+        return this.carsOnLane;
     } //}}}
     
     public boolean isVirtual() //{{{
     {
-        return p_isVirtual;
+        return this.isVirtual;
     } //}}}
+    
+    public Lane()
+    {
+    	this.speedLimit = Lane.UNLIMITED_SPEED;
+        this.length = Lane.DEFAULT_LENGTH;
+        this.destination = null;
+        this.source = null;
+    }
     
     public Lane(LanesCross source,LanesCross destination) //{{{
     {
-        p_speedLimit = Lane.UNLIMITED_SPEED;
-        p_length = Lane.DEFAULT_LENGTH;
-        p_destination = destination;
-        p_source = source;
+    	this.speedLimit = Lane.UNLIMITED_SPEED;
+        this.length = Lane.DEFAULT_LENGTH;
+        this.destination = destination;
+        this.source = source;
     } //}}}
     
     public Lane(int speedLimit, int length, LanesCross source, LanesCross destination) //{{{
     {
-        p_speedLimit = speedLimit;
-        p_length = length;
-        p_destination = destination;
-        p_source = source;
+        this.speedLimit = speedLimit;
+        this.length = length;
+        this.destination = destination;
+        this.source = source;
     } //}}}
     
     public void addAdjecent(Lane lane) //{{{
     {
-        p_adjecentLines.add(lane);
+        adjacentLanes.add(lane);
     } //}}}
 
     public Lights addLights(int distance, LightsState state) //{{{
     {
-        if (p_lights.containsKey(distance))
-            return p_lights.get(distance);
+        if (this.lights.containsKey(distance))
+            return this.lights.get(distance);
         Lights lights = new Lights(this,distance,state);
-        p_lights.put(distance,lights);
+        this.lights.put(distance,lights);
         return lights;
     } //}}}
     
     public boolean isEmpty() //{{{
     {
-        return p_carsOnLane.isEmpty();
+        return this.carsOnLane.isEmpty();
     } //}}}
     
     public boolean isCarOnLane(Car car) //{{{
     {
-        return p_carsOnLane.containsValue(car);
+        return this.carsOnLane.containsValue(car);
     } //}}}
 
     public Car getFirstCar() //{{{
     {
-        if (p_carsOnLane.isEmpty())
+        if (this.carsOnLane.isEmpty())
             return null;
         else
         {
-            int firstCarCoordinate = p_carsOnLane.firstKey();
-            return p_carsOnLane.get(firstCarCoordinate);
+            int firstCarCoordinate = this.carsOnLane.firstKey();
+            return this.carsOnLane.get(firstCarCoordinate);
         }
     } //}}}
     
     public boolean hasLights(int distance) //{{{
     {
-        return p_lights.containsKey(distance);
+        return this.lights.containsKey(distance);
     } //}}}
 
     public Lights getLights(int distance) //{{{
@@ -152,27 +161,27 @@ public class Lane  //{{{
         if (!p_lights.containsKey(distance))
         return null;
          */
-        return p_lights.get(distance);
+        return this.lights.get(distance);
     } //}}}
     
     public boolean putCar(int coord, Car car) //{{{
     {
-        if (coord > p_length)
+        if (coord > this.length)
             return false;
-        p_carsOnLane.put(coord, car);
+        this.carsOnLane.put(coord, car);
         return true;
     } //}}}
 
     void carIsLeaving(int coordinate)
     {
-        if (p_carsOnLane.containsKey(coordinate))
-            p_carsOnLane.remove(coordinate);
+        if (this.carsOnLane.containsKey(coordinate))
+        	this.carsOnLane.remove(coordinate);
     }
 
     boolean moveCar(Integer coord1, Integer coord2) 
     {
         // if start and end position are the same, we're done.
-        if (coord1 == coord2 && p_carsOnLane.containsKey(coord1))
+        if (coord1 == coord2 && this.carsOnLane.containsKey(coord1))
             return true;
 
         /*
@@ -190,15 +199,15 @@ public class Lane  //{{{
         return true;
         */
         // check if there is a car on coord1 and if coord2 is free
-        if (p_carsOnLane.containsKey(coord1) && !p_carsOnLane.containsKey(coord2))
+        if (this.carsOnLane.containsKey(coord1) && !this.carsOnLane.containsKey(coord2))
         {   
-            if ((coord1 < p_carsOnLane.firstKey())&&
-                (p_carsOnLane.get(p_carsOnLane.firstKey()) != p_carsOnLane.get(coord2)))
+            if ((coord1 < this.carsOnLane.firstKey())&&
+                (this.carsOnLane.get(this.carsOnLane.firstKey()) != this.carsOnLane.get(coord2)))
             {
                 return false;
             }
-            p_carsOnLane.put(coord2, p_carsOnLane.get(coord1));
-            p_carsOnLane.remove(coord1);
+            this.carsOnLane.put(coord2, this.carsOnLane.get(coord1));
+            this.carsOnLane.remove(coord1);
             return true;
         }
         else return false;
@@ -210,7 +219,7 @@ public class Lane  //{{{
      */
     public LanesCross getLaneSource()
     {
-        return p_source;
+        return this.source;
     }
     
     /**
@@ -219,7 +228,7 @@ public class Lane  //{{{
      */
     public LanesCross getLaneDestination()
     {
-        return p_destination;
+        return this.destination;
     }
     
     public boolean setDefaultNextLane(Lane next)
@@ -228,21 +237,77 @@ public class Lane  //{{{
         {
             return false;
         }
-        if (!p_destination.getOutgoingLanes().contains(next))   
+        if (!this.destination.getOutgoingLanes().contains(next))   
         {
             return false;
         }
         else
         {
-            p_defaultNextLane = next;
+        	this.defaultNextLane = next;
             return true;
         }
     }
     
     public Lane getDefaultLane()
     {
-        return p_defaultNextLane;
+        return this.defaultNextLane;
     }
+
+	public LanesCross getDestination() {
+		return destination;
+	}
+
+	public void setDestination(LanesCross destination) {
+		this.destination = destination;
+	}
+
+	public LanesCross getSource() {
+		return source;
+	}
+
+	public void setSource(LanesCross source) {
+		this.source = source;
+	}
+
+	public LinkedList<Lane> getAdjacentLanes() {
+		return adjacentLanes;
+	}
+
+	public void setAdjacentLanes(LinkedList<Lane> adjacentLanes) {
+		this.adjacentLanes = adjacentLanes;
+	}
+
+	public SortedMap<Integer, Car> getCarsOnLane() {
+		return carsOnLane;
+	}
+
+	public void setCarsOnLane(SortedMap<Integer, Car> carsOnLane) {
+		this.carsOnLane = carsOnLane;
+	}
+
+	public Hashtable<Integer, Lights> getLights() {
+		return lights;
+	}
+
+	public void setLights(Hashtable<Integer, Lights> lights) {
+		this.lights = lights;
+	}
+
+	public Lane getDefaultNextLane() {
+		return defaultNextLane;
+	}
+
+	public void setSpeedLimit(int speedLimit) {
+		this.speedLimit = speedLimit;
+	}
+
+	public void setLength(int length) {
+		this.length = length;
+	}
+
+	public void setVirtual(boolean isVirtual) {
+		this.isVirtual = isVirtual;
+	}
     
 } //}}}
 

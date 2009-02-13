@@ -21,6 +21,11 @@
 package trafficsim;
 
 // imports {{{
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Observable;
@@ -39,22 +44,22 @@ public class Model extends Observable //{{{
     /**
      * LinkedList of all lane crosses.
      */
-    private Hashtable<Integer, LanesCross>      p_crosses;
+    private Hashtable<Integer, LanesCross>      crosses;
     
     /***
      * List of all lanes.
      */
-    private LinkedList<Lane>                          p_lanes;
+    private LinkedList<Lane>                          lanes;
     
     /***
      * List of all cars on the map
      */
-    private LinkedList<Car>                           p_cars;
+    private LinkedList<Car>                           cars;
     
     /**
      * List of all parkings.
      */
-    private LinkedList<Parking>                       p_parkings;
+    private LinkedList<Parking>                       parkings;
     
     //}}}
 
@@ -73,16 +78,16 @@ public class Model extends Observable //{{{
 
     public Model()//{{{
     {
-        p_crosses  = new Hashtable<Integer, LanesCross>();
-        p_lanes    = new LinkedList<Lane>();
-        p_cars     = new LinkedList<Car>();
-        p_parkings = new LinkedList<Parking>();
+        crosses  = new Hashtable<Integer, LanesCross>();
+        lanes    = new LinkedList<Lane>();
+        cars     = new LinkedList<Car>();
+        parkings = new LinkedList<Parking>();
     }//}}}
     
     public int addCross(int X, int Y)//{{{
     {
         int crossId = nextCrossId++;
-        p_crosses.put(crossId, new LanesCross(crossId, X, Y) );
+        crosses.put(crossId, new LanesCross(crossId, X, Y) );
         this.setChanged();
         return crossId;
         //this.notifyObservers(WhatHasChanged.Crosses);
@@ -90,11 +95,11 @@ public class Model extends Observable //{{{
     
     public Lane addLane(int start, int end, int maxSpeed, int length)//{{{
     {
-        if (!p_crosses.containsKey(start) || !p_crosses.containsKey(end))
+        if (!crosses.containsKey(start) || !crosses.containsKey(end))
             return null;
         
-        LanesCross cStart = p_crosses.get(start);
-        LanesCross cEnd = p_crosses.get(end);
+        LanesCross cStart = crosses.get(start);
+        LanesCross cEnd = crosses.get(end);
         
         Lane newLane = new Lane(maxSpeed, length, cStart, cEnd);
         
@@ -102,7 +107,7 @@ public class Model extends Observable //{{{
         cEnd.addIncoming(newLane);
         cStart.addOutgoing(newLane);
         
-        p_lanes.add(newLane);
+        lanes.add(newLane);
         this.setChanged();
         //this.notifyObservers(WhatHasChanged.Lanes);
         
@@ -112,7 +117,7 @@ public class Model extends Observable //{{{
     public Parking addParking(Lane lane_to_cross, Lane lane_to_parking)//{{{
     {
         Parking parking = new Parking(lane_to_cross, lane_to_parking);
-        p_parkings.add(parking);
+        parkings.add(parking);
         this.setChanged();
         return parking;
         //this.notifyObservers(WhatHasChanged.Parkings);
@@ -128,22 +133,22 @@ public class Model extends Observable //{{{
     
     public LinkedList<Car> getCars()//{{{
     {
-        return p_cars;
+        return cars;
     }//}}}
     
     public LinkedList<Parking> getParkings()//{{{
     {
-        return p_parkings;
+        return parkings;
     }//}}}
     
     public Hashtable<Integer, LanesCross> getLanesCrosses()//{{{
     {
-        return p_crosses;
+        return crosses;
     }//}}}
     
     public LinkedList<Lane> getLanes()//{{{
     {
-        return p_lanes;
+        return lanes;
     }//}}}
     
     public void updateCarsState(LinkedList<Car> cars)//{{{
@@ -154,18 +159,56 @@ public class Model extends Observable //{{{
     public Car newCar(Parking where)//{{{
     {
         Car newCar = where.newCar();
-        p_cars.add(newCar);
+        cars.add(newCar);
         this.setChanged();
         //this.notifyObservers(WhatHasChanged.Cars);
         return newCar;
     }//}}}
 
-    void finishedTimeUpdate()//{{{
+    public void finishedTimeUpdate()//{{{
     {
         this.setChanged();
         this.notifyObservers(WhatHasChanged.TimeUpdate);
     }//}}}
 
+    public static Model loadModel(String fileName) throws FileNotFoundException
+    {
+    	Model newModel = null;
+    	FileInputStream is = new FileInputStream(fileName);
+    	XMLDecoder decoder = new XMLDecoder(is);
+    	newModel = (Model)decoder.readObject();
+    	decoder.close();
+    	return newModel;
+    }
+    
+    public void saveModel(String fileName) throws FileNotFoundException
+    {
+    	FileOutputStream os = new FileOutputStream(fileName);
+    	XMLEncoder encoder = new XMLEncoder(os);
+    	encoder.writeObject(this);
+    	encoder.close();
+    }
+
+	public Hashtable<Integer, LanesCross> getCrosses() {
+		return crosses;
+	}
+
+	public void setCrosses(Hashtable<Integer, LanesCross> crosses) {
+		this.crosses = crosses;
+	}
+
+	public void setLanes(LinkedList<Lane> lanes) {
+		this.lanes = lanes;
+	}
+
+	public void setCars(LinkedList<Car> cars) {
+		this.cars = cars;
+	}
+
+	public void setParkings(LinkedList<Parking> parkings) {
+		this.parkings = parkings;
+	}
+ 
 }//}}}
 
 /* vim: set ts=4 sw=4 sts=4 et foldmethod=marker: */

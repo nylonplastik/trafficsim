@@ -23,6 +23,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.FileNotFoundException;
 
 import javax.swing.*;
 
@@ -52,7 +53,11 @@ public class TrafficSimEditor implements Runnable
 
 	@Override
 	public void run() {
-		model = new Model();
+		try {
+			model = Model.loadModel("model.xml");
+		} catch (FileNotFoundException e1) {
+			model = new Model();
+		}
 		main_frame = new JFrame("TrafficSim Map Editor");
 		
 		/* Menu bar */
@@ -116,6 +121,10 @@ public class TrafficSimEditor implements Runnable
 
 			@Override
 			public void windowClosed(WindowEvent e) {
+				try {
+					model.saveModel("model.xml");
+				} catch (FileNotFoundException e1) {
+				}
 				System.exit(0);
 			}
 

@@ -21,6 +21,7 @@
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.FileNotFoundException;
 
 import trafficsim.gui.*;
 import trafficsim.*;
@@ -46,6 +47,8 @@ public class TrafficSim implements Runnable
         }
     }
 
+    private Model m = null;
+    
     /**
      * Shows main frame 
      *
@@ -53,24 +56,32 @@ public class TrafficSim implements Runnable
     public void run()
     {
                 // Create simple model
-        Model m = new Model();
-        
-        int cross1 = m.addCross(10,10);
-        int cross2 = m.addCross(200,200);
-        int cross3 = m.addCross(200, 300);
-        Lane lane1 = m.addLane(cross1, cross2, 50, 200);
-        Lane lane2 = m.addLane(cross2, cross1, 50, 200);
-        Lane lane3 = m.addLane(cross2, cross3, 50, 200);
-        Lane lane4 = m.addLane(cross3, cross2, 50, 200);
-        if (lane1 != null)
-            lane1.setDefaultNextLane(lane3);
-        if (lane2 != null)
-            lane4.setDefaultNextLane(lane2);
-        
-        
-        m.addParking(lane1, lane2);
-        m.addParking(lane3, lane4);
-        
+        m = null;
+        try {
+			m=Model.loadModel("model.xml");
+		} catch (FileNotFoundException e1) {
+		}
+		if (m==null)
+		{
+	        m=new Model();
+	        
+	        int cross1 = m.addCross(10,10);
+	        int cross2 = m.addCross(200,200);
+	        int cross3 = m.addCross(200, 300);
+	        Lane lane1 = m.addLane(cross1, cross2, 50, 200);
+	        Lane lane2 = m.addLane(cross2, cross1, 50, 200);
+	        Lane lane3 = m.addLane(cross2, cross3, 50, 200);
+	        Lane lane4 = m.addLane(cross3, cross2, 50, 200);
+	        if (lane1 != null)
+	            lane1.setDefaultNextLane(lane3);
+	        if (lane2 != null)
+	            lane4.setDefaultNextLane(lane2);
+	        
+	        
+	        m.addParking(lane1, lane2);
+	        m.addParking(lane3, lane4);
+		}
+		
         ClientViewClientSide clientSideView   = new ClientViewClientSide();
         ClientController1    clientController = 
                 new ClientController1(m, clientSideView);
@@ -100,6 +111,10 @@ public class TrafficSim implements Runnable
             @Override
             public void windowClosed(WindowEvent e) {
                 timeControlThread.interrupt();
+                try {
+					m.saveModel("model.xml");
+				} catch (FileNotFoundException e1) {
+				}
                 System.exit(0);
             }
 

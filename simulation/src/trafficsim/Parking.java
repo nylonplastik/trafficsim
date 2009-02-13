@@ -22,6 +22,7 @@ package trafficsim;
 
 // imports {{{
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
 // }}}
@@ -31,34 +32,43 @@ import java.util.LinkedList;
  *
  * @author Mariusz Ceier
  */
-public class Parking //{{{
+@SuppressWarnings("serial")
+public class Parking implements Serializable //{{{
 {
     // Variables {{{
 
     /**
      * Lane from Parking to LanesCross
      */
-    private Lane p_lane_to_cross;
+    private Lane laneToCross;
 
     /**
      * Lane from LanesCross to Parking
      */
-    private Lane p_lane_to_parking;
+    private Lane laneToParking;
 
-    private LinkedList<Car>  p_carsOnParking;
-    private LinkedList<Car>  p_carsLeavingParking;
+    private LinkedList<Car>  carsOnParking;
+    private LinkedList<Car>  carsLeavingParking;
     
     // }}}
+
+    public Parking()
+    {
+    	this.laneToCross = null;
+    	this.laneToParking = null;
+    	this.carsLeavingParking = new LinkedList<Car>();
+    	this.carsOnParking = new LinkedList<Car>();
+    }
 
     /**
      * @param lane_to_cross Lane from Parking to LanesCross
      */
     public Parking(Lane lane_to_cross, Lane lane_to_parking) //{{{
     {
-        p_lane_to_cross = lane_to_cross;
-        p_lane_to_parking = lane_to_parking;
-        p_carsLeavingParking = new LinkedList<Car>();
-        p_carsOnParking = new LinkedList<Car>();
+    	this.laneToCross = lane_to_cross;
+    	this.laneToParking = lane_to_parking;
+    	this.carsLeavingParking = new LinkedList<Car>();
+        this.carsOnParking = new LinkedList<Car>();
     }//}}}
 
     /**
@@ -70,7 +80,7 @@ public class Parking //{{{
         
         // set route for a car to get out from the parking
         LinkedList<Lane> plannedRoute = new LinkedList<Lane>();
-        plannedRoute.add(p_lane_to_cross);
+        plannedRoute.add(this.laneToCross);
         newCar.setRoute(plannedRoute);
         
         newCar.park(this);
@@ -79,25 +89,25 @@ public class Parking //{{{
         
     public void park(Car car)//{{{
     {
-        p_carsOnParking.add(car);
+    	this.carsOnParking.add(car);
     }//}}}
     
     public void goToLeavingQueue(Car car)//{{{
     {
-        if (p_carsLeavingParking.contains(car) == false)
+        if (this.carsLeavingParking.contains(car) == false)
         {
-            p_carsLeavingParking.add(car);
+        	this.carsLeavingParking.add(car);
         }
     }//}}}
     
     public boolean canLeaveParking(Car car)//{{{
     {
-        if (p_carsLeavingParking.isEmpty())
+        if (this.carsLeavingParking.isEmpty())
         {
-            p_carsLeavingParking.add(car);
+        	this.carsLeavingParking.add(car);
             return true;
         }
-        if (p_carsLeavingParking.get(0) == car)
+        if (this.carsLeavingParking.get(0) == car)
             return true;
         else return false;
     }//}}}
@@ -107,7 +117,7 @@ public class Parking //{{{
     {
         if (canLeaveParking(car))
         {
-            p_carsLeavingParking.remove(0);
+        	this.carsLeavingParking.remove(0);
             return true;
         }
         else
@@ -115,8 +125,40 @@ public class Parking //{{{
     }//}}}
     public Lane laneOut() //{{{
     {
-        return this.p_lane_to_cross;
+        return this.laneToCross;
     } //}}}
+
+	public Lane getLaneToCross() {
+		return laneToCross;
+	}
+
+	public void setLaneToCross(Lane laneToCross) {
+		this.laneToCross = laneToCross;
+	}
+
+	public Lane getLaneToParking() {
+		return laneToParking;
+	}
+
+	public void setLaneToParking(Lane laneToParking) {
+		this.laneToParking = laneToParking;
+	}
+
+	public LinkedList<Car> getCarsOnParking() {
+		return carsOnParking;
+	}
+
+	public void setCarsOnParking(LinkedList<Car> carsOnParking) {
+		this.carsOnParking = carsOnParking;
+	}
+
+	public LinkedList<Car> getCarsLeavingParking() {
+		return carsLeavingParking;
+	}
+
+	public void setCarsLeavingParking(LinkedList<Car> carsLeavingParking) {
+		this.carsLeavingParking = carsLeavingParking;
+	}
 
 }//}}}
 
