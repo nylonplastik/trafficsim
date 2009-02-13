@@ -98,11 +98,18 @@ public class SimulationComponent extends JComponent implements Observer {
         for(Car c : m.getCars())
         {
             Position p = c.getPosition();
-            int x = p.getLane().getLaneSource().getX();
-            int y = p.getLane().getLaneSource().getY();
-            x += c.getPosition().getCoord()*(p.getLane().getLaneDestination().getX() - p.getLane().getLaneSource().getX())/c.getPosition().getLane().getLength();
-            y += c.getPosition().getCoord()*(p.getLane().getLaneDestination().getY() - p.getLane().getLaneSource().getY())/c.getPosition().getLane().getLength();
-            g.fillRect(x-5,y-5,10,10);
+            Lane l = p.getLane();
+            LanesCross l_source = null;
+            LanesCross l_destination = null;
+            if ((l!=null)&&((l_source=l.getLaneSource())!=null)&&
+            	((l_destination=l.getLaneDestination())!=null))
+            {
+            	int x = l_source.getX();
+            	int y = l_source.getY();
+            	x += p.getCoord()*(l_destination.getX() - l_source.getX())/l.getLength();
+            	y += p.getCoord()*(l_destination.getY() - l_source.getY())/l.getLength();
+            	g.fillRect(x-5,y-5,10,10);
+            }
         }
     }
 
