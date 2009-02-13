@@ -40,7 +40,7 @@ public class EditorFrame extends JFrame
 {
 
     private Model model = null;
-    private SimulationCanvas sim_canvas = null;
+    private SimulationComponent sim_component = null;
     private JPanel editor_panel = null;
     
     private LanesCross selected_cross = null;
@@ -55,11 +55,11 @@ public class EditorFrame extends JFrame
         model.addLane(cross2, cross1, 50, 200);
         model.getCars().add(model.addParking(model.getLanes().get(0), model.getLanes().get(1)).newCar());
         setLayout(new BorderLayout());
-        sim_canvas = new SimulationCanvas(model);
-        sim_canvas.addMouseListener(this);
-        sim_canvas.addMouseMotionListener(this);
+        sim_component = new SimulationComponent(model);
+        sim_component.addMouseListener(this);
+        sim_component.addMouseMotionListener(this);
         editor_panel = new JPanel(true);
-        editor_panel.add(sim_canvas,BorderLayout.CENTER);
+        editor_panel.add(sim_component,BorderLayout.CENTER);
         add(editor_panel,BorderLayout.CENTER);
         setPreferredSize(new Dimension(800,600));
         setResizable(true);
@@ -91,7 +91,7 @@ public class EditorFrame extends JFrame
 
     public void setModel(Model model) {
         this.model = model;
-        sim_canvas.setModel(model);
+        sim_component.setModel(model);
     }
 
     @Override
@@ -99,7 +99,7 @@ public class EditorFrame extends JFrame
         // TODO Auto-generated method stub
         LanesCross last_selected_cross = selected_cross;
         selected_cross = null;
-        for(LanesCross lc : sim_canvas.getModel().getLanesCrosses().values())
+        for(LanesCross lc : sim_component.getModel().getLanesCrosses().values())
         {
             if ((-5<=lc.getX()-e.getX())&&(lc.getX()-e.getX()<=5)&&
                 (-5<=lc.getY()-e.getY())&&(lc.getY()-e.getY()<=5))
@@ -109,13 +109,13 @@ public class EditorFrame extends JFrame
             }        
         }
         if (selected_cross==null)
-            sim_canvas.getModel().addCross(e.getX(), e.getY());
+            sim_component.getModel().addCross(e.getX(), e.getY());
         else
         {
             if ((last_selected_cross != null)&&
                 (last_selected_cross != selected_cross))
             {
-                sim_canvas.getModel().addLane(last_selected_cross.getId(), selected_cross.getId(), 70, 700);
+                sim_component.getModel().addLane(last_selected_cross.getId(), selected_cross.getId(), 70, 700);
             }
         }
         e.consume();
@@ -137,7 +137,7 @@ public class EditorFrame extends JFrame
     public void mousePressed(MouseEvent e) {
         // TODO Auto-generated method stub
         moving_cross = null;
-        for(LanesCross lc : sim_canvas.getModel().getLanesCrosses().values())
+        for(LanesCross lc : sim_component.getModel().getLanesCrosses().values())
         {
             if ((-5<=lc.getX()-e.getX())&&(lc.getX()-e.getX()<=5)&&
                 (-5<=lc.getY()-e.getY())&&(lc.getY()-e.getY()<=5))
