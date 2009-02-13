@@ -21,6 +21,7 @@
 package trafficsim;
 
 // imports {{{
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.SortedMap;
@@ -31,59 +32,59 @@ import java.util.SortedMap;
  *
  * @author Adam Rutkowski
  */
-public class Car //{{{
+@SuppressWarnings("serial")
+public class Car implements Serializable //{{{
 {
     // Variables {{{
-    private int          p_id;
+    private int          id;
     private static int   carsCount = 0;
-    private int          p_nextCarDistance;
-    private Position     p_position;
-    private float        p_speed;
-    private float        p_acceleration; 
-    private static float p_maxSpeed = 12;
-    private static float p_maxAcceleration = 5;
-    private boolean      p_hasColided = false;    // if there was a collision
+    private int          nextCarDistance;
+    private Position     position;
+    private float        speed;
+    private float        acceleration; 
+    private static float maxSpeed = 12;
+    private static float maxAcceleration = 5;
+    private boolean      collided = false;    // if there was a collision
     
-    private Parking      p_currentParking;
+    private Parking      currentParking;
     
     /**
      * The route that this car is about to move on.
      */
-    private LinkedList<Lane> p_plannedRoute;
+    private LinkedList<Lane> plannedRoute;
+
+    /**
+     * list of lanes that this car is observing
+     */
+    private LinkedList<Lane>   observedLanes = null;
         
      //}}}
     
     private synchronized int getNewId() //{{{
     {
-        return carsCount++;
+        return Car.carsCount++;
     } //}}}
     
-    /**
-     * list of lanes that this car is observing
-     */
-    private LinkedList<Lane>   p_observedLanes = null;
-    
-
     /**
      * Default constructor - Car doesn't know anything
      */
     public Car() //{{{
     {
-        p_id = getNewId();
-        p_currentParking = null;
-        p_position = new Position();
+    	this.id = getNewId();
+        this.currentParking = null;
+        this.position = new Position();
     } //}}}
     
     public boolean isParked() //{{{
     {
-        return (p_currentParking != null);
+        return (this.currentParking != null);
     } //}}}
     
     public void park(Parking parking) //{{{
     {
-        p_currentParking = parking;
-        p_position.setLane(null);
-        p_position.info = Position.e_info.NOT_DRIVING;
+    	this.currentParking = parking;
+        this.position.setLane(null);
+        this.position.info = Position.e_info.NOT_DRIVING;
         parking.park(this);
     } //}}}
     
@@ -91,25 +92,25 @@ public class Car //{{{
     {
         if (isParked() == false)
             return ;
-        p_currentParking.goToLeavingQueue(this);
-        p_plannedRoute = new LinkedList<Lane>();
-        p_plannedRoute.add(p_currentParking.laneOut());
+        this.currentParking.goToLeavingQueue(this);
+        this.plannedRoute = new LinkedList<Lane>();
+        this.plannedRoute.add(this.currentParking.laneOut());
     }
     
     public boolean leaveParking() //{{{
     {
-       if (p_currentParking == null)
+       if (this.currentParking == null)
            return false;
-       p_currentParking.goToLeavingQueue(this);
-       if (p_currentParking.canLeaveParking(this))
+       this.currentParking.goToLeavingQueue(this);
+       if (currentParking.canLeaveParking(this))
        {
            // TODO: check if lane out of parking is empty
            // and set it as the only element of planned route
-           p_currentParking.carIsLeaving(this);
-           p_currentParking = null;
-           p_position.setLane(p_plannedRoute.get(0));
-           p_plannedRoute.remove(0);
-           p_position.setCoord(0);
+    	   this.currentParking.carIsLeaving(this);
+    	   this.currentParking = null;
+    	   this.position.setLane(this.plannedRoute.get(0));
+    	   this.plannedRoute.remove(0);
+    	   this.position.setCoord(0);
            return true;
        }
        else
@@ -124,7 +125,7 @@ public class Car //{{{
      */
     public void move(int timeMiliseconds) //{{{
     {
-        if (p_position.info == Position.e_info.NOT_DRIVING)
+        if (this.position.info == Position.e_info.NOT_DRIVING)
             return;
         
         // check what will be the car position after one time period
@@ -133,21 +134,21 @@ public class Car //{{{
         // if position has been calculated successfully - set the new position
         if (newPosition.info == Position.e_info.OK)
         {
-            if (p_position.getLane() != newPosition.getLane())  // car approached new lane?
+            if (this.position.getLane() != newPosition.getLane())  // car approached new lane?
             {
                 // try to put the car on new lane
-                p_position.getLane().carIsLeaving(this.p_position.getCoord());
+            	this.position.getLane().carIsLeaving(this.position.getCoord());
                 if (!newPosition.getLane().putCar(newPosition.getCoord(), this))
                     return;
             }
             else
                 // try to move car on current lane
-                if (!p_position.getLane().moveCar(p_position.getCoord(), newPosition.getCoord()))
+                if (!this.position.getLane().moveCar(this.position.getCoord(), newPosition.getCoord()))
                     return;
             
-            p_position.setLane(newPosition.getLane());
-            p_position.setCoord(newPosition.getCoord());
-            p_speed += p_acceleration * timeMiliseconds;
+            this.position.setLane(newPosition.getLane());
+            this.position.setCoord(newPosition.getCoord());
+            this.speed += this.acceleration * timeMiliseconds;
         }
     } //}}}
     
@@ -162,29 +163,29 @@ public class Car //{{{
     
     public int getId() //{{{
     {
-        return p_id;
+        return this.id;
     } //}}}
     
     public void setRoute(LinkedList<Lane> route) //{{{
     {
-        p_plannedRoute = route;
+    	this.plannedRoute = route;
     } //}}}
     
     public LinkedList<Lane> getRoute() //{{{
     {
-        return p_plannedRoute;
+        return this.plannedRoute;
     } //}}}
     
     public boolean canLeaveParking(int safeDistance) //{{{
     {
-        if (p_currentParking != null)
-            if (p_currentParking.canLeaveParking(this))
+        if (this.currentParking != null)
+            if (this.currentParking.canLeaveParking(this))
             {
-                if (p_plannedRoute.isEmpty())
+                if (this.plannedRoute.isEmpty())
                     return false;
                 
-                Lane laneOut = p_currentParking.laneOut();
-                if (p_plannedRoute.get(0) != laneOut)
+                Lane laneOut = this.currentParking.laneOut();
+                if (this.plannedRoute.get(0) != laneOut)
                     return false;
                 
                 getNextCar();
@@ -203,31 +204,31 @@ public class Car //{{{
     public Position positionAfterTime(int timePeriod, int periodsCount) //{{{
     {
         Position result = new Position();
-        result.setLane(p_position.getLane());
-        result.setCoord(p_position.getCoord());
+        result.setLane(this.position.getLane());
+        result.setCoord(this.position.getCoord());
         
-        if (p_position.getLane() == null)
+        if (this.position.getLane() == null)
         {
             result.info = Position.e_info.NOT_DRIVING;
             return result;
         }
         
         int newCoordinate;
-        float speed = p_speed,  acceleration = p_acceleration;
+        float current_speed = this.speed,  current_acceleration = this.acceleration;
         
         for (int i=0; i<periodsCount; i++)
         {
-            newCoordinate = result.getCoord() + (int)(timePeriod * speed);
-            speed +=  (timePeriod * acceleration);   
-            if (speed > p_maxSpeed)
+            newCoordinate = result.getCoord() + (int)(timePeriod * current_speed);
+            current_speed +=  (timePeriod * current_acceleration);   
+            if (current_speed > this.maxSpeed)
             {
-                speed = p_maxSpeed;
-                acceleration = 0;
+                current_speed = this.maxSpeed;
+                current_acceleration = 0;
             }
-            else if (speed < 0)
+            else if (current_speed < 0)
             {
-                speed = 0;
-                acceleration = 0;
+                current_speed = 0;
+                current_acceleration = 0;
             }
             
             result.info = Position.e_info.OK;
@@ -242,10 +243,10 @@ public class Car //{{{
                 while(sum <= newCoordinate)
                 {
                     // get the next lane in g
-                    boolean routeIsEmpty = p_plannedRoute.isEmpty();
+                    boolean routeIsEmpty = this.plannedRoute.isEmpty();
                     boolean endOfRoute = 
-                            (p_plannedRoute.indexOf(result.getLane())
-                                                   == p_plannedRoute.size()-1
+                            (this.plannedRoute.indexOf(result.getLane())
+                                                   == this.plannedRoute.size()-1
                             );
                     
                     if (routeIsEmpty || endOfRoute)
@@ -254,7 +255,7 @@ public class Car //{{{
                         if (laneAterRoute == null)
                         {
                             result.setCoord(result.getLane().getLength());
-                            this.p_hasColided = true;  // Collision - end of
+                            this.collided = true;  // Collision - end of
                                                         //  route
                             return result;
                         }
@@ -265,7 +266,7 @@ public class Car //{{{
                         }
                     }
                     else
-                        result.setLane(p_plannedRoute.get(p_plannedRoute.indexOf(result.getLane())));
+                        result.setLane(this.plannedRoute.get(this.plannedRoute.indexOf(result.getLane())));
                     
                     sum += result.getLane().getLength();
                 }
@@ -277,7 +278,7 @@ public class Car //{{{
     
     public Position getPosition() //{{{
     {
-        return p_position;
+        return this.position;
     } //}}}
     
     /**
@@ -286,57 +287,57 @@ public class Car //{{{
      */
     public Car getNextCar() //{{{
     {
-        if (p_position.getLane() != null)    // car is on some lane
+        if (this.position.getLane() != null)    // car is on some lane
         {
-            SortedMap<Integer, Car> carsOnLane = p_position.getLane().getCars();
+            SortedMap<Integer, Car> carsOnLane = this.position.getLane().getCars();
 
             // is the lane empty?
             if (carsOnLane.isEmpty() == false)
                 // is the car on this lane? (if no, something is wrong)
                 if (carsOnLane.containsValue(this))
                     // is 'car' not the last car on the lane?
-                    if (carsOnLane.lastKey() != p_position.getCoord())
+                    if (carsOnLane.lastKey() != this.position.getCoord())
                     {
                         // get the part of car list starting with this car
-                        Iterator<Car> iter = carsOnLane.tailMap(p_position.getCoord()).values().iterator();
+                        Iterator<Car> iter = carsOnLane.tailMap(this.position.getCoord()).values().iterator();
                         // get this car element of the list
                         iter.next();
                         // get next element of the list
                         Car next = iter.next();
                         // calculate distance to that car
-                        p_nextCarDistance = next.getPosition().getCoord() - p_position.getCoord();
+                        this.nextCarDistance = next.getPosition().getCoord() - position.getCoord();
                         // return the next car
                         return next;
                     }
             // preceding car not found on current lane. Calculate distance from
             // this car to the end of the lane for use in further calculations.
-            p_nextCarDistance = p_position.getLane().getLength() - p_position.getCoord();
+            this.nextCarDistance = this.position.getLane().getLength() - this.position.getCoord();
         }
         else
-            p_nextCarDistance = 0; //since the car is not riding, the distance 
+        	this.nextCarDistance = 0; //since the car is not riding, the distance 
                     // to next car will be calculated basing on the planned route
                     // <B>only</B>, so for now the distance is 0.
                                 
         
-        if (p_plannedRoute.isEmpty() == false)  // are there some lanes planned to move on?
+        if (this.plannedRoute.isEmpty() == false)  // are there some lanes planned to move on?
         {
             // try to find the closest car on planned route
             int i = 0;
             Lane laneOnRoute = null;
-            while(i < p_plannedRoute.size())
+            while(i < this.plannedRoute.size())
             {
-                laneOnRoute  = p_plannedRoute.get(i);
+                laneOnRoute  = this.plannedRoute.get(i);
                 if (laneOnRoute.isEmpty() == false)
                     break;
                 // No car on this lane, distance to next car is increased by
                 // this lane length.
-                p_nextCarDistance += laneOnRoute.getLength();
+                this.nextCarDistance += laneOnRoute.getLength();
                 i++;
             }
-            if (i==p_plannedRoute.size())     // whole planned car route is empty
+            if (i==this.plannedRoute.size())     // whole planned car route is empty
                 return null;
             // distance to the next car is increased by that car position on its lane
-            p_nextCarDistance = laneOnRoute.getFirstCar().getPosition().getCoord();
+            this.nextCarDistance = laneOnRoute.getFirstCar().getPosition().getCoord();
             return laneOnRoute.getFirstCar();  
         }
         else
@@ -349,84 +350,149 @@ public class Car //{{{
      */
     public int getNextCarDistance() //{{{
     {
-        return p_nextCarDistance;
+        return this.nextCarDistance;
     } //}}}
     
     /**
      * Sets the car on the beginning of its planned route
      */
-    public void startMoving(float acceleration) //{{{
+    public void startMoving(float accel) //{{{
     {
         // check if we can move on
-        if ( p_position.getLane() != null || 
-             p_plannedRoute.isEmpty() || 
-             !p_currentParking.canLeaveParking(this))
+        if ( this.position.getLane() != null || 
+        	 this.plannedRoute.isEmpty() || 
+             !this.currentParking.canLeaveParking(this))
         {
             return;
         }
         
         // try to put car on the lane
-        if (!p_plannedRoute.get(0).putCar(0, this))
+        if (!this.plannedRoute.get(0).putCar(0, this))
             return;
         
         // set up new position
-        p_position.setLane(p_plannedRoute.get(0));
-        p_position.setCoord(0);
-        p_position.info = Position.e_info.OK;
-        p_plannedRoute.remove(0);
+        this.position.setLane(this.plannedRoute.get(0));
+        this.position.setCoord(0);
+        this.position.info = Position.e_info.OK;
+        this.plannedRoute.remove(0);
 
 
         // leave the parking
-        p_currentParking.carIsLeaving(this);
-        p_currentParking = null;
+        this.currentParking.carIsLeaving(this);
+        this.currentParking = null;
         
         // set new state
-        if (acceleration > p_maxAcceleration)
-            acceleration = p_maxAcceleration;
-        p_speed         = 0;
-        p_acceleration  = acceleration;
+        if (accel > this.maxAcceleration)
+            accel = this.maxAcceleration;
+        this.speed         = 0;
+        this.acceleration  = accel;
     } //}}}
     
     public float getAcceleration() //{{{
     {
-        return p_acceleration;
+        return this.acceleration;
     } //}}}
     
     public float getMaxAcceleration()
     {
-        return p_maxAcceleration;
+        return this.maxAcceleration;
     }
     
     public float getSpeed() //{{{
     {
-        return p_speed;
+        return this.speed;
     } //}}}    	
     
     public void changeAcceleration(float newAcceleration) //{{{
     {
-        if (newAcceleration > p_maxAcceleration || -1.0*newAcceleration > p_maxAcceleration)
+        if (newAcceleration > this.maxAcceleration || 
+        		-1.0*newAcceleration > this.maxAcceleration)
         {
             if (newAcceleration < 0)
-                p_acceleration = (float)-1.0*p_maxAcceleration;
+            	this.acceleration = (float)-1.0*this.maxAcceleration;
             else
-                p_acceleration = p_maxAcceleration;
+            	this.acceleration = this.maxAcceleration;
         }
         else
-            p_acceleration = newAcceleration;
+        	this.acceleration = newAcceleration;
     } //}}}
 
     public void setObservedLanes(LinkedList<Lane> p_observedLanes) {
-        this.p_observedLanes = p_observedLanes;
+        this.observedLanes = p_observedLanes;
     }
 
     public LinkedList<Lane> getObservedLanes() {
-        return p_observedLanes;
+        return this.observedLanes;
     }
     
     public boolean hasColided()
     {
-        return p_hasColided;
+        return this.collided;
     }
+
+	public static int getCarsCount() {
+		return carsCount;
+	}
+
+	public static void setCarsCount(int carsCount) {
+		Car.carsCount = carsCount;
+	}
+
+	public static float getMaxSpeed() {
+		return maxSpeed;
+	}
+
+	public static void setMaxSpeed(float maxSpeed) {
+		Car.maxSpeed = maxSpeed;
+	}
+
+	public Parking getCurrentParking() {
+		return currentParking;
+	}
+
+	public void setCurrentParking(Parking currentParking) {
+		this.currentParking = currentParking;
+	}
+
+	public LinkedList<Lane> getPlannedRoute() {
+		return plannedRoute;
+	}
+
+	public void setPlannedRoute(LinkedList<Lane> plannedRoute) {
+		this.plannedRoute = plannedRoute;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setNextCarDistance(int nextCarDistance) {
+		this.nextCarDistance = nextCarDistance;
+	}
+
+	public void setPosition(Position position) {
+		this.position = position;
+	}
+
+	public void setSpeed(float speed) {
+		this.speed = speed;
+	}
+
+	public void setAcceleration(float acceleration) {
+		this.acceleration = acceleration;
+	}
+
+	public static void setMaxAcceleration(float maxAcceleration) {
+		Car.maxAcceleration = maxAcceleration;
+	}
+
+	public boolean isCollided() {
+		return collided;
+	}
+
+	public void setCollided(boolean collided) {
+		this.collided = collided;
+	}
 
 } //}}}
 
