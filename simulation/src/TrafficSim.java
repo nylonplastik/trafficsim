@@ -65,7 +65,7 @@ public class TrafficSim implements Runnable
         if (lane1 != null)
             lane1.setDefaultNextLane(lane3);
         if (lane2 != null)
-            lane2.setDefaultNextLane(lane4);
+            lane4.setDefaultNextLane(lane2);
         
         
         m.addParking(lane1, lane2);

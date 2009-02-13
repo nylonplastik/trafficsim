@@ -41,10 +41,10 @@ public class ClientController1 implements IController
     // time period used to calculate future position of other car
     private static final int           PREDICTION_TIME_FRAME = 3;
     
-    // When other's car movenent prediction is done, the decission about
+    // When other's car movement prediction is done, the decision about
     // speed reduction is made basing on predicted distance between one car
     // and another after PREDICTION_TIME_FRAME. This constant determines a 
-    // treshold value of predicted distance between cars .
+    // threshold value of predicted distance between cars .
     private static final int           SAFE_MOVE_DISTANCE = 10;  
         
     
@@ -116,7 +116,7 @@ public class ClientController1 implements IController
                 // Acceleration adjustment.
 
                 // Determining if there is a need to reduce speed because
-                // the net car os moving slowly.
+                // the net car is moving slowly.
                 Car nextCar = car.getNextCar();
                 if (nextCar != null)
                 {
@@ -138,7 +138,7 @@ public class ClientController1 implements IController
                 // we need to stop (end of route, red light, ...)
                 float currentAcceleration = car.getAcceleration();
                 
-                // chec kif it is possible to stop before end of route
+                // check if it is possible to stop before end of route
                 car.changeAcceleration(-1 * car.getMaxAcceleration());
 */                
             }        

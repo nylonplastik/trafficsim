@@ -192,13 +192,13 @@ public class Lane  //{{{
         // check if there is a car on coord1 and if coord2 is free
         if (p_carsOnLane.containsKey(coord1) && !p_carsOnLane.containsKey(coord2))
         {   
+            if ((coord1 < p_carsOnLane.firstKey())&&
+                (p_carsOnLane.get(p_carsOnLane.firstKey()) != p_carsOnLane.get(coord2)))
+            {
+                return false;
+            }
             p_carsOnLane.put(coord2, p_carsOnLane.get(coord1));
             p_carsOnLane.remove(coord1);
-            if (coord1 < p_carsOnLane.firstKey())
-            if (p_carsOnLane.get(p_carsOnLane.firstKey()) != p_carsOnLane.get(coord2))
-            {
-                return true;
-            }
             return true;
         }
         else return false;
