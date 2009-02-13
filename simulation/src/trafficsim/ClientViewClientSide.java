@@ -38,8 +38,8 @@ public class ClientViewClientSide { //{{{
         
     }
     
-    // TODO: eventually this class should be made private when inter process
-    // comunnication is implemented. It should be invoked by communication 
+    // TODO: eventually this class should be made private when interprocess
+    // communication is implemented. It should be invoked by communication 
     // routine upon receiving data from server.
     public void viewChanged(ClientViewData data)
     { //{{{

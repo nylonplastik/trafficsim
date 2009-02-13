@@ -25,7 +25,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
- * Singleton class responsible for somulation control.
+ * Singleton class responsible for simulation control.
  * @author Adam Rutkowski
  */
 public class ClientController1 implements IController
@@ -179,8 +179,8 @@ public class ClientController1 implements IController
         int t1 = (int)Math.floor(timeToReachPoint(distance, speed, -1*  maxAcc));
         
         if (speed*t1 - t1*t1*(maxAcc/2)/2 > distance)
-        
-        return 0;
+        	return 0;
+        return maxAcc; //4*(speed*t1-distance)/t1*t1;
     }
     
     private static double timeToReachPoint(int dist, float speed, float acc)
