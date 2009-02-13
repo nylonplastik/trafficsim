@@ -61,7 +61,7 @@ public class ClientController1 implements IController
         if (!(parkings = model.getParkings()).isEmpty())
         {
             // start one new cars on first available parking
-            for (int i = 0; i <2; i++) 
+            for (int i = 0; i <6; i++) 
             {
                 // new car parked on first parking
                 newCar = model.newCar(parkings.get(0));
