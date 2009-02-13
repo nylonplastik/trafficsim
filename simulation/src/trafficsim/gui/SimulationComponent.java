@@ -1,13 +1,33 @@
+/*
+    TrafficSim is simulation of road traffic
+    Copyright (C) 2009  Mariusz Ceier, Adam Rutkowski
+
+    This file is part of TrafficSim
+
+    TrafficSim is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    TrafficSim is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with TrafficSim.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package trafficsim.gui;
 
-import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.GraphicsConfiguration;
 import java.util.Collection;
 import java.util.Observable;
 import java.util.Observer;
+
+import javax.swing.JComponent;
 
 import trafficsim.Car;
 import trafficsim.Lane;
@@ -16,7 +36,7 @@ import trafficsim.Model;
 import trafficsim.Position;
 
 @SuppressWarnings("serial")
-public class SimulationCanvas extends Canvas implements Observer {
+public class SimulationComponent extends JComponent implements Observer {
 
     private Model model = null;
     
@@ -25,28 +45,29 @@ public class SimulationCanvas extends Canvas implements Observer {
         model = m;
         model.addObserver(this);
         setBackground(Color.WHITE);
+        setOpaque(false);
+        setDoubleBuffered(true);
         setPreferredSize(new Dimension(640,480));
     }
 
-    public SimulationCanvas(Model m) {
+    public SimulationComponent(Model m) {
         initCanvas(m);
     }
 
-    public SimulationCanvas(Model m, GraphicsConfiguration config) {
-        super(config);
-        initCanvas(m);
-    }
-
+    /*
     @Override
     public void paint(Graphics g)
     {
-        update(g);
+        doUpdate(g);
     }
-
-    public void update(Graphics g)
+    */
+    
+    public void doUpdate(Graphics g)
     {
-        g.clearRect(0, 0, this.getWidth(), this.getHeight());
         Model m = model;
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, this.getWidth(), this.getHeight());
+        //g.clearRect(0, 0, this.getWidth(), this.getHeight());
         if (m == null) return;
         Collection<Lane> lanes = m.getLanes();
         g.setColor(Color.BLACK);
@@ -96,10 +117,21 @@ public class SimulationCanvas extends Canvas implements Observer {
         this.model = model;
         if (this.model!=null)
             this.model.addObserver(this);
+        this.invalidate();
+        this.repaint();
     }
 
     @Override
     public void update(Observable o, Object arg) {
+    	this.invalidate();
         this.repaint();
     }
+
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		doUpdate(g);
+	}
 }
+
+/* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */

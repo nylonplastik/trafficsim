@@ -32,17 +32,22 @@ public class CreateServerDialog
     extends JDialog
 {
 
+	private JButton ok_button = null;
     private JButton cancel_button = null;
     
     protected void initDialog()
     {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        this.setLayout(new GridLayout(2,2));
+        this.setLayout(new GridLayout(3,2));
         this.add(new JLabel("Server name:"));
         this.add(new JEditorPane());
-           this.add(new JButton("OK"));
-           cancel_button = new JButton("Cancel");
-           this.add(cancel_button);
+        this.add(new JLabel("Server port:"));
+        this.add(new JEditorPane());
+        
+        ok_button = new JButton("OK");
+        this.add(ok_button);
+        cancel_button = new JButton("Cancel");
+        this.add(cancel_button);
         this.setResizable(true);
     }
 
