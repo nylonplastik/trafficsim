@@ -45,11 +45,12 @@ public class LanesCross extends Observable //{{{
     /* adjacent lane crosses with lanes to them */
     private Hashtable <Integer,Lane>    p_adjecentCrosses = new Hashtable<Integer, Lane>();
     private LinkedList<Lane>            p_incomingLanes = new LinkedList<Lane>();
+    private LinkedList<Lane>            p_outgoingLanes = new LinkedList<Lane>();
     // }}}
 
     public LinkedList<Lane> getOutgoingLanes()//{{{
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return p_outgoingLanes;
     }//}}}
     
     public LanesCross()//{{{
@@ -89,7 +90,11 @@ public class LanesCross extends Observable //{{{
     {
        p_incomingLanes.add(lane);
     }//}}}
-
+    
+    public void addOutgoing(Lane lane)
+    {
+        p_outgoingLanes.add(lane);
+    }
     public int getX() {
         return X_coordinate;
     }

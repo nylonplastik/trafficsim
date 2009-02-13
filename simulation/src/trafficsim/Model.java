@@ -88,10 +88,10 @@ public class Model extends Observable //{{{
         //this.notifyObservers(WhatHasChanged.Crosses);
     }//}}}
     
-    public int addLane(int start, int end, int maxSpeed, int length)//{{{
+    public Lane addLane(int start, int end, int maxSpeed, int length)//{{{
     {
         if (!p_crosses.containsKey(start) || !p_crosses.containsKey(end))
-            return -1;
+            return null;
         
         LanesCross cStart = p_crosses.get(start);
         LanesCross cEnd = p_crosses.get(end);
@@ -100,12 +100,13 @@ public class Model extends Observable //{{{
         
         cStart.addConnection(end, newLane );
         cEnd.addIncoming(newLane);
+        cStart.addOutgoing(newLane);
         
         p_lanes.add(newLane);
         this.setChanged();
         //this.notifyObservers(WhatHasChanged.Lanes);
         
-        return p_lanes.indexOf(newLane);
+        return newLane;
     }//}}}
     
     public Parking addParking(Lane lane_to_cross, Lane lane_to_parking)//{{{

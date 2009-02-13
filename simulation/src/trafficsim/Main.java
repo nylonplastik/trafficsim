@@ -35,13 +35,14 @@ public class Main //{{{
      */
     public static void main(String[] args) //{{{
     {
+       /*
         // Create simple model
         Model m = new Model();
         
         int cross1 = m.addCross(10,10);
         int cross2 = m.addCross(10,200);
-        int lane1 = m.addLane(cross1, cross2, 50, 200);
-        int lane2 = m.addLane(cross2, cross1, 50, 200);
+        Lane lane1 = m.addLane(cross1, cross2, 50, 200);
+        Lane lane2 = m.addLane(cross2, cross1, 50, 200);
         m.addParking(m.getLanes().get(lane1), m.getLanes().get(lane2));
         
         ClientViewClientSide clientSideView   = new ClientViewClientSide();
@@ -58,6 +59,7 @@ public class Main //{{{
         TimeController tc = TimeController.getTimeController(m);
         Thread timeControlThread = new Thread(tc);
         timeControlThread.start();
+        * */
     }//}}}
 
 }//}}}

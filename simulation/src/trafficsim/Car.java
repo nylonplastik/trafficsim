@@ -42,6 +42,7 @@ public class Car //{{{
     private float        p_acceleration; 
     private static float p_maxSpeed = 12;
     private static float p_maxAcceleration = 5;
+    private boolean      p_hasColided = false;    // if there was a collision
     
     private Parking      p_currentParking;
     
@@ -241,15 +242,27 @@ public class Car //{{{
                 while(sum <= newCoordinate)
                 {
                     // get the next lane in g
-                    if (p_plannedRoute.isEmpty())
-                    {
-                        result.info = Position.e_info.OUT_OF_RANGE;
-                        return result;
-                    }
-                    else if (p_plannedRoute.indexOf(result.getLane()) == p_plannedRoute.size())
-                    {
-                        result.info = Position.e_info.OUT_OF_RANGE;
-                        return result;                        
+                    boolean routeIsEmpty = p_plannedRoute.isEmpty();
+                    boolean endOfRoute = 
+                            (p_plannedRoute.indexOf(result.getLane())
+                                                   == p_plannedRoute.size()-1
+                            );
+                    
+                    if (routeIsEmpty || endOfRoute)
+                    {   
+                        Lane laneAterRoute = result.getLane().getDefaultLane();    
+                        if (laneAterRoute == null)
+                        {
+                            result.setCoord(result.getLane().getLength());
+                            this.p_hasColided = true;  // Colision - end of
+                                                        //  route
+                            return result;
+                        }
+                        else
+                        {
+                            result.info = Position.e_info.OUT_OF_RANGE;
+                            result.setLane(laneAterRoute);
+                        }
                     }
                     else
                         result.setLane(p_plannedRoute.get(p_plannedRoute.indexOf(result.getLane())));
@@ -379,6 +392,11 @@ public class Car //{{{
         return p_acceleration;
     } //}}}
     
+    public float getMaxAcceleration()
+    {
+        return p_maxAcceleration;
+    }
+    
     public float getSpeed() //{{{
     {
         return p_speed;
@@ -404,6 +422,12 @@ public class Car //{{{
     public LinkedList<Lane> getObservedLanes() {
         return p_observedLanes;
     }
+    
+    public boolean hasColided()
+    {
+        return p_hasColided;
+    }
+
 } //}}}
 
 /* vim: set ts=4 sw=4 sts=4 et foldmethod=marker: */

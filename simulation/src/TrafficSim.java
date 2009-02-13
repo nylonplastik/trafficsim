@@ -58,13 +58,18 @@ public class TrafficSim implements Runnable
         int cross1 = m.addCross(10,10);
         int cross2 = m.addCross(200,200);
         int cross3 = m.addCross(200, 300);
-        int lane1id = m.addLane(cross1, cross2, 50, 200);
-        int lane2id = m.addLane(cross2, cross1, 50, 200);
-        int lane3id = m.addLane(cross2, cross3, 50, 200);
-        int lane4id = m.addLane(cross3, cross2, 50, 200);
+        Lane lane1 = m.addLane(cross1, cross2, 50, 200);
+        Lane lane2 = m.addLane(cross2, cross1, 50, 200);
+        Lane lane3 = m.addLane(cross2, cross3, 50, 200);
+        Lane lane4 = m.addLane(cross3, cross2, 50, 200);
+        if (lane1 != null)
+            lane1.setDefaultNextLane(lane3);
+        if (lane2 != null)
+            lane2.setDefaultNextLane(lane4);
         
-        m.addParking(m.getLanes().get(lane1id), m.getLanes().get(lane2id));
-        m.addParking(m.getLanes().get(lane3id), m.getLanes().get(lane4id));
+        
+        m.addParking(lane1, lane2);
+        m.addParking(lane3, lane4);
         
         ClientViewClientSide clientSideView   = new ClientViewClientSide();
         ClientController1    clientController = 

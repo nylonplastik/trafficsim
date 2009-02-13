@@ -42,6 +42,7 @@ public class Lane  //{{{
     private int                  p_length = Lane.DEFAULT_LENGTH;
     private LanesCross           p_destination = null;
     private LanesCross           p_source = null;
+    private Lane                 p_defaultNextLane = null;
     
     /**
      * Virtual lanes are inserted to the streets structure just to 
@@ -179,6 +180,11 @@ public class Lane  //{{{
         {
             p_carsOnLane.put(coord2, p_carsOnLane.get(coord1));
             p_carsOnLane.remove(coord1);
+            if (coord1 < p_carsOnLane.firstKey())
+            if (p_carsOnLane.get(p_carsOnLane.firstKey()) != p_carsOnLane.get(coord2))
+            {
+                return true;
+            }
             return true;
         }
         else return false;
@@ -200,6 +206,28 @@ public class Lane  //{{{
     public LanesCross getLaneDestination()
     {
         return p_destination;
+    }
+    
+    public boolean setDefaultNextLane(Lane next)
+    {
+        if (next == null)
+        {
+            return false;
+        }
+        if (!p_destination.getOutgoingLanes().contains(next))   
+        {
+            return false;
+        }
+        else
+        {
+            p_defaultNextLane = next;
+            return true;
+        }
+    }
+    
+    public Lane getDefaultLane()
+    {
+        return p_defaultNextLane;
     }
     
 } //}}}
