@@ -20,6 +20,7 @@
 
 package trafficsim;
 
+import java.lang.Math;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -169,8 +170,29 @@ public class ClientController1 implements IController
         return (int)( distance + speed2*timeFrame - speed1*timeFrame);
     }
     
-    private static float adjustAcceleration(int distance, float speed, float acc)
+    private static float adjustAcceleration(int distance, 
+                                            float speed, 
+                                            float maxAcc
+                                            
+                                            )
     {
+        int t1 = (int)Math.floor(timeToReachPoint(distance, speed, -1*  maxAcc));
+        
+        if (speed*t1 - t1*t1*(maxAcc/2)/2 > distance)
+        
         return 0;
     }
+    
+    private static double timeToReachPoint(int dist, float speed, float acc)
+    {
+        return Math.floor ( 
+            speed*(1-Math.sqrt(1 + 2*(acc/2)*dist/speed*speed))/(acc/2) 
+            ); 
+    }
+    
+    private static double positionAfterTime(int speed, int acc, int time)
+    {
+        return acc*acc*time/2 + speed * time;
+    }
+
 }
