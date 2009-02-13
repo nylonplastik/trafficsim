@@ -114,6 +114,7 @@ public class ClientController1 implements IController
             }
             else  // if (car.isParked()) 
             {
+                
                 // Acceleration adjustment.
 
                 // Determining if there is a need to reduce speed because
@@ -144,17 +145,35 @@ public class ClientController1 implements IController
                 Position currentPosition = car.getPosition();
                 int distanceToEnd = currentPosition.getLane().getLength()
                                                - currentPosition.getCoord();
+                
+                if (distanceToEnd == 0)
+                    break;
+                
                 if (plannedRoute != null)
                 {
                     for(Lane l : plannedRoute)
                         distanceToEnd += l.getLength();
                 }
                 
-                float acceleration = adjustAcceleration(distanceToEnd, 
+                double acceleration = adjustAcceleration(distanceToEnd, 
                                                         car.getSpeed(), 
                                                         car.getAcceleration()
                                                         );
+                // When approaching to the end, keep slowing down
+                if (acceleration < -1*car.getMaxAcceleration()/2 && distanceToEnd > car.getMaxAcceleration())
+                    car.changeAcceleration((float)acceleration);
                 
+                // When close enough, stop slowing down
+                if (distanceToEnd < car.getMaxAcceleration())
+                    car.changeAcceleration(0);
+                
+                // final stop
+                if (2*car.getSpeed() + car.getAcceleration() > distanceToEnd)
+                {
+                    float newAcc = distanceToEnd - 2*((int)(car.getSpeed()));
+                    car.changeAcceleration(newAcc);
+                }
+                    
  
                
             }        
@@ -172,29 +191,24 @@ public class ClientController1 implements IController
         return (int)( distance + speed2*timeFrame - speed1*timeFrame);
     }
     
-    private static float adjustAcceleration(int distance, 
-                                            float speed, 
-                                            float maxAcc
-                                            
+    private static double adjustAcceleration(int distance, 
+                                            double speed, 
+                                            double maxAcc                                      
                                             )
     {
-        int t1 = (int)Math.floor(timeToReachPoint(distance, speed, -1*  maxAcc));
-        
-        if (speed*t1 - t1*t1*(maxAcc/2)/2 > distance)
-        
-        return 0;
+        return acccelerationToStopAt(speed, distance);
     }
     
-    private static double timeToReachPoint(int dist, float speed, float acc)
+    private static double timeToReachPoint(int dist, double speed, double acc)
     {
-        return Math.floor ( 
-            speed*(1-Math.sqrt(1 + 2*(acc/2)*dist/speed*speed))/(acc/2) 
-            ); 
+        double delta = (2*speed-acc)*(2*speed-acc) + 4*acc*dist;
+        double time = (acc - 2*speed + Math.sqrt(delta)) / (2*acc);
+        return time;
     }
     
-    private static double positionAfterTime(int speed, int acc, int time)
+    private static double acccelerationToStopAt(double speed, int dist)
     {
-        return acc*acc*time/2 + speed * time;
+        return speed/(1-2*dist/speed);
     }
 
 }
