@@ -133,14 +133,28 @@ public class ClientController1 implements IController
                     car.changeAcceleration(newAcc);
                 }
                 
-/*                
+               
                 // Determining if there is a need to reduce speed because
                 // we need to stop (end of route, red light, ...)
-                float currentAcceleration = car.getAcceleration();
+
                 
-                // chec kif it is possible to stop before end of route
-                car.changeAcceleration(-1 * car.getMaxAcceleration());
-*/                
+                // get distance to the end of planned route
+                LinkedList<Lane> plannedRoute = car.getRoute();
+                Position currentPosition = car.getPosition();
+                int distanceToEnd = currentPosition.getLane().getLength()
+                                               - currentPosition.getCoord();
+                if (plannedRoute != null)
+                {
+                    for(Lane l : plannedRoute)
+                        distanceToEnd += l.getLength();
+                }
+                
+                adjustAcceleration(distanceToEnd, 
+                                   car.getSpeed(), 
+                                   car.getAcceleration()
+                                   );
+ 
+               
             }        
         }
     }
@@ -154,5 +168,10 @@ public class ClientController1 implements IController
             int timeFrame)
     {
         return (int)( distance + speed2*timeFrame - speed1*timeFrame);
+    }
+    
+    private static float adjustAcceleration(int distance, float speed, float acc)
+    {
+        
     }
 }
