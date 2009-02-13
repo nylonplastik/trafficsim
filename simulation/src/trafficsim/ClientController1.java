@@ -149,10 +149,11 @@ public class ClientController1 implements IController
                         distanceToEnd += l.getLength();
                 }
                 
-                adjustAcceleration(distanceToEnd, 
-                                   car.getSpeed(), 
-                                   car.getAcceleration()
-                                   );
+                float acceleration = adjustAcceleration(distanceToEnd, 
+                                                        car.getSpeed(), 
+                                                        car.getAcceleration()
+                                                        );
+                
  
                
             }        
@@ -172,6 +173,6 @@ public class ClientController1 implements IController
     
     private static float adjustAcceleration(int distance, float speed, float acc)
     {
-        
+        return 0;
     }
 }
