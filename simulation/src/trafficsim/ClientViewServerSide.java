@@ -21,12 +21,13 @@
 package trafficsim;
 
 // imports {{{
-import java.util.SortedMap;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
+import trafficSim.CarData;
 //}}}
-import java.util.Set;
+
 
 /**
  *
@@ -95,8 +96,13 @@ public class ClientViewServerSide implements Observer  //{{{
             return;
         Model model = (Model)o;
         
-        createClientView(model);
-            
+        Hashtable<Integer, CarData> carData = p_data.getCarData();
+        carData = new Hashtable<Integer, CarData>();
+        for (Car c : p_observedCars)
+        {
+            carData.put(c.getId(), new CarData(c));
+        }
+        
         updateClientSideView();
     } //}}}
     
@@ -155,7 +161,7 @@ public class ClientViewServerSide implements Observer  //{{{
         updateClientSideView();
          * */
     }
-    
+/*    
     private void addClosestLanesAndCrossses(
                                  Car car, 
                                  LinkedList<Lane> lanes,
@@ -201,7 +207,7 @@ public class ClientViewServerSide implements Observer  //{{{
         }
           
     }
-    
+    */
 } //}}}
 
 
