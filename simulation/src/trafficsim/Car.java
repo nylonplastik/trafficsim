@@ -42,8 +42,8 @@ public class Car implements Serializable //{{{
     private Position     position;
     private float        speed;
     private float        acceleration; 
-    private static float maxSpeed = 12;
-    private static float maxAcceleration = 5;
+    private float        maxSpeed = 12;
+    private float        maxAcceleration = 5;
     private boolean      collided = false;    // if there was a collision
     
     private Parking      currentParking;
@@ -52,12 +52,7 @@ public class Car implements Serializable //{{{
      * The route that this car is about to move on.
      */
     private LinkedList<Lane> plannedRoute;
-
-    /**
-     * list of lanes that this car is observing
-     */
-    private LinkedList<Lane>   observedLanes = null;
-        
+    
      //}}}
     
     private synchronized int getNewId() //{{{
@@ -385,8 +380,8 @@ public class Car implements Serializable //{{{
         this.currentParking = null;
         
         // set new state
-        if (accel > this.maxAcceleration)
-            accel = this.maxAcceleration;
+        if (accel > maxAcceleration)
+            accel = maxAcceleration;
         this.speed         = 0;
         this.acceleration  = accel;
     } //}}}
@@ -408,56 +403,22 @@ public class Car implements Serializable //{{{
     
     public void changeAcceleration(float newAcceleration) //{{{
     {
-        if (newAcceleration > this.maxAcceleration || 
-        		-1.0*newAcceleration > this.maxAcceleration)
-        {
-            if (newAcceleration < 0)
-            	this.acceleration = (float)-1.0*this.maxAcceleration;
-            else
-            	this.acceleration = this.maxAcceleration;
-        }
-        else
-        	this.acceleration = newAcceleration;
+
     } //}}}
-
-    public void setObservedLanes(LinkedList<Lane> p_observedLanes) {
-        this.observedLanes = p_observedLanes;
-    }
-
-    public LinkedList<Lane> getObservedLanes() {
-        return this.observedLanes;
-    }
     
-    public boolean hasColided()
-    {
-        return this.collided;
-    }
-
-	public static int getCarsCount() {
+	public synchronized static int getCarsCount() {
 		return carsCount;
 	}
 
-	public static void setCarsCount(int carsCount) {
-		Car.carsCount = carsCount;
-	}
-
-	public static float getMaxSpeed() {
+	public synchronized float getMaxSpeed() {
 		return maxSpeed;
 	}
 
-	public static void setMaxSpeed(float maxSpeed) {
-		Car.maxSpeed = maxSpeed;
-	}
-
-	public Parking getCurrentParking() {
+	public synchronized Parking getCurrentParking() {
 		return currentParking;
 	}
 
-	public void setCurrentParking(Parking currentParking) {
-		this.currentParking = currentParking;
-	}
-
-	public LinkedList<Lane> getPlannedRoute() {
+	public synchronized LinkedList<Lane> getPlannedRoute() {
 		return plannedRoute;
 	}
 
@@ -465,38 +426,28 @@ public class Car implements Serializable //{{{
 		this.plannedRoute = plannedRoute;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public synchronized void setAcceleration(float newAcceleration) 
+        {
+            if (newAcceleration > maxAcceleration || 
+                            -1.0*newAcceleration > maxAcceleration)
+            {
+                if (newAcceleration < 0)
+                    this.acceleration = (float)-1.0*maxAcceleration;
+                else
+                    this.acceleration = maxAcceleration;
+            }
+            else
+                    this.acceleration = newAcceleration;
 	}
 
-	public void setNextCarDistance(int nextCarDistance) {
-		this.nextCarDistance = nextCarDistance;
-	}
 
-	public void setPosition(Position position) {
-		this.position = position;
-	}
-
-	public void setSpeed(float speed) {
-		this.speed = speed;
-	}
-
-	public void setAcceleration(float acceleration) {
-		this.acceleration = acceleration;
-	}
-
-	public static void setMaxAcceleration(float maxAcceleration) {
-		Car.maxAcceleration = maxAcceleration;
-	}
-
-	public boolean isCollided() {
+	public synchronized boolean isCollided() {
 		return collided;
 	}
 
-	public void setCollided(boolean collided) {
+	public synchronized void setCollided(boolean collided) {
 		this.collided = collided;
 	}
-
 } //}}}
 
 /* vim: set ts=4 sw=4 sts=4 et foldmethod=marker: */

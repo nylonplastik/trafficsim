@@ -280,19 +280,22 @@ public class Lane implements Serializable //{{{
 		this.adjacentLanes = adjacentLanes;
 	}
 
-	public SortedMap<Integer, Car> getCarsOnLane() {
+	public synchronized SortedMap<Integer, Car> getCarsOnLane() {
 		return carsOnLane;
 	}
 
-	public void setCarsOnLane(SortedMap<Integer, Car> carsOnLane) {
+	public synchronized void setCarsOnLane(SortedMap<Integer, Car> 
+                                               carsOnLane
+                                               ) 
+        {
 		this.carsOnLane = carsOnLane;
 	}
 
-	public Hashtable<Integer, Lights> getLights() {
+	public synchronized Hashtable<Integer, Lights> getLights() {
 		return lights;
 	}
 
-	public void setLights(Hashtable<Integer, Lights> lights) {
+	public synchronized void setLights(Hashtable<Integer, Lights> lights) {
 		this.lights = lights;
 	}
 
@@ -300,15 +303,11 @@ public class Lane implements Serializable //{{{
 		return defaultNextLane;
 	}
 
-	public void setSpeedLimit(int speedLimit) {
+	public synchronized void setSpeedLimit(int speedLimit) {
 		this.speedLimit = speedLimit;
 	}
 
-	public void setLength(int length) {
-		this.length = length;
-	}
-
-	public void setVirtual(boolean isVirtual) {
+	public synchronized void setVirtual(boolean isVirtual) {
 		this.isVirtual = isVirtual;
 	}
     

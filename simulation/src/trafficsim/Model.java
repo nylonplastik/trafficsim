@@ -42,9 +42,9 @@ public class Model extends Observable //{{{
     private int nextCrossId = 1;
     
     /**
-     * LinkedList of all lane crosses.
+     * Hashtable of all lane crosses.
      */
-    private Hashtable<Integer, LanesCross>      crosses;
+    private Hashtable<Integer, LanesCross>            crosses;
     
     /***
      * List of all lanes.

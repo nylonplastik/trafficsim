@@ -28,7 +28,7 @@ package trafficsim;
  * Position of car
  * @author Adam Rutkowski
  */
-public class Position {
+public class Position  {
     private Lane     lane;
     private Integer  coord;
     public enum     e_info
@@ -38,16 +38,17 @@ public class Position {
         NOT_DRIVING     // the car is not on the street
     };
     e_info          info;
-    public void setLane(Lane lane) {
+    
+    public synchronized void setLane(Lane lane) {
         this.lane = lane;
     }
-    public Lane getLane() {
+    public synchronized Lane getLane() {
         return lane;
     }
-    public void setCoord(Integer coord) {
+    public synchronized void setCoord(Integer coord) {
         this.coord = coord;
     }
-    public Integer getCoord() {
+    public synchronized Integer getCoord() {
         return coord;
     }
 }

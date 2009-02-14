@@ -20,7 +20,6 @@
 
 package trafficsim;
 
-import java.lang.Math;
 import java.util.Iterator;
 import java.util.LinkedList;
 

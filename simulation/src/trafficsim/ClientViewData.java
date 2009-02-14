@@ -35,8 +35,6 @@ import java.util.Hashtable;
 public class ClientViewData { //{{{
     
     // Variables {{{    
-   
-    private LinkedList<Car>                    observedCars;
     
     /**
      * List of all lanes close enough to controlled cars.
@@ -62,20 +60,11 @@ public class ClientViewData { //{{{
     
     public ClientViewData() //{{{
     {
-        setObservedCars(new LinkedList<Car>());
         setBorderCrosses(new LinkedList<LanesCross>());
         setCars(new LinkedList<Car>());
         setLanes(new LinkedList<Lane>());
         setCrosses(new Hashtable<Integer, LanesCross>());
     } //}}}
-
-    public void setObservedCars(LinkedList<Car> observedCars) {
-        this.observedCars = observedCars;
-    }
-
-    public LinkedList<Car> getObservedCars() {
-        return observedCars;
-    }
 
     public void setCrosses(Hashtable<Integer, LanesCross> crosses) {
         this.crosses = crosses;

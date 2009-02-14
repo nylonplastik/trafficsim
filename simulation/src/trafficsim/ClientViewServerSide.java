@@ -21,11 +21,12 @@
 package trafficsim;
 
 // imports {{{
-import java.util.Hashtable;
+import java.util.SortedMap;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 //}}}
+import java.util.Set;
 
 /**
  *
@@ -36,6 +37,8 @@ import java.util.Observer;
 public class ClientViewServerSide implements Observer  //{{{
 {
     // Variables {{{
+    
+    private static final int     VIEW_RADIUS = 100;
     
     private ClientViewData       p_data;
     
@@ -114,24 +117,87 @@ public class ClientViewServerSide implements Observer  //{{{
         p_data.getCars().clear();
         p_data.getCrosses().clear();
         p_data.getLanes().clear();
-        p_data.getObservedCars().clear();
+        
+        LinkedList<Lane>        closestLanes   = new LinkedList<Lane>();
+        LinkedList<LanesCross>  closestCrosses = new LinkedList<LanesCross>();
+        LinkedList<Car>         closestCars    = new LinkedList<Car>(); 
+        
+        for (Car c : p_observedCars)
+        {
+            addClosestLanesAndCrossses(c, closestLanes, closestCrosses);
+            closestCars.add(c);
+        }
         
         
-        // TODO: it's a shallow copy only. Doesn't make much sense.
-        synchronized  (model)
+        // Get all cars from close lanes
+        for (Lane l : closestLanes)
         {
-            p_data.setCrosses((Hashtable<Integer, LanesCross>) model.getLanesCrosses().clone());
-            p_data.setLanes((LinkedList<Lane>) model.getLanes().clone());
-            p_data.setCars((LinkedList<Car>) model.getCars().clone());
+            SortedMap<Integer, Car> carsOnLane = l.getCarsOnLane();
+            Set<Integer> ids;
+            
+            synchronized(carsOnLane)
+            {
+                ids = carsOnLane.keySet();
+            
+                for(Integer id : ids)
+                    if (!closestCars.contains(carsOnLane.get(id)))
+                        closestCars.add(carsOnLane.get(id));
+            }       
         }
-         
-        // TODO : add some real client view creation        
-/*          
-        foreach (Car c : p_observedCars)
+        
+        p_data.setCars(closestCars);
+        p_data.setLanes(closestLanes);
+        
+        for(LanesCross c : closestCrosses)
+            p_data.getCrosses().put(c.getId(), c);
+        
+        updateClientSideView();
+    }
+    
+    private void addClosestLanesAndCrossses(
+                                 Car car, 
+                                 LinkedList<Lane> lanes,
+                                 LinkedList<LanesCross> crosses
+                                 )
+    { 
+        if (car.getPosition().info == Position.e_info.NOT_DRIVING)
+            return;
+        
+        Lane currentLane = car.getPosition().getLane();
+        LinkedList<Lane> adjecentLanes = currentLane.getAdjacentLanes();
+        
+        // add adjecent lines
+        for (Lane l : adjecentLanes)
+            if (!lanes.contains(l))
+                lanes.add(l);
+        
+        // add crosses on the end of added lanes
+        LinkedList<LanesCross> closestCrosses = new LinkedList<LanesCross>();
+        LinkedList<LanesCross> endingCrosses  = new LinkedList<LanesCross>();
+        LinkedList<LanesCross> borderCrosses  = new LinkedList<LanesCross>();
+        
+        for (Lane l : adjecentLanes)
         {
-            addClosestLanes()
+            if (!closestCrosses.contains(l.getDestination()))
+            {
+                 closestCrosses.add(l.getDestination());       
+                 endingCrosses.add(l.getDestination());
+            }
+            if (!closestCrosses.contains(l.getSource()))
+                closestCrosses.add(l.getSource());                  
         }
- */
+        
+        // add lanes outgoing from adjecent crosses
+        for (LanesCross c : endingCrosses)
+        {
+            if (!crosses.contains(c))
+                crosses.add(c);
+            
+            for( Lane l : c.getOutgoingLanes() )
+                if (!lanes.contains(l))
+                    lanes.add(l);
+        }
+          
     }
     
 } //}}}
