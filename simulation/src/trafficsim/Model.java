@@ -213,6 +213,7 @@ public class Model extends Observable //{{{
             newRoute.add(lanesById.get(i));
         
         car.setPlannedRoute(newRoute);
+        setChanged();
     }
 
 	public Hashtable<Integer, LanesCross> getCrosses() {
@@ -262,6 +263,7 @@ public class Model extends Observable //{{{
         {
             c.startMoving(acceleration);
         }
+        setChanged();
     }
     
     void setAcceleration(int carId, float acceleration)
@@ -271,6 +273,7 @@ public class Model extends Observable //{{{
         {
             c.setAcceleration(acceleration);
         }
+        setChanged();
     }
     
     void setRoute(int carId, LinkedList<Integer> route)
@@ -287,7 +290,8 @@ public class Model extends Observable //{{{
         synchronized(c)
         {
             c.setRoute(newRoute);
-        }        
+        }      
+        setChanged();
     }
         
         

@@ -158,7 +158,6 @@ public class ClientController1 implements IController
                         LinkedList<Integer> newRoute = new LinkedList<Integer>();
                         newRoute.add(possibleRoutes.get(rand).getId());
                         serverModel.setPlannedRoute(car.getId(), newRoute);
-                        routeHasChanged = true;
                     }
                 }
                 
@@ -237,23 +236,10 @@ public class ClientController1 implements IController
                 
             }        
             
-            sendInfoToModel(car, routeHasChanged);
+            serverModel.setAcceleration(car.getId(), car.getAcceleration());
         }
     }
-    
-    void sendInfoToModel(Car car, boolean routeHasChanged)
-    {
-        serverModel.setAcceleration(car.getId(), car.getAcceleration());
-        if (routeHasChanged)
-        {
-            LinkedList<Integer> newRoute = p_controlledCars;
-            for (Lane l : car.getPlannedRoute())
-            {
-                newRoute.add(l.getId());
-            }
-            serverModel.setPlannedRoute(car.getId(), newRoute);
-        }
-    }
+  
     
     // Trying to predict distance between two cars basing on their current speed
     // and current distance between them.
