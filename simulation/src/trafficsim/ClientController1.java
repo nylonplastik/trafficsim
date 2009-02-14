@@ -22,6 +22,9 @@ package trafficsim;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Random;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Singleton class responsible for somulation control.
@@ -44,16 +47,19 @@ public class ClientController1 implements IController
     // When other's car movenent prediction is done, the decission about
     // speed reduction is made basing on predicted distance between one car
     // and another after PREDICTION_TIME_FRAME. This constant determines a 
-    // treshold value of predicted distance between cars .
+    // treshold value of predicted distance between cars.
     private static final int           SAFE_MOVE_DISTANCE = 50;  
-        
     
+    private static final int           CONTROLLED_CARS    = 1;
+        
+    private Random                     randomizer;
     
     public ClientController1(Model model, ClientViewClientSide view)
     {
         p_model          = model;
         p_view           = view;
         p_controlledCars = new LinkedList<Car>();
+        randomizer       = new Random(new Date().getTime());   
     }
     
     public void start()
@@ -64,7 +70,7 @@ public class ClientController1 implements IController
         if (!(parkings = p_model.getParkings()).isEmpty())
         {
             // start one new cars on first available parking
-            for (int i = 0; i <30; i++) 
+            for (int i = 0; i <CONTROLLED_CARS; i++) 
             {
                 // new car parked on first parking
                 newCar = p_model.newCar(parkings.get(0));
@@ -117,9 +123,20 @@ public class ClientController1 implements IController
             }
             else  // if (car.isParked()) 
             {
-               
-                // Acceleration adjustment.
-
+                // Add random lane to car's planned route if it's empty
+                if (car.getPlannedRoute().isEmpty())
+                {
+                    LanesCross next = car.getPosition().getLane().
+                                                            getDestination();
+                    LinkedList<Lane> possibleRoutes = next.getOutgoingLanes();
+                    if (!possibleRoutes.isEmpty())
+                    {
+                        int rand = randomizer.nextInt(possibleRoutes.size());
+                        car.getPlannedRoute().add(possibleRoutes.get(rand));
+                    }
+                }
+                
+                // Acceleration adjustment.                
                 // Determining if there is a need to reduce speed because
                 // the net car os moving slowly.
                 Car nextCar = car.getNextCar();

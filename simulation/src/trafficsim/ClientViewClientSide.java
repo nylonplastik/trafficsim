@@ -25,9 +25,6 @@
 
 package trafficsim;
 
-import java.util.LinkedList;
-
-
 /**
  *
  * @author Adam Rutkowski

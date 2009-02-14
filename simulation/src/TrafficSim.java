@@ -63,23 +63,23 @@ public class TrafficSim implements Runnable
 		}
 		if (m==null)
 		{
-	        m=new Model();
-	        
-	        int cross1 = m.addCross(10,10);
-	        int cross2 = m.addCross(200,200);
-	        int cross3 = m.addCross(200, 300);
-	        Lane lane1 = m.addLane(cross1, cross2, 50, 2000);
-	        Lane lane2 = m.addLane(cross2, cross1, 50, 2000);
-	        Lane lane3 = m.addLane(cross2, cross3, 50, 2000);
-	        Lane lane4 = m.addLane(cross3, cross2, 50, 2000);
-	        if (lane1 != null)
-	            lane1.setDefaultNextLane(lane3);
-	        if (lane2 != null)
-	            lane4.setDefaultNextLane(lane2);
-	        
-	        
-	        m.addParking(lane1, lane2);
-	        m.addParking(lane3, lane4);
+                    m=new Model();
+
+                    int cross1 = m.addCross(10,10);
+                    int cross2 = m.addCross(200,200);
+                    int cross3 = m.addCross(200, 300);
+                    Lane lane1 = m.addLane(cross1, cross2, 50, 2000);
+                    Lane lane2 = m.addLane(cross2, cross1, 50, 2000);
+                    Lane lane3 = m.addLane(cross2, cross3, 50, 2000);
+                    Lane lane4 = m.addLane(cross3, cross2, 50, 2000);
+                    if (lane1 != null)
+                        lane1.setDefaultNextLane(lane3);
+                    if (lane2 != null)
+                        lane4.setDefaultNextLane(lane2);
+
+
+                    m.addParking(lane1, lane2);
+                    m.addParking(lane3, lane4);
 		}
 		
         ClientViewClientSide clientSideView   = new ClientViewClientSide();

@@ -261,8 +261,17 @@ public class Car implements Serializable //{{{
                         }
                     }
                     else
-                        result.setLane(this.plannedRoute.get(this.plannedRoute.indexOf(result.getLane())));
-                    
+                    {
+                        if(plannedRoute.contains(result.getLane()))
+                        {
+                            result.setLane(this.plannedRoute.get(
+                                    this.plannedRoute.indexOf(result.getLane())
+                                    ));
+                        }
+                        else
+                            result.setLane(plannedRoute.get(0));
+                    }
+                        
                     sum += result.getLane().getLength();
                 }
                 result.setCoord(newCoordinate - (sum - result.getLane().getLength()));
