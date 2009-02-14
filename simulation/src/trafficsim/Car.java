@@ -25,8 +25,9 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.SortedMap;
-
+import trafficSim.CarData;
 //}}}
+
 
 /**
  *
@@ -69,6 +70,39 @@ public class Car implements Serializable //{{{
         this.currentParking = null;
         this.position = new Position();
     } //}}}
+    
+    public Car(int id) //{{{
+    {
+    	this.id = id;
+        this.currentParking = null;
+        this.position = new Position();
+    } //}}}
+    
+    public Car(CarData data, Model model)
+    {
+        this.id              = data.id;
+        this.acceleration    = data.acceleration;
+        this.collided        = data.collided;
+        this.currentParking  = model.getParkingById(data.parkingId);
+        this.maxAcceleration = data.maxAcceleration;
+        this.maxSpeed        = data.maxSpeed;
+        this.plannedRoute    = new LinkedList<Lane>();
+        
+        for(int i : data.plannedRoute)
+        {
+            plannedRoute.add(model.getLaneById(i));
+        }
+        
+        if (data.parkingId == -1)
+            this.currentParking = null;
+        else
+            this.currentParking = model.getParkingById(data.parkingId);
+        
+        this.position        = new Position();
+        this.position.setCoord(data.positionCoord);
+        this.position.setLane(model.getLaneById(data.positionLane));
+        this.position.setInfo(data.positionInfo);
+    }
     
     public boolean isParked() //{{{
     {

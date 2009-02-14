@@ -113,6 +113,7 @@ public class ClientViewServerSide implements Observer  //{{{
         
     private void createClientView(Model model)
     {
+        /*
         p_data.getBorderCrosses().clear();
         p_data.getCars().clear();
         p_data.getCrosses().clear();
@@ -152,6 +153,7 @@ public class ClientViewServerSide implements Observer  //{{{
             p_data.getCrosses().put(c.getId(), c);
         
         updateClientSideView();
+         * */
     }
     
     private void addClosestLanesAndCrossses(

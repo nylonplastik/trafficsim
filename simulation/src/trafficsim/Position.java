@@ -51,4 +51,15 @@ public class Position  {
     public synchronized Integer getCoord() {
         return coord;
     }
+    
+    public synchronized e_info getInfo()
+    { 
+        return info;
+    }
+    
+    public synchronized void setInfo(e_info info)
+    {
+        this.info = info;
+    }
+
 }

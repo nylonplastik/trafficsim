@@ -50,6 +50,9 @@ public class Parking implements Serializable //{{{
     private LinkedList<Car>  carsOnParking;
     private LinkedList<Car>  carsLeavingParking;
     
+    private int              id;
+    static int               parkingsCount;
+    
     // }}}
 
     public Parking()
@@ -58,6 +61,7 @@ public class Parking implements Serializable //{{{
     	this.laneToParking = null;
     	this.carsLeavingParking = new LinkedList<Car>();
     	this.carsOnParking = new LinkedList<Car>();
+        this.id = getNewId();
     }
 
     /**
@@ -69,8 +73,14 @@ public class Parking implements Serializable //{{{
     	this.laneToParking = lane_to_parking;
     	this.carsLeavingParking = new LinkedList<Car>();
         this.carsOnParking = new LinkedList<Car>();
+        this.id = getNewId();
     }//}}}
 
+    static synchronized int getNewId()
+    {
+        return parkingsCount++;
+    }
+    
     /**
      * Create new car that drives from Parking
      */
@@ -159,6 +169,10 @@ public class Parking implements Serializable //{{{
 	public void setCarsLeavingParking(LinkedList<Car> carsLeavingParking) {
 		this.carsLeavingParking = carsLeavingParking;
 	}
+
+    public int getId() {
+        return id;
+    }
 
 }//}}}
 

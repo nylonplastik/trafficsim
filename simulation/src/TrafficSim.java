@@ -82,7 +82,7 @@ public class TrafficSim implements Runnable
                     m.addParking(lane3, lane4);
 		}
 		
-        ClientViewClientSide clientSideView   = new ClientViewClientSide();
+        ClientViewClientSide clientSideView   = new ClientViewClientSide(m);
         ClientController1    clientController = 
                 new ClientController1(m, clientSideView);
         ClientViewServerSide v = new ClientViewServerSide(clientSideView, m);

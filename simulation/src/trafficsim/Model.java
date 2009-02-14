@@ -64,6 +64,7 @@ public class Model extends Observable //{{{
     
     private Hashtable<Integer, Car>                   carsById;
     private Hashtable<Integer, Lane>                  lanesById;  
+    private Hashtable<Integer, Parking>               parkingById;
     //}}}
 
     /**
@@ -81,12 +82,13 @@ public class Model extends Observable //{{{
 
     public Model()//{{{
     {
-        crosses   = new Hashtable<Integer, LanesCross>();
-        lanes     = new LinkedList<Lane>();
-        cars      = new LinkedList<Car>();
-        parkings  = new LinkedList<Parking>();
-        carsById  = new Hashtable<Integer, Car>();
-        lanesById = new Hashtable<Integer, Lane>(); 
+        crosses     = new Hashtable<Integer, LanesCross>();
+        lanes       = new LinkedList<Lane>();
+        cars        = new LinkedList<Car>();
+        parkings    = new LinkedList<Parking>();
+        carsById    = new Hashtable<Integer, Car>();
+        lanesById   = new Hashtable<Integer, Lane>(); 
+        parkingById = new Hashtable<Integer, Parking>(); 
     }//}}}
     
     public int addCross(int X, int Y)//{{{
@@ -124,6 +126,7 @@ public class Model extends Observable //{{{
     {
         Parking parking = new Parking(lane_to_cross, lane_to_parking);
         parkings.add(parking);
+        parkingById.put(parking.getId(), parking);
         this.setChanged();
         return parking;
         //this.notifyObservers(WhatHasChanged.Parkings);
@@ -162,14 +165,14 @@ public class Model extends Observable //{{{
         
     }//}}}
      
-    public Car newCar(Parking where)//{{{
+    public int newCar(Parking where)//{{{
     {
         Car newCar = where.newCar();
         cars.add(newCar);
         carsById.put(newCar.getId(), newCar);
         this.setChanged();
         //this.notifyObservers(WhatHasChanged.Cars);
-        return newCar;
+        return newCar.getId();
     }//}}}
 
     public void finishedTimeUpdate()//{{{
@@ -235,6 +238,21 @@ public class Model extends Observable //{{{
 	public void setParkings(LinkedList<Parking> parkings) {
 		this.parkings = parkings;
 	}
+        
+        public Car getCarById(int id)
+        {
+            return carsById.get(id);
+        }
+        
+        public Lane getLaneById (int id)
+        {
+            return lanesById.get(id);
+        }
+        
+        public Parking getParkingById (int id)
+        {
+            return parkingById.get(id);
+        }
  
 }//}}}
 

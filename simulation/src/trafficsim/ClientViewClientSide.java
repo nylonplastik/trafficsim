@@ -25,6 +25,8 @@
 
 package trafficsim;
 
+import java.util.Hashtable;
+
 /**
  *
  * @author Adam Rutkowski
@@ -32,10 +34,17 @@ package trafficsim;
 public class ClientViewClientSide { //{{{
     // Variables {{{
     
-    public ClientViewData       data;
+    protected Hashtable<Integer, Car>     p_cars;            
     
     private IController         p_controller;
+    
+    private Model               p_model;
 
+    
+    public ClientViewClientSide(Model m)
+    {
+        this.p_model = m;
+    }
     
     // TODO: this field should be removed and it's methods invocation replaced
     // by interprocess communication
@@ -54,10 +63,10 @@ public class ClientViewClientSide { //{{{
         p_controller = controller;
     }    
 
-    public void addObservedCar(Car car)
+    public void addObservedCar(int carId)
     {
         if (p_serverSideView != null)
-            p_serverSideView.addObservedCar(car.getId());
+            p_serverSideView.addObservedCar(carId);
     }
     
     public void delObservedCar(Car car)
@@ -70,9 +79,21 @@ public class ClientViewClientSide { //{{{
     // routine upon receiving data from server.
     public void viewChanged(ClientViewData data)
     { //{{{
-        this.data = data;
+        p_cars = new Hashtable<Integer, Car>();
+        
+        // Create Car class instances basing on data from server
+        for(Integer id : data.getCarData().keySet())
+        {
+            p_cars.put(id, new Car(data.getCarData().get(id), p_model));
+        }
+        
         p_controller.viewChanged();
     } //}}}
+
+    public Hashtable<Integer, Car> getCars() {
+        return p_cars;
+    }
+
 } //}}}
 
 /* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */

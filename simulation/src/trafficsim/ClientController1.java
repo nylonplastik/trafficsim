@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.Date;
+import java.util.Hashtable;
 
 /**
  * Singleton class responsible for somulation control.
@@ -33,7 +34,7 @@ public class ClientController1 implements IController
 {       
     private Model                      p_model;
     private ClientViewClientSide       p_view;
-    private LinkedList<Car>            p_controlledCars;
+    private LinkedList<Integer>        p_controlledCars;
     
     // Safe distance between the cars to make one car start moving.
     private static final int           SAFE_START_DISTANCE = 50;  
@@ -57,12 +58,13 @@ public class ClientController1 implements IController
     {
         p_model          = model;
         p_view           = view;
-        p_controlledCars = new LinkedList<Car>();
+        p_controlledCars = new LinkedList<Integer>();
         randomizer       = new Random(new Date().getTime());   
     }
     
     public void start()
     {
+        int newCarId;
         Car newCar;
         LinkedList<Parking> parkings;
         
@@ -72,12 +74,13 @@ public class ClientController1 implements IController
             for (int i = 0; i <CONTROLLED_CARS; i++) 
             {
                 // new car parked on first parking
-                newCar = p_model.newCar(parkings.get(0));
+                newCarId = p_model.newCar(parkings.get(0));
+                p_controlledCars.add(newCarId);
+               
                 // car is trying to leave the parking
-                newCar.goToParkingOutQueue();
+                //model.goToParkingOutQueue(newCarId)
                 
-                p_controlledCars.add(newCar);
-                p_view.addObservedCar(newCar);  
+                p_view.addObservedCar(newCarId);  
             }
         }        
     }
@@ -87,13 +90,14 @@ public class ClientController1 implements IController
      */
     public void viewChanged()
     {
-        LinkedList<Car> carsInView = p_view.data.getCars();
+        Hashtable<Integer, Car> carsInView = p_view.getCars();
+        
         Car car;
         
         // for each controlled car in client's view
-        for (Iterator<Car> it = carsInView.iterator(); it.hasNext(); )
+        for (int carId : p_controlledCars)
         {
-            car = it.next();
+            car = carsInView.get(carId);
                
             if (car.isParked())
             {
