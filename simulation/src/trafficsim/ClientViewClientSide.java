@@ -44,6 +44,7 @@ public class ClientViewClientSide { //{{{
     public ClientViewClientSide(Model m)
     {
         this.p_model = m;
+        p_cars = new Hashtable<Integer, Car>();
     }
     
     // TODO: this field should be removed and it's methods invocation replaced
@@ -79,12 +80,45 @@ public class ClientViewClientSide { //{{{
     // routine upon receiving data from server.
     public void viewChanged(ClientViewData data)
     { //{{{
+        
+        for (int i: p_cars.keySet())
+        {
+            Car car = p_cars.get(i);
+            if (car.isParked())
+                car.getCurrentParking().carIsLeaving(car);
+            else
+                car.getPosition().getLane().carIsLeaving(
+                        car.getPosition().getCoord()
+                        );
+        }
+        
         p_cars = new Hashtable<Integer, Car>();
         
         // Create Car class instances basing on data from server
         for(Integer id : data.getCarData().keySet())
         {
-            p_cars.put(id, new Car(data.getCarData().get(id), p_model));
+            Car newCar = new Car(data.getCarData().get(id), p_model);
+            if (!newCar.isParked())
+            {
+                p_cars.put(id, newCar);
+                Lane l= p_model.getLaneById(newCar.getPosition().getLane().getId());
+                l.putCar(newCar.getPosition().getCoord(), newCar);
+            }
+            else
+            {
+                Parking parking = newCar.getCurrentParking();
+                parking.park(newCar);
+            }
+            p_cars.put(id, newCar);
+        }
+        
+        // update parking info basing on data from server
+        for (Integer id : data.getParkingData().keySet())
+        {
+            p_model.getParkingById(id).updateData(
+                    data.getParkingData().get(id),
+                    p_cars
+                    );
         }
         
         p_controller.viewChanged();

@@ -32,6 +32,10 @@ import java.util.Hashtable;
  */
 public class ClientController1 implements IController
 {       
+    // TODO: to be removed when communication is implemented
+    private Model                serverModel;
+    public void setServerModel(Model model) { serverModel = model; }
+    
     private Model                      p_model;
     private ClientViewClientSide       p_view;
     private LinkedList<Integer>        p_controlledCars;
@@ -74,7 +78,7 @@ public class ClientController1 implements IController
             for (int i = 0; i <CONTROLLED_CARS; i++) 
             {
                 // new car parked on first parking
-                newCarId = p_model.newCar(parkings.get(0));
+                newCarId = serverModel.newCar(parkings.get(0));
                 p_controlledCars.add(newCarId);
                
                 // car is trying to leave the parking
@@ -82,7 +86,9 @@ public class ClientController1 implements IController
                 
                 p_view.addObservedCar(newCarId);  
             }
-        }        
+        }       
+        
+        serverModel.refresh();
     }
     
     /***
@@ -98,7 +104,8 @@ public class ClientController1 implements IController
         for (int carId : p_controlledCars)
         {
             car = carsInView.get(carId);
-               
+            boolean routeHasChanged = false;
+            
             if (car.isParked())
             {
                  // if car is parked, try to leave the parking
@@ -119,7 +126,7 @@ public class ClientController1 implements IController
                     {
                         // there is enough space on lane to move and we know 
                         // where to go.
-                        car.startMoving(3);
+                        serverModel.startMoving(car.getId(), 3);
                     }  
                 }
                 continue;
@@ -132,7 +139,11 @@ public class ClientController1 implements IController
                     int index = car.getPlannedRoute().indexOf(
                                         car.getPosition().getLane());
                     for (int i=0; i<=index; i++)
+                    {
+                        routeHasChanged = true;
                         car.getPlannedRoute().remove();
+                    }
+                    
                 }
                 
                 // Add random lane to car's planned route if it's empty
@@ -147,6 +158,7 @@ public class ClientController1 implements IController
                         LinkedList<Integer> newRoute = new LinkedList<Integer>();
                         newRoute.add(possibleRoutes.get(rand).getId());
                         p_model.setPlannedRoute(car.getId(), newRoute);
+                        routeHasChanged = true;
                     }
                 }
                 
@@ -221,10 +233,25 @@ public class ClientController1 implements IController
                 {
                     float newAcc2 = distanceToEnd - 2*((int)(car.getSpeed()));
                     car.changeAcceleration(newAcc2);
-                }                 
- 
-               
+                }  
+                
             }        
+            
+            sendInfoToModel(car, routeHasChanged);
+        }
+    }
+    
+    void sendInfoToModel(Car car, boolean routeHasChanged)
+    {
+        serverModel.setAcceleration(car.getId(), car.getAcceleration());
+        if (routeHasChanged)
+        {
+            LinkedList<Integer> newRoute = p_controlledCars;
+            for (Lane l : car.getPlannedRoute())
+            {
+                newRoute.add(l.getId());
+            }
+            serverModel.setPlannedRoute(car.getId(), newRoute);
         }
     }
     

@@ -26,7 +26,10 @@ import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 import trafficSim.CarData;
+import trafficSim.ParkingData;
 //}}}
+
+
 
 
 /**
@@ -96,11 +99,30 @@ public class ClientViewServerSide implements Observer  //{{{
             return;
         Model model = (Model)o;
         
+        /* Set information about current state of cars */
+        p_data.setCarData(new Hashtable<Integer, CarData>());
         Hashtable<Integer, CarData> carData = p_data.getCarData();
-        carData = new Hashtable<Integer, CarData>();
         for (Car c : p_observedCars)
         {
             carData.put(c.getId(), new CarData(c));
+        }
+        p_data.setCarData(carData);
+        
+        /* Set information about current state of parkings */
+        p_data.setParkingData(new Hashtable<Integer, trafficSim.ParkingData>());
+        Hashtable<Integer, ParkingData> parkingData  = p_data.getParkingData();
+        
+        /* find parkings that our cars are parked at */
+        LinkedList<Parking> observedParkings = new LinkedList<Parking>();
+        for (Car c : p_observedCars)
+            if (c.isParked())
+                if (!observedParkings.contains(c.getCurrentParking()))
+                    observedParkings.add(c.getCurrentParking());
+        
+        /* copy data about parkings */
+        for (Parking p : observedParkings)
+        {
+            parkingData.put(p.getId(),  new ParkingData(p));
         }
         
         updateClientSideView();

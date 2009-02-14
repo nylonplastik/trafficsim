@@ -23,9 +23,11 @@ package trafficsim;
 // imports {{{
 
 import java.io.Serializable;
+import java.util.Hashtable;
 import java.util.LinkedList;
 
 // }}}
+import trafficSim.ParkingData;
 
 /**
  * Entry/Exit point for cars
@@ -62,7 +64,7 @@ public class Parking implements Serializable //{{{
     	this.carsLeavingParking = new LinkedList<Car>();
     	this.carsOnParking = new LinkedList<Car>();
         this.id = getNewId();
-    }
+    } 
 
     /**
      * @param lane_to_cross Lane from Parking to LanesCross
@@ -75,6 +77,16 @@ public class Parking implements Serializable //{{{
         this.carsOnParking = new LinkedList<Car>();
         this.id = getNewId();
     }//}}}
+    
+    public Parking(Lane lane_to_cross, Lane lane_to_parking, int id) //{{{
+    {
+    	this.laneToCross = lane_to_cross;
+    	this.laneToParking = lane_to_parking;
+    	this.carsLeavingParking = new LinkedList<Car>();
+        this.carsOnParking = new LinkedList<Car>();
+        this.id = id;
+    }//}}}
+    
 
     static synchronized int getNewId()
     {
@@ -125,13 +137,11 @@ public class Parking implements Serializable //{{{
     
     public boolean carIsLeaving(Car car)//{{{
     {
-        if (canLeaveParking(car))
-        {
-        	this.carsLeavingParking.remove(0);
-            return true;
-        }
-        else
-            return false;
+        if (carsLeavingParking.contains(car))
+           carsLeavingParking.remove(car);
+        if (carsOnParking.contains(car))
+            carsOnParking.remove(car);
+        return true;
     }//}}}
     public Lane laneOut() //{{{
     {
@@ -172,6 +182,18 @@ public class Parking implements Serializable //{{{
 
     public int getId() {
         return id;
+    }
+    
+    public void updateData(ParkingData data, Hashtable<Integer, Car> cars)
+    {
+        carsLeavingParking = new LinkedList<Car>();
+        carsOnParking      = new LinkedList<Car>();
+        
+        for (int i : data.carsLeavingParking)
+            carsLeavingParking.add(cars.get(i));
+        
+        for (int i: data.carsOnParking)
+            carsOnParking.add(cars.get(i));         
     }
 
 }//}}}

@@ -47,7 +47,8 @@ public class TrafficSim implements Runnable
         }
     }
 
-    private Model m = null;
+    private Model serverModel = null;
+    private Model clientModel = null;
     
     /**
      * Shows main frame 
@@ -56,51 +57,71 @@ public class TrafficSim implements Runnable
     public void run()
     {
                 // Create simple model
-        m = null;
+        serverModel = null;
         //try {
 	//		m=Model.loadModel("model.xml");
 	//	} catch (FileNotFoundException e1) {
         //}
 		//if (m==null)
 		{
-                    m=new Model();
+                    serverModel=new Model();
 
-                    int cross1 = m.addCross(10,10);
-                    int cross2 = m.addCross(200,200);
-                    int cross3 = m.addCross(200, 300);
-                    Lane lane1 = m.addLane(cross1, cross2, 50, 2000);
-                    Lane lane2 = m.addLane(cross2, cross1, 50, 2000);
-                    Lane lane3 = m.addLane(cross2, cross3, 50, 2000);
-                    Lane lane4 = m.addLane(cross3, cross2, 50, 2000);
+                    int cross1 = serverModel.addCross(10,10);
+                    int cross2 = serverModel.addCross(200,200);
+                    int cross3 = serverModel.addCross(200, 300);
+                    Lane lane1 = serverModel.addLane(cross1, cross2, 50, 2000);
+                    Lane lane2 = serverModel.addLane(cross2, cross1, 50, 2000);
+                    Lane lane3 = serverModel.addLane(cross2, cross3, 50, 2000);
+                    Lane lane4 = serverModel.addLane(cross3, cross2, 50, 2000);
                     if (lane1 != null)
                         lane1.setDefaultNextLane(lane3);
                     if (lane2 != null)
                         lane4.setDefaultNextLane(lane2);
 
 
-                    m.addParking(lane1, lane2);
-                    m.addParking(lane3, lane4);
+                    serverModel.addParking(lane1, lane2);
+                    serverModel.addParking(lane3, lane4);
+                    
+                    clientModel=new Model();
+
+                    cross1 = clientModel.addCross(10,10, 0);
+                    cross2 = clientModel.addCross(200,200, 1);
+                    cross3 = clientModel.addCross(200, 300, 2);
+                    lane1 = clientModel.addLane(cross1, cross2, 50, 2000, 0);
+                    lane2 = clientModel.addLane(cross2, cross1, 50, 2000, 1);
+                    lane3 = clientModel.addLane(cross2, cross3, 50, 2000, 2);
+                    lane4 = clientModel.addLane(cross3, cross2, 50, 2000, 3);
+                    if (lane1 != null)
+                        lane1.setDefaultNextLane(lane3);
+                    if (lane2 != null)
+                        lane4.setDefaultNextLane(lane2);
+
+
+                    clientModel.addParking(lane1, lane2, 0);
+                    clientModel.addParking(lane3, lane4, 1);                    
 		}
 		
-        ClientViewClientSide clientSideView   = new ClientViewClientSide(m);
+        ClientViewClientSide clientSideView   = new ClientViewClientSide(serverModel);
         ClientController1    clientController = 
-                new ClientController1(m, clientSideView);
-        ClientViewServerSide v = new ClientViewServerSide(clientSideView, m);
+                new ClientController1(clientModel, clientSideView);
+        ClientViewServerSide v = new ClientViewServerSide(clientSideView, serverModel);
         clientSideView.setController(clientController);
         clientSideView.setServerSideView(v);
+
+        @SuppressWarnings("unused")
+        Client c = new Client(serverModel, clientSideView, v);
         
+        /* TODO TO BE REMOVED */clientController.setServerModel(serverModel);
         clientController.start();
         
-        @SuppressWarnings("unused")
-        Client c = new Client(m, clientSideView, v);
    
         // Create time controller
-        TimeController tc = TimeController.getTimeController(m);
+        TimeController tc = TimeController.getTimeController(serverModel);
         final Thread timeControlThread = new Thread(tc);
         timeControlThread.start();
         
         MainFrame frame = new MainFrame("Simulation of road traffic");
-        frame.setModel(m);
+        frame.setModel(serverModel);
         frame.pack();
         frame.addWindowListener(new WindowListener(){
 
@@ -114,7 +135,7 @@ public class TrafficSim implements Runnable
             public void windowClosed(WindowEvent e) {
                 timeControlThread.interrupt();
                 try {
-					m.saveModel("model.xml");
+					serverModel.saveModel("model.xml");
 				} catch (FileNotFoundException e1) {
 				}
                 System.exit(0);

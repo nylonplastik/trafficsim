@@ -325,6 +325,16 @@ public class Lane implements Serializable //{{{
         return id;
     }
     
+   /* TODO TO BE REMOVED WHEN COMMUNICATION IS ON*/
+    public Lane(int speedLimit, int length, LanesCross source, LanesCross destination, int id) //{{{
+    {
+        this.speedLimit = speedLimit;
+        this.length = length;
+        this.destination = destination;
+        this.source = source;
+        this.id = id;
+    } //}}}
+    
 } //}}}
 
 /* vim: set ts=4 sw=4 sts=4 et foldmethod=marker: */

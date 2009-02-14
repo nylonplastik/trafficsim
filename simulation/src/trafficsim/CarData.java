@@ -37,9 +37,25 @@ public class CarData {
         if (car.getCurrentParking() == null)
             this.parkingId = -1;
         else this.parkingId = car.getCurrentParking().getId();
-        this.positionCoord   = car.getPosition().getCoord();
+        if (car.getPosition().getCoord() == null)
+        {
+            this.positionCoord = -1;
+        }
+        else
+        {
+            this.positionCoord   = car.getPosition().getCoord();
+        }
         this.positionInfo    = car.getPosition().getInfo();
-        this.positionLane    = car.getPosition().getLane().getId();
+        
+        if (car.getPosition().getLane() == null)
+        {
+            this.positionLane    = -1;
+        }
+        else
+        {
+            this.positionLane    = car.getPosition().getLane().getId();
+        }        
+        
         this.speed           = car.getSpeed();
         plannedRoute         = new LinkedList<Integer>();
         for(Lane l : car.getPlannedRoute())

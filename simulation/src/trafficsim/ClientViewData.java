@@ -26,6 +26,7 @@
 package trafficsim;
 import java.util.Hashtable;
 import trafficSim.CarData;
+import trafficSim.ParkingData;
 
 /**
  *
@@ -35,7 +36,8 @@ public class ClientViewData { //{{{
     
    // Variables {{{    
     
-    private Hashtable<Integer, CarData> carData;
+    private Hashtable<Integer, CarData>     carData;
+    protected Hashtable<Integer, ParkingData> parkingData;
 
     public //{{{
     // Variables {{{
@@ -45,6 +47,14 @@ public class ClientViewData { //{{{
 
     public void setCarData(Hashtable<Integer, CarData> carData) {
         this.carData = carData;
+    }
+
+    public Hashtable<Integer, ParkingData> getParkingData() {
+        return parkingData;
+    }
+
+    public void setParkingData(Hashtable<Integer, ParkingData> parkingData) {
+        this.parkingData = parkingData;
     }
 
 } //}}}

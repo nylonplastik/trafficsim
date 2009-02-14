@@ -29,6 +29,7 @@ import java.io.FileOutputStream;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Observable;
+import java.util.concurrent.ConcurrentHashMap;
 //}}}
 
 /**
@@ -62,9 +63,10 @@ public class Model extends Observable //{{{
     private LinkedList<Parking>                       parkings;
     
     
-    private Hashtable<Integer, Car>                   carsById;
-    private Hashtable<Integer, Lane>                  lanesById;  
-    private Hashtable<Integer, Parking>               parkingById;
+    private ConcurrentHashMap<Integer, Car>                   carsById;
+    private ConcurrentHashMap<Integer, Lane>                  lanesById;  
+    private ConcurrentHashMap<Integer, Parking>               parkingById;
+
     //}}}
 
     /**
@@ -86,9 +88,9 @@ public class Model extends Observable //{{{
         lanes       = new LinkedList<Lane>();
         cars        = new LinkedList<Car>();
         parkings    = new LinkedList<Parking>();
-        carsById    = new Hashtable<Integer, Car>();
-        lanesById   = new Hashtable<Integer, Lane>(); 
-        parkingById = new Hashtable<Integer, Parking>(); 
+        carsById    = new ConcurrentHashMap<Integer, Car>();
+        lanesById   = new ConcurrentHashMap<Integer, Lane>(); 
+        parkingById = new ConcurrentHashMap<Integer, Parking>(); 
     }//}}}
     
     public int addCross(int X, int Y)//{{{
@@ -253,6 +255,95 @@ public class Model extends Observable //{{{
         {
             return parkingById.get(id);
         }
+        
+        public void refresh()
+        {
+            finishedTimeUpdate();
+        }
+        
+    void startMoving(int carId, int acceleration) 
+    {
+        Car c = carsById.get(carId);
+        synchronized (c)
+        {
+            c.startMoving(acceleration);
+        }
+    }
+    
+    void setAcceleration(int carId, float acceleration)
+    {
+        Car c = carsById.get(carId);
+        synchronized(c)
+        {
+            c.setAcceleration(acceleration);
+        }
+    }
+    
+    void setRoute(int carId, LinkedList<Integer> route)
+    {
+        LinkedList<Lane> newRoute = new LinkedList<Lane>();
+        
+        // reconstuct the route
+        for (Integer i : route)
+        {
+            newRoute.add(lanesById.get(i));
+        }
+        
+        Car c = carsById.get(carId);
+        synchronized(c)
+        {
+            c.setRoute(newRoute);
+        }        
+    }
+        
+        
+        
+        
+        
+        
+        
+    /* TODO TO BE REMOVED WHEN COMMUNICATION IS ON*/
+    public int addCross(int X, int Y, int id)//{{{
+    {
+        crosses.put(id, new LanesCross(id, X, Y) );
+        this.setChanged();
+        return id;
+        //this.notifyObservers(WhatHasChanged.Crosses);
+    }//}}}
+    
+    /* TODO TO BE REMOVED WHEN COMMUNICATION IS ON*/
+    public Lane addLane(int start, int end, int maxSpeed, int length, int id)//{{{
+    {
+        if (!crosses.containsKey(start) || !crosses.containsKey(end))
+            return null;
+        
+        LanesCross cStart = crosses.get(start);
+        LanesCross cEnd = crosses.get(end);
+        
+        Lane newLane = new Lane(maxSpeed, length, cStart, cEnd, id);
+        
+        cStart.addConnection(end, newLane );
+        cEnd.addIncoming(newLane);
+        cStart.addOutgoing(newLane);
+        
+        lanes.add(newLane);
+        lanesById.put(newLane.getId(), newLane);
+        this.setChanged();
+        //this.notifyObservers(WhatHasChanged.Lanes);
+        
+        return newLane;
+    }//}}}
+    
+    /* TODO TO BE REMOVED WHEN COMMUNICATION IS ON*/
+    public Parking addParking(Lane lane_to_cross, Lane lane_to_parking, int id)  
+    {//{{{
+        Parking parking = new Parking(lane_to_cross, lane_to_parking, id);
+        parkings.add(parking);
+        parkingById.put(parking.getId(), parking);
+        this.setChanged();
+        return parking;
+        //this.notifyObservers(WhatHasChanged.Parkings);
+    }//}}}  
  
 }//}}}
 
