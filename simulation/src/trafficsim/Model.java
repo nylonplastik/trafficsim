@@ -29,7 +29,7 @@ import java.io.FileOutputStream;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Observable;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
 //}}}
 
 /**
@@ -205,18 +205,12 @@ public class Model extends Observable //{{{
     {
         Car car;
         
-        synchronized (carsById)
-        {
-            car = carsById.get(carId);
-        }
+        car = carsById.get(carId);
         
         LinkedList<Lane> newRoute = new LinkedList<Lane>();
         
-        synchronized(lanesById)
-        {
-            for (int i : route)
-                newRoute.add(lanesById.get(i));
-        }
+        for (int i : route)
+            newRoute.add(lanesById.get(i));
         
         car.setPlannedRoute(newRoute);
     }

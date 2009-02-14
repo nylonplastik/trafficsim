@@ -157,7 +157,7 @@ public class ClientController1 implements IController
                         int rand = randomizer.nextInt(possibleRoutes.size());
                         LinkedList<Integer> newRoute = new LinkedList<Integer>();
                         newRoute.add(possibleRoutes.get(rand).getId());
-                        p_model.setPlannedRoute(car.getId(), newRoute);
+                        serverModel.setPlannedRoute(car.getId(), newRoute);
                         routeHasChanged = true;
                     }
                 }
