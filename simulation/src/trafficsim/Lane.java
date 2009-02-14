@@ -37,6 +37,8 @@ import java.util.*;
 public class Lane implements Serializable //{{{
 {  
     // Variables {{{
+    private int                  id;
+    private static int           lanesCount = 0;
     private static final int     UNLIMITED_SPEED = Integer.MAX_VALUE;
     private static final int     DEFAULT_LENGTH = 100;
     private int                  speedLimit = Lane.UNLIMITED_SPEED;
@@ -91,12 +93,18 @@ public class Lane implements Serializable //{{{
         return this.isVirtual;
     } //}}}
     
+    private synchronized int getNewId()
+    {
+        return lanesCount++;
+    }
+    
     public Lane()
     {
     	this.speedLimit = Lane.UNLIMITED_SPEED;
         this.length = Lane.DEFAULT_LENGTH;
         this.destination = null;
         this.source = null;
+        this.id = getNewId();
     }
     
     public Lane(LanesCross source,LanesCross destination) //{{{
@@ -105,6 +113,7 @@ public class Lane implements Serializable //{{{
         this.length = Lane.DEFAULT_LENGTH;
         this.destination = destination;
         this.source = source;
+        this.id = getNewId();
     } //}}}
     
     public Lane(int speedLimit, int length, LanesCross source, LanesCross destination) //{{{
@@ -256,60 +265,64 @@ public class Lane implements Serializable //{{{
         return this.defaultNextLane;
     }
 
-	public LanesCross getDestination() {
-		return destination;
-	}
+    public LanesCross getDestination() {
+            return destination;
+    }
 
-	public void setDestination(LanesCross destination) {
-		this.destination = destination;
-	}
+    public void setDestination(LanesCross destination) {
+            this.destination = destination;
+    }
 
-	public LanesCross getSource() {
-		return source;
-	}
+    public LanesCross getSource() {
+            return source;
+    }
 
-	public void setSource(LanesCross source) {
-		this.source = source;
-	}
+    public void setSource(LanesCross source) {
+            this.source = source;
+    }
 
-	public LinkedList<Lane> getAdjacentLanes() {
-		return adjacentLanes;
-	}
+    public LinkedList<Lane> getAdjacentLanes() {
+            return adjacentLanes;
+    }
 
-	public void setAdjacentLanes(LinkedList<Lane> adjacentLanes) {
-		this.adjacentLanes = adjacentLanes;
-	}
+    public void setAdjacentLanes(LinkedList<Lane> adjacentLanes) {
+            this.adjacentLanes = adjacentLanes;
+    }
 
-	public synchronized SortedMap<Integer, Car> getCarsOnLane() {
-		return carsOnLane;
-	}
+    public synchronized SortedMap<Integer, Car> getCarsOnLane() {
+            return carsOnLane;
+    }
 
-	public synchronized void setCarsOnLane(SortedMap<Integer, Car> 
-                                               carsOnLane
-                                               ) 
-        {
-		this.carsOnLane = carsOnLane;
-	}
+    public synchronized void setCarsOnLane(SortedMap<Integer, Car> 
+                                           carsOnLane
+                                           ) 
+    {
+            this.carsOnLane = carsOnLane;
+    }
 
-	public synchronized Hashtable<Integer, Lights> getLights() {
-		return lights;
-	}
+    public synchronized Hashtable<Integer, Lights> getLights() {
+            return lights;
+    }
 
-	public synchronized void setLights(Hashtable<Integer, Lights> lights) {
-		this.lights = lights;
-	}
+    public synchronized void setLights(Hashtable<Integer, Lights> lights) {
+            this.lights = lights;
+    }
 
-	public Lane getDefaultNextLane() {
-		return defaultNextLane;
-	}
+    public Lane getDefaultNextLane() {
+            return defaultNextLane;
+    }
 
-	public synchronized void setSpeedLimit(int speedLimit) {
-		this.speedLimit = speedLimit;
-	}
+    public synchronized void setSpeedLimit(int speedLimit) {
+            this.speedLimit = speedLimit;
+    }
 
-	public synchronized void setVirtual(boolean isVirtual) {
-		this.isVirtual = isVirtual;
-	}
+    public synchronized void setVirtual(boolean isVirtual) {
+            this.isVirtual = isVirtual;
+    }
+
+    public int getId() {
+        return id;
+    }
     
 } //}}}
 
