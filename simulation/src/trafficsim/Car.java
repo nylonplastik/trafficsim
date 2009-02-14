@@ -431,7 +431,8 @@ public class Car implements Serializable //{{{
 		return plannedRoute;
 	}
 
-	public void setPlannedRoute(LinkedList<Lane> plannedRoute) {
+	public synchronized void setPlannedRoute(LinkedList<Lane> plannedRoute) 
+        {
 		this.plannedRoute = plannedRoute;
 	}
 

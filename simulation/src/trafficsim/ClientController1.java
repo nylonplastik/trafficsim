@@ -23,7 +23,6 @@ package trafficsim;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -123,6 +122,15 @@ public class ClientController1 implements IController
             }
             else  // if (car.isParked()) 
             {
+                // remove used lanes from planned route
+                if(car.getPlannedRoute().contains(car.getPosition().getLane()))
+                {
+                    int index = car.getPlannedRoute().indexOf(
+                                        car.getPosition().getLane());
+                    for (int i=0; i<=index; i++)
+                        car.getPlannedRoute().remove();
+                }
+                
                 // Add random lane to car's planned route if it's empty
                 if (car.getPlannedRoute().isEmpty())
                 {
@@ -132,7 +140,9 @@ public class ClientController1 implements IController
                     if (!possibleRoutes.isEmpty())
                     {
                         int rand = randomizer.nextInt(possibleRoutes.size());
-                        car.getPlannedRoute().add(possibleRoutes.get(rand));
+                        LinkedList<Integer> newRoute = new LinkedList<Integer>();
+                        newRoute.add(possibleRoutes.get(rand).getId());
+                        p_model.setPlannedRoute(car.getId(), newRoute);
                     }
                 }
                 

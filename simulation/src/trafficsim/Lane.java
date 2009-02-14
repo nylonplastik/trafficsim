@@ -122,6 +122,7 @@ public class Lane implements Serializable //{{{
         this.length = length;
         this.destination = destination;
         this.source = source;
+        this.id = getNewId();
     } //}}}
     
     public void addAdjecent(Lane lane) //{{{

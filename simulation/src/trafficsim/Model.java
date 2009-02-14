@@ -61,6 +61,9 @@ public class Model extends Observable //{{{
      */
     private LinkedList<Parking>                       parkings;
     
+    
+    private Hashtable<Integer, Car>                   carsById;
+    private Hashtable<Integer, Lane>                  lanesById;  
     //}}}
 
     /**
@@ -78,10 +81,12 @@ public class Model extends Observable //{{{
 
     public Model()//{{{
     {
-        crosses  = new Hashtable<Integer, LanesCross>();
-        lanes    = new LinkedList<Lane>();
-        cars     = new LinkedList<Car>();
-        parkings = new LinkedList<Parking>();
+        crosses   = new Hashtable<Integer, LanesCross>();
+        lanes     = new LinkedList<Lane>();
+        cars      = new LinkedList<Car>();
+        parkings  = new LinkedList<Parking>();
+        carsById  = new Hashtable<Integer, Car>();
+        lanesById = new Hashtable<Integer, Lane>(); 
     }//}}}
     
     public int addCross(int X, int Y)//{{{
@@ -108,6 +113,7 @@ public class Model extends Observable //{{{
         cStart.addOutgoing(newLane);
         
         lanes.add(newLane);
+        lanesById.put(newLane.getId(), newLane);
         this.setChanged();
         //this.notifyObservers(WhatHasChanged.Lanes);
         
@@ -160,6 +166,7 @@ public class Model extends Observable //{{{
     {
         Car newCar = where.newCar();
         cars.add(newCar);
+        carsById.put(newCar.getId(), newCar);
         this.setChanged();
         //this.notifyObservers(WhatHasChanged.Cars);
         return newCar;
@@ -187,6 +194,26 @@ public class Model extends Observable //{{{
     	XMLEncoder encoder = new XMLEncoder(os);
     	encoder.writeObject(this);
     	encoder.close();
+    }
+    
+    public void setPlannedRoute(int carId, LinkedList<Integer> route)
+    {
+        Car car;
+        
+        synchronized (carsById)
+        {
+            car = carsById.get(carId);
+        }
+        
+        LinkedList<Lane> newRoute = new LinkedList<Lane>();
+        
+        synchronized(lanesById)
+        {
+            for (int i : route)
+                newRoute.add(lanesById.get(i));
+        }
+        
+        car.setPlannedRoute(newRoute);
     }
 
 	public Hashtable<Integer, LanesCross> getCrosses() {
