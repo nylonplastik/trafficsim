@@ -25,8 +25,8 @@
 
 package trafficsim;
 import java.util.Hashtable;
-import trafficSim.CarData;
-import trafficSim.ParkingData;
+import trafficsim.CarData;
+import trafficsim.ParkingData;
 
 /**
  *

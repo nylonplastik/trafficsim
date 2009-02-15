@@ -25,7 +25,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.SortedMap;
-import trafficSim.CarData;
+import trafficsim.CarData;
 //}}}
 
 

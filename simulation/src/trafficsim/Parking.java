@@ -27,7 +27,7 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 
 // }}}
-import trafficSim.ParkingData;
+import trafficsim.ParkingData;
 
 /**
  * Entry/Exit point for cars

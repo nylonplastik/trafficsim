@@ -25,8 +25,8 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
-import trafficSim.CarData;
-import trafficSim.ParkingData;
+import trafficsim.CarData;
+import trafficsim.ParkingData;
 //}}}
 
 
@@ -109,7 +109,7 @@ public class ClientViewServerSide implements Observer  //{{{
         p_data.setCarData(carData);
         
         /* Set information about current state of parkings */
-        p_data.setParkingData(new Hashtable<Integer, trafficSim.ParkingData>());
+        p_data.setParkingData(new Hashtable<Integer, trafficsim.ParkingData>());
         Hashtable<Integer, ParkingData> parkingData  = p_data.getParkingData();
         
         /* find parkings that our cars are parked at */
