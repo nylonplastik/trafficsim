@@ -78,7 +78,7 @@ public class ClientController1 implements IController
             for (int i = 0; i <CONTROLLED_CARS; i++) 
             {
                 // new car parked on first parking
-                newCarId = serverModel.newCar(parkings.get(0));
+                newCarId = serverModel.newCar(parkings.get(0).getId());
                 p_controlledCars.add(newCarId);
                
                 // car is trying to leave the parking

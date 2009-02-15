@@ -66,6 +66,8 @@ public class Model extends Observable //{{{
     private ConcurrentHashMap<Integer, Car>                   carsById;
     private ConcurrentHashMap<Integer, Lane>                  lanesById;  
     private ConcurrentHashMap<Integer, Parking>               parkingById;
+    
+    private static final int            FAILED = -1;
 
     //}}}
 
@@ -167,15 +169,28 @@ public class Model extends Observable //{{{
         
     }//}}}
      
-    public int newCar(Parking where)//{{{
+    public int newCar(int parkinId)//{{{
     {
-        Car newCar = where.newCar();
-        cars.add(newCar);
+        if (!parkingById.keySet().contains(parkinId))
+            return FAILED;
+        Parking parking = parkingById.get(parkinId);
+        
+        Car newCar;
+        synchronized(parking)
+        {
+            newCar = parking.newCar();  
+        }
+        
+        synchronized(cars)
+        {
+            cars.add(newCar);
+        }
+        
         carsById.put(newCar.getId(), newCar);
         this.setChanged();
         //this.notifyObservers(WhatHasChanged.Cars);
         return newCar.getId();
-    }//}}}
+    }//}}}    
 
     public void finishedTimeUpdate()//{{{
     {
