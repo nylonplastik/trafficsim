@@ -125,7 +125,7 @@ public class TrafficSim implements Runnable
         new Thread(st).start();
         
 
-        ClientViewClientSide clientSideView   = new ClientViewClientSide(serverModel);
+        ClientViewClientSide clientSideView   = new ClientViewClientSide(clientModel);
         ClientController1    clientController = 
                 new ClientController1(clientModel, clientSideView);
         ClientViewServerSide v = new ClientViewServerSide(clientSideView, serverModel);
