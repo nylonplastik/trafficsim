@@ -85,10 +85,10 @@ public class TrafficSim implements Runnable
                     int cross1 = serverModel.addCross(10,10);
                     int cross2 = serverModel.addCross(200,200);
                     int cross3 = serverModel.addCross(200, 300);
-                    Lane lane1 = serverModel.addLane(cross1, cross2, 50, 50000);
-                    Lane lane2 = serverModel.addLane(cross2, cross1, 50, 50000);
-                    Lane lane3 = serverModel.addLane(cross2, cross3, 50, 50000);
-                    Lane lane4 = serverModel.addLane(cross3, cross2, 50, 50000);
+                    Lane lane1 = serverModel.addLane(cross1, cross2, 20, 500);
+                    Lane lane2 = serverModel.addLane(cross2, cross1, 20, 500);
+                    Lane lane3 = serverModel.addLane(cross2, cross3, 20, 500);
+                    Lane lane4 = serverModel.addLane(cross3, cross2, 20, 500);
                     if (lane1 != null)
                         lane1.setDefaultNextLane(lane3);
                     if (lane2 != null)
@@ -103,10 +103,10 @@ public class TrafficSim implements Runnable
                     cross1 = clientModel.addCross(10,10, 0);
                     cross2 = clientModel.addCross(200,200, 1);
                     cross3 = clientModel.addCross(200, 300, 2);
-                    lane1 = clientModel.addLane(cross1, cross2, 50, 50000, 0);
-                    lane2 = clientModel.addLane(cross2, cross1, 50, 50000, 1);
-                    lane3 = clientModel.addLane(cross2, cross3, 50, 50000, 2);
-                    lane4 = clientModel.addLane(cross3, cross2, 50, 50000, 3);
+                    lane1 = clientModel.addLane(cross1, cross2, 20, 500, 0);
+                    lane2 = clientModel.addLane(cross2, cross1, 20, 500, 1);
+                    lane3 = clientModel.addLane(cross2, cross3, 20, 500, 2);
+                    lane4 = clientModel.addLane(cross3, cross2, 20, 500, 3);
                     if (lane1 != null)
                         lane1.setDefaultNextLane(lane3);
                     if (lane2 != null)
@@ -141,7 +141,7 @@ public class TrafficSim implements Runnable
 		new Thread(sp).start();
         new Thread(ct).start();
         
-        ClientViewClientSide clientSideView   = new ClientViewClientSide(serverModel);
+        ClientViewClientSide clientSideView   = new ClientViewClientSide(clientModel);
         ClientController1    clientController = 
                 new ClientController1(clientModel, clientSideView);
         ClientViewServerSide v = new ClientViewServerSide(clientSideView, serverModel);

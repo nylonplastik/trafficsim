@@ -80,7 +80,7 @@ public class Car implements Serializable //{{{
     } //}}}
     
     public Car(CarData data, Model model)
-    {
+    {//{{{
         this.id              = data.id;
         this.acceleration    = data.acceleration;
         this.collided        = data.collided;
@@ -103,7 +103,7 @@ public class Car implements Serializable //{{{
         this.position.setCoord(data.positionCoord);
         this.position.setLane(model.getLaneById(data.positionLane));
         this.position.setInfo(data.positionInfo);
-    }
+    }//}}}
     
     public synchronized boolean isParked() //{{{
     {
@@ -118,14 +118,14 @@ public class Car implements Serializable //{{{
         parking.park(this);
     } //}}}
     
-    public synchronized  void goToParkingOutQueue()
+    public synchronized  void goToParkingOutQueue() //{{{
     {
         if (isParked() == false)
             return ;
         this.currentParking.goToLeavingQueue(this);
         this.plannedRoute = new LinkedList<Lane>();
         this.plannedRoute.add(this.currentParking.laneOut());
-    }
+    }//}}}
     
     public boolean leaveParking() //{{{
     {
@@ -183,7 +183,7 @@ public class Car implements Serializable //{{{
             
             this.position.setLane(newPosition.getLane());
             this.position.setCoord(newPosition.getCoord());
-            this.speed += this.acceleration * timeMiliseconds;
+            this.speed += this.acceleration / 1000 * timeMiliseconds;
         }
     } //}}}
     
@@ -230,13 +230,16 @@ public class Car implements Serializable //{{{
     } //}}}  
     
     public synchronized Position positionAfterTime(
-            int timePeriod, 
+            int timeMiliseconds, 
             int periodsCount
+             
              ) 
     {//{{{
         Position result = new Position();
         result.setLane(this.position.getLane());
         result.setCoord(this.position.getCoord());
+        
+        float timeSeconds = (float) timeMiliseconds / 1000;
         
         if (this.position.getLane() == null)
         {
@@ -245,12 +248,13 @@ public class Car implements Serializable //{{{
         }
         
         int newCoordinate;
-        float current_speed = this.speed,  current_acceleration = this.acceleration;
+        float current_speed        = this.speed;
+        float current_acceleration = this.acceleration;
         
         for (int i=0; i<periodsCount; i++)
         {
-            newCoordinate = result.getCoord() + (int)(timePeriod * current_speed);
-            current_speed +=  (timePeriod * current_acceleration);   
+            newCoordinate =result.getCoord() + (int)(timeSeconds*current_speed);
+            current_speed +=  (timeSeconds * current_acceleration);   
             if (current_speed > this.maxSpeed)
             {
                 current_speed = this.maxSpeed;

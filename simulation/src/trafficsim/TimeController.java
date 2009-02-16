@@ -38,8 +38,7 @@ public class TimeController implements Runnable //{{{
     private static Logger s_log = Logger.getLogger(TimeController.class.toString());
     private static TimeController  s_controller = null;
     private Model   p_model;
-    private int     p_timeTick = 1;
-    private int     p_timeMilisecs = 100;
+    private int     p_timeMilisecs = 50;
     //}}}
     
     private TimeController(Model model) //{{{
@@ -56,21 +55,18 @@ public class TimeController implements Runnable //{{{
     
     private void updateView() //{{{
     {
-        synchronized(p_model)
+        LinkedList<Car> cars  = (LinkedList<Car>) p_model.getCars().clone();
+        for (Car car : cars)
         {
-            LinkedList<Car> cars  = p_model.getCars();
-            for (Car car : cars)
+            try
             {
-                try
-                {
-                    car.move(p_timeTick);
-                }
-                catch (Exception ex)
-                {
-                    // FIXME: should be break ?
-                    break;
-                    //return;
-                }
+                car.move(p_timeMilisecs);
+            }
+            catch (Exception ex)
+            {
+                // FIXME: should be break ?
+                break;
+                //return;
             }
         }
         // TODO: update lights state
