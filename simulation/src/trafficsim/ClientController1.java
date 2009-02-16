@@ -54,7 +54,7 @@ public class ClientController1 implements IController
     // treshold value of predicted distance between cars.
     private static final int           SAFE_MOVE_DISTANCE = 50;  
     
-    private static final int           CONTROLLED_CARS    = 1;
+    private static final int           CONTROLLED_CARS    = 10;
         
     private Random                     randomizer;
     
@@ -85,6 +85,7 @@ public class ClientController1 implements IController
                 // TODO: when communication implemented, these lines 
                 // are to be removed. This operation will be done
                 // in newCarCallback method.
+                serverModel.gotoParkingQueue(newCarId);
                 p_controlledCars.add(newCarId);
                 p_view.addObservedCar(newCarId);                  
             }

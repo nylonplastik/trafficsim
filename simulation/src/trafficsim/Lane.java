@@ -52,7 +52,7 @@ public class Lane implements Serializable //{{{
      * represent the fact that a car can get from the starting lanes cross
      * to the ending one by switching from one lane to an adjecent one.
      * Purpose of holding information about virtual lanes is to make it possible
-     * for graph algorithms to operate easily on streHets structure.
+     * for graph algorithms to operate easily on streets structure.
      */
     private boolean              isVirtual = false;
     
@@ -125,12 +125,12 @@ public class Lane implements Serializable //{{{
         this.id = getNewId();
     } //}}}
     
-    public void addAdjecent(Lane lane) //{{{
+    public synchronized void addAdjecent(Lane lane) //{{{
     {
         adjacentLanes.add(lane);
     } //}}}
 
-    public Lights addLights(int distance, LightsState state) //{{{
+    public synchronized Lights addLights(int distance, LightsState state) //{{{
     {
         if (this.lights.containsKey(distance))
             return this.lights.get(distance);
@@ -139,17 +139,17 @@ public class Lane implements Serializable //{{{
         return lights;
     } //}}}
     
-    public boolean isEmpty() //{{{
+    public synchronized boolean isEmpty() //{{{
     {
         return this.carsOnLane.isEmpty();
     } //}}}
     
-    public boolean isCarOnLane(Car car) //{{{
+    public synchronized boolean isCarOnLane(Car car) //{{{
     {
         return this.carsOnLane.containsValue(car);
     } //}}}
 
-    public Car getFirstCar() //{{{
+    public synchronized Car getFirstCar() //{{{
     {
         if (this.carsOnLane.isEmpty())
             return null;
@@ -160,12 +160,12 @@ public class Lane implements Serializable //{{{
         }
     } //}}}
     
-    public boolean hasLights(int distance) //{{{
+    public synchronized boolean hasLights(int distance) //{{{
     {
         return this.lights.containsKey(distance);
     } //}}}
 
-    public Lights getLights(int distance) //{{{
+    public synchronized Lights getLights(int distance) //{{{
     {
         /*
         if (!p_lights.containsKey(distance))
@@ -174,7 +174,7 @@ public class Lane implements Serializable //{{{
         return this.lights.get(distance);
     } //}}}
     
-    public boolean putCar(int coord, Car car) //{{{
+    public synchronized boolean putCar(int coord, Car car) //{{{
     {
         if (coord > this.length)
             return false;
@@ -182,13 +182,13 @@ public class Lane implements Serializable //{{{
         return true;
     } //}}}
 
-    void carIsLeaving(int coordinate)
+    public synchronized void carIsLeaving(int coordinate)
     {
         if (this.carsOnLane.containsKey(coordinate))
         	this.carsOnLane.remove(coordinate);
     }
 
-    boolean moveCar(Integer coord1, Integer coord2) 
+    public synchronized boolean moveCar(Integer coord1, Integer coord2) 
     {
         // if start and end position are the same, we're done.
         if (coord1 == coord2 && this.carsOnLane.containsKey(coord1))
@@ -209,28 +209,13 @@ public class Lane implements Serializable //{{{
         carsOnLane.put(coord2, carsOnLane.get(coord1));
         carsOnLane.remove(coord1);
         return true;
-        /*
-        // check if there is a car on coord1 and if coord2 is free
-        if (this.carsOnLane.containsKey(coord1) && !this.carsOnLane.containsKey(coord2))
-        {   
-            if ((coord1 < this.carsOnLane.firstKey())&&
-                (this.carsOnLane.get(this.carsOnLane.firstKey()) != this.carsOnLane.get(coord2)))
-            {
-                return false;
-            }
-            this.carsOnLane.put(coord2, this.carsOnLane.get(coord1));
-            this.carsOnLane.remove(coord1);
-            return true;
-        }
-        else return false;
-        */
     }
 
     /**
      * 
      * @return source of lane
      */
-    public LanesCross getLaneSource()
+    public synchronized LanesCross getLaneSource()
     {
         return this.source;
     }
@@ -239,12 +224,12 @@ public class Lane implements Serializable //{{{
      * 
      * @return destination of lane
      */
-    public LanesCross getLaneDestination()
+    public synchronized LanesCross getLaneDestination()
     {
         return this.destination;
     }
     
-    public boolean setDefaultNextLane(Lane next)
+    public synchronized boolean setDefaultNextLane(Lane next)
     {
         if (next == null)
         {
@@ -261,32 +246,32 @@ public class Lane implements Serializable //{{{
         }
     }
     
-    public Lane getDefaultLane()
+    public synchronized Lane getDefaultLane()
     {
         return this.defaultNextLane;
     }
 
-    public LanesCross getDestination() {
+    public synchronized LanesCross getDestination() {
             return destination;
     }
 
-    public void setDestination(LanesCross destination) {
+    public synchronized void setDestination(LanesCross destination) {
             this.destination = destination;
     }
 
-    public LanesCross getSource() {
+    public synchronized LanesCross getSource() {
             return source;
     }
 
-    public void setSource(LanesCross source) {
+    public synchronized void setSource(LanesCross source) {
             this.source = source;
     }
 
-    public LinkedList<Lane> getAdjacentLanes() {
+    public synchronized LinkedList<Lane> getAdjacentLanes() {
             return adjacentLanes;
     }
 
-    public void setAdjacentLanes(LinkedList<Lane> adjacentLanes) {
+    public synchronized void setAdjacentLanes(LinkedList<Lane> adjacentLanes) {
             this.adjacentLanes = adjacentLanes;
     }
 
@@ -309,7 +294,7 @@ public class Lane implements Serializable //{{{
             this.lights = lights;
     }
 
-    public Lane getDefaultNextLane() {
+    public synchronized Lane getDefaultNextLane() {
             return defaultNextLane;
     }
 

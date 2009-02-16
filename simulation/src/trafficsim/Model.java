@@ -69,6 +69,7 @@ public class Model extends Observable //{{{
     
     private static final int            FAILED = -1;
 
+
     //}}}
 
     /**
@@ -310,7 +311,10 @@ public class Model extends Observable //{{{
     }
         
         
-        
+    void gotoParkingQueue(int id) { //{{{
+        Car car = carsById.get(id);
+        car.goToParkingOutQueue();
+    } //}}}  
         
         
         
@@ -357,6 +361,8 @@ public class Model extends Observable //{{{
         return parking;
         //this.notifyObservers(WhatHasChanged.Parkings);
     }//}}}  
+    
+    
  
 }//}}}
 

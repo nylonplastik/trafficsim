@@ -27,7 +27,6 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 
 // }}}
-import trafficsim.ParkingData;
 
 /**
  * Entry/Exit point for cars
@@ -42,7 +41,7 @@ public class Parking implements Serializable //{{{
     /**
      * Lane from Parking to LanesCross
      */
-    private Lane laneToCross;
+    private  Lane            laneToCross;
 
     /**
      * Lane from LanesCross to Parking
@@ -52,7 +51,7 @@ public class Parking implements Serializable //{{{
     private LinkedList<Car>  carsOnParking;
     private LinkedList<Car>  carsLeavingParking;
     
-    private int              id;
+    private final int        id;
     static int               parkingsCount;
     
     // }}}
@@ -109,12 +108,12 @@ public class Parking implements Serializable //{{{
         return newCar;
     }//}}}
         
-    public void park(Car car)//{{{
+    public synchronized void park(Car car)//{{{
     {
     	this.carsOnParking.add(car);
     }//}}}
     
-    public void goToLeavingQueue(Car car)//{{{
+    public synchronized void goToLeavingQueue(Car car)//{{{
     {
         if (this.carsLeavingParking.contains(car) == false)
         {
@@ -122,7 +121,7 @@ public class Parking implements Serializable //{{{
         }
     }//}}}
     
-    public boolean canLeaveParking(Car car)//{{{
+    public synchronized boolean canLeaveParking(Car car)//{{{
     {
         if (this.carsLeavingParking.isEmpty())
         {
@@ -135,7 +134,7 @@ public class Parking implements Serializable //{{{
     }//}}}
     
     
-    public boolean carIsLeaving(Car car)//{{{
+    public synchronized boolean carIsLeaving(Car car)//{{{
     {
         if (carsLeavingParking.contains(car))
            carsLeavingParking.remove(car);
@@ -143,48 +142,56 @@ public class Parking implements Serializable //{{{
             carsOnParking.remove(car);
         return true;
     }//}}}
-    public Lane laneOut() //{{{
+    
+    public synchronized Lane laneOut() //{{{
     {
         return this.laneToCross;
     } //}}}
 
-	public Lane getLaneToCross() {
-		return laneToCross;
-	}
+    public synchronized Lane getLaneToCross() {
+            return laneToCross;
+    }
 
-	public void setLaneToCross(Lane laneToCross) {
-		this.laneToCross = laneToCross;
-	}
+    public synchronized void setLaneToCross(Lane laneToCross) {
+            this.laneToCross = laneToCross;
+    }
 
-	public Lane getLaneToParking() {
-		return laneToParking;
-	}
+    public synchronized Lane getLaneToParking() {
+            return laneToParking;
+    }
 
-	public void setLaneToParking(Lane laneToParking) {
-		this.laneToParking = laneToParking;
-	}
+    public synchronized void setLaneToParking(Lane laneToParking) {
+            this.laneToParking = laneToParking;
+    }
 
-	public LinkedList<Car> getCarsOnParking() {
-		return carsOnParking;
-	}
+    public LinkedList<Car> getCarsOnParking() {
+            return carsOnParking;
+    }
 
-	public void setCarsOnParking(LinkedList<Car> carsOnParking) {
-		this.carsOnParking = carsOnParking;
-	}
+    public synchronized void setCarsOnParking(LinkedList<Car> carsOnParking) 
+    {
+            this.carsOnParking = carsOnParking;
+    }
 
-	public LinkedList<Car> getCarsLeavingParking() {
-		return carsLeavingParking;
-	}
+    public synchronized LinkedList<Car> getCarsLeavingParking() {
+            return carsLeavingParking;
+    }
 
-	public void setCarsLeavingParking(LinkedList<Car> carsLeavingParking) {
-		this.carsLeavingParking = carsLeavingParking;
-	}
+    public synchronized void setCarsLeavingParking(
+            LinkedList<Car> carsLeavingParking
+            ) 
+    {
+            this.carsLeavingParking = carsLeavingParking;
+    }
 
     public int getId() {
         return id;
     }
-    
-    public void updateData(ParkingData data, Hashtable<Integer, Car> cars)
+
+    public synchronized void updateData(
+            ParkingData data, 
+            Hashtable<Integer, Car> cars
+            )
     {
         carsLeavingParking = new LinkedList<Car>();
         carsOnParking      = new LinkedList<Car>();

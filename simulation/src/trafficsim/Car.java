@@ -36,14 +36,14 @@ import java.util.SortedMap;
 public class Car implements Serializable //{{{
 {
     // Variables {{{
-    private int          id;
+    private final int    id;
     private static int   carsCount = 0;
     private int          nextCarDistance;
     private Position     position;
     private float        speed;
     private float        acceleration; 
     private float        maxSpeed = 12;
-    private float        maxAcceleration = 5;
+    private final float  maxAcceleration;
     private boolean      collided = false;    // if there was a collision
     
     private Parking      currentParking;
@@ -65,16 +65,18 @@ public class Car implements Serializable //{{{
      */
     public Car() //{{{
     {
-    	this.id = getNewId();
-        this.currentParking = null;
-        this.position = new Position();
+    	this.id              = getNewId();
+        this.currentParking  = null;
+        this.maxAcceleration = 5;
+        this.position        = new Position();
     } //}}}
     
     public Car(int id) //{{{
     {
-    	this.id = id;
-        this.currentParking = null;
-        this.position = new Position();
+    	this.id              = id;
+        this.currentParking  = null;
+        this.maxAcceleration = 5;        
+        this.position        = new Position();
     } //}}}
     
     public Car(CarData data, Model model)
@@ -103,20 +105,20 @@ public class Car implements Serializable //{{{
         this.position.setInfo(data.positionInfo);
     }
     
-    public boolean isParked() //{{{
+    public synchronized boolean isParked() //{{{
     {
         return (this.currentParking != null);
     } //}}}
     
-    public void park(Parking parking) //{{{
+    public synchronized void park(Parking parking) //{{{
     {
-    	this.currentParking = parking;
+        this.currentParking = parking;
         this.position.setLane(null);
         this.position.info = Position.e_info.NOT_DRIVING;
         parking.park(this);
     } //}}}
     
-    public void goToParkingOutQueue()
+    public synchronized  void goToParkingOutQueue()
     {
         if (isParked() == false)
             return ;
@@ -127,8 +129,9 @@ public class Car implements Serializable //{{{
     
     public boolean leaveParking() //{{{
     {
-       if (this.currentParking == null)
-           return false;
+        if (this.currentParking == null)
+            return false;   
+        
        this.currentParking.goToLeavingQueue(this);
        if (currentParking.canLeaveParking(this))
        {
@@ -151,7 +154,7 @@ public class Car implements Serializable //{{{
      * @param timeUnits
      * @throws java.lang.Exception
      */
-    public void move(int timeMiliseconds) //{{{
+    public synchronized void move(int timeMiliseconds) //{{{
     {
         if (this.position.info == Position.e_info.NOT_DRIVING)
             return;
@@ -161,8 +164,9 @@ public class Car implements Serializable //{{{
         
         // if position has been calculated successfully - set the new position
         if (newPosition.info == Position.e_info.OK)
-        {
-            if (this.position.getLane() != newPosition.getLane())  // car approached new lane?
+        {   
+            // car approached new lane?
+            if (this.position.getLane() != newPosition.getLane())  
             {
                 // try to put the car on new lane
             	this.position.getLane().carIsLeaving(this.position.getCoord());
@@ -171,7 +175,10 @@ public class Car implements Serializable //{{{
             }
             else
                 // try to move car on current lane
-                if (!this.position.getLane().moveCar(this.position.getCoord(), newPosition.getCoord()))
+                if (!this.position.getLane().moveCar(
+                                this.position.getCoord(), 
+                                newPosition.getCoord()
+                                ))
                     return;
             
             this.position.setLane(newPosition.getLane());
@@ -180,31 +187,24 @@ public class Car implements Serializable //{{{
         }
     } //}}}
     
-    /**
-     * modify the observed lanes list according to current position.
-     */
-    public void updateObserverList() //{{{
-    {
-        // here the car object should subscribe and unsubsrcribe for information from
-        // selected Lanes.
-    } //}}}
     
+    // Not synchronized - id is a final field
     public int getId() //{{{
     {
         return this.id;
     } //}}}
     
-    public void setRoute(LinkedList<Lane> route) //{{{
+    public synchronized void setRoute(LinkedList<Lane> route) //{{{
     {
     	this.plannedRoute = route;
     } //}}}
     
-    public LinkedList<Lane> getRoute() //{{{
+    public synchronized LinkedList<Lane> getRoute() //{{{
     {
         return this.plannedRoute;
     } //}}}
     
-    public boolean canLeaveParking(int safeDistance) //{{{
+    public synchronized boolean canLeaveParking(int safeDistance) //{{{
     {
         if (this.currentParking != null)
             if (this.currentParking.canLeaveParking(this))
@@ -229,8 +229,11 @@ public class Car implements Serializable //{{{
         return false;
     } //}}}  
     
-    public Position positionAfterTime(int timePeriod, int periodsCount) //{{{
-    {
+    public synchronized Position positionAfterTime(
+            int timePeriod, 
+            int periodsCount
+             ) 
+    {//{{{
         Position result = new Position();
         result.setLane(this.position.getLane());
         result.setCoord(this.position.getCoord());
@@ -313,7 +316,7 @@ public class Car implements Serializable //{{{
         return result;
     }//}}}
     
-    public Position getPosition() //{{{
+    public synchronized Position getPosition() //{{{
     {
         return this.position;
     } //}}}
@@ -322,7 +325,7 @@ public class Car implements Serializable //{{{
      * Returns car preceding this one on its planned route.
      * @return
      */
-    public Car getNextCar() //{{{
+    public synchronized Car getNextCar() //{{{
     {
         if (this.position.getLane() != null)    // car is on some lane
         {
@@ -336,7 +339,10 @@ public class Car implements Serializable //{{{
                     if (carsOnLane.lastKey() != this.position.getCoord())
                     {
                         // get the part of car list starting with this car
-                        Iterator<Car> iter = carsOnLane.tailMap(this.position.getCoord()).values().iterator();
+                        Iterator<Car> iter = carsOnLane.tailMap(
+                                this.position.getCoord()
+                                ).values().iterator();
+                        
                         // get this car element of the list
                         iter.next();
                         if (iter.hasNext())
@@ -344,23 +350,26 @@ public class Car implements Serializable //{{{
                         	// get next element of the list
                         	Car next = iter.next();
                         	// calculate distance to that car
-                        	this.nextCarDistance = next.getPosition().getCoord() - position.getCoord();
+                        	this.nextCarDistance = 
+                                        next.getPosition().getCoord() - 
+                                            position.getCoord();
                         	// return the next car
                         	return next;
                         }
                     }
             // preceding car not found on current lane. Calculate distance from
             // this car to the end of the lane for use in further calculations.
-            this.nextCarDistance = this.position.getLane().getLength() - this.position.getCoord();
+            this.nextCarDistance = this.position.getLane().getLength() - 
+                                                    this.position.getCoord();
         }
         else
-        	this.nextCarDistance = 0; //since the car is not riding, the distance 
-                    // to next car will be calculated basing on the planned route
-                    // <B>only</B>, so for now the distance is 0.
+        	this.nextCarDistance = 0; //since the car is not riding, the 
+                    // distance  to next car will be calculated basing on the 
+                    // planned route <B>only</B>, so for now the distance is 0.
                                 
         
-        if (this.plannedRoute.isEmpty() == false)  // are there some lanes planned to move on?
-        {
+        if (this.plannedRoute.isEmpty() == false)  // are there some lanes 
+        {                                          // planned to move on?
             // try to find the closest car on planned route
             int i = 0;
             Lane laneOnRoute = null;
@@ -374,10 +383,13 @@ public class Car implements Serializable //{{{
                 this.nextCarDistance += laneOnRoute.getLength();
                 i++;
             }
-            if (i==this.plannedRoute.size())     // whole planned car route is empty
+            if (i==this.plannedRoute.size()) // whole planned car route is empty
                 return null;
-            // distance to the next car is increased by that car position on its lane
-            this.nextCarDistance = laneOnRoute.getFirstCar().getPosition().getCoord();
+            
+            // distance to the next car is increased by that car position 
+            // on its lane
+            this.nextCarDistance = 
+                           laneOnRoute.getFirstCar().getPosition().getCoord();
             return laneOnRoute.getFirstCar();  
         }
         else
@@ -388,7 +400,7 @@ public class Car implements Serializable //{{{
      * Works properly only after successful call to  getNextCar().
      * @return distance to the next car on this car planned route.
      */
-    public int getNextCarDistance() //{{{
+    public synchronized int getNextCarDistance() //{{{
     {
         return this.nextCarDistance;
     } //}}}
@@ -396,7 +408,7 @@ public class Car implements Serializable //{{{
     /**
      * Sets the car on the beginning of its planned route
      */
-    public void startMoving(float accel) //{{{
+    public synchronized void startMoving(float accel) //{{{
     {
         // check if we can move on
         if ( this.position.getLane() != null || 
@@ -428,7 +440,7 @@ public class Car implements Serializable //{{{
         this.acceleration  = accel;
     } //}}}
     
-    public float getAcceleration() //{{{
+    public synchronized float getAcceleration() //{{{
     {
         return this.acceleration;
     } //}}}
@@ -448,48 +460,48 @@ public class Car implements Serializable //{{{
 
     } //}}}
     
-	public synchronized static int getCarsCount() {
-		return carsCount;
-	}
+    public synchronized static int getCarsCount() {
+            return carsCount;
+    }
 
-	public synchronized float getMaxSpeed() {
-		return maxSpeed;
-	}
+    public synchronized float getMaxSpeed() {
+            return maxSpeed;
+    }
 
-	public synchronized Parking getCurrentParking() {
-		return currentParking;
-	}
+    public synchronized Parking getCurrentParking() {
+            return currentParking;
+    }
 
-	public synchronized LinkedList<Lane> getPlannedRoute() {
-		return plannedRoute;
-	}
+    public synchronized LinkedList<Lane> getPlannedRoute() {
+            return plannedRoute;
+    }
 
-	public synchronized void setPlannedRoute(LinkedList<Lane> plannedRoute) 
+    public synchronized void setPlannedRoute(LinkedList<Lane> plannedRoute) 
+    {
+            this.plannedRoute = plannedRoute;
+    }
+
+    public synchronized void setAcceleration(float newAcceleration) 
+    {
+        if (newAcceleration > maxAcceleration || 
+                        -1.0*newAcceleration > maxAcceleration)
         {
-		this.plannedRoute = plannedRoute;
-	}
-
-	public synchronized void setAcceleration(float newAcceleration) 
-        {
-            if (newAcceleration > maxAcceleration || 
-                            -1.0*newAcceleration > maxAcceleration)
-            {
-                if (newAcceleration < 0)
-                    this.acceleration = (float)-1.0*maxAcceleration;
-                else
-                    this.acceleration = maxAcceleration;
-            }
+            if (newAcceleration < 0)
+                this.acceleration = (float)-1.0*maxAcceleration;
             else
-                    this.acceleration = newAcceleration;
-	}
+                this.acceleration = maxAcceleration;
+        }
+        else
+                this.acceleration = newAcceleration;
+    }
 
 
-	public synchronized boolean isCollided() {
-		return collided;
-	}
+    public synchronized boolean isCollided() {
+            return collided;
+    }
 
-	public synchronized void setCollided(boolean collided) {
-		this.collided = collided;
+    public synchronized void setCollided(boolean collided) {
+            this.collided = collided;
 	}
 } //}}}
 
