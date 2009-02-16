@@ -28,11 +28,24 @@ public abstract class ProcessorThread<T> implements Runnable
     private static final int POLLING_TIME_MS = 100;
 
     private boolean processing = false;
-    private LinkedBlockingQueue<T> events = new LinkedBlockingQueue<T>();
-        
+    private LinkedBlockingQueue<T> events = null;
+    
+    public ProcessorThread()
+    {
+    	events = new LinkedBlockingQueue<T>();
+    }
+    
+    public ProcessorThread(ProcessorThread<T> p)
+    {
+    	events = p.getEvents();
+    }
+    
     public void addEvent(final T event)
     {
-        events.add(event);
+    	synchronized(events)
+    	{
+    		events.add(event);
+    	}
     }
 
     public abstract void processEvent(final T event);
@@ -41,14 +54,17 @@ public abstract class ProcessorThread<T> implements Runnable
     public void run() {
         try
         {
-            processing = true;
-            while(processing)
+            setProcessing(true);
+            while(isProcessing())
             {
                 T event = events.poll();
+                T first_event = event;
                 while(event!=null)
                 {
                     processEvent(event);
                     event = events.poll();
+                    if (first_event==event)
+                    	break;
                 }
                 Thread.sleep(POLLING_TIME_MS);
             }
@@ -57,13 +73,18 @@ public abstract class ProcessorThread<T> implements Runnable
         }
     }
 
-    public void setProcessing(boolean processing) {
+    public synchronized void setProcessing(boolean processing) {
         this.processing = processing;
     }
 
-    public boolean isProcessing() {
+    public synchronized boolean isProcessing() {
         return processing;
     }
+    
+    public synchronized LinkedBlockingQueue<T> getEvents() {
+    	return events;
+    }
+
 }
 
 /* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */
