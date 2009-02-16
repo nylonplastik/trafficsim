@@ -20,9 +20,47 @@
 
 package trafficsim.network;
 
-public interface PacketsProcessor
+import java.net.Socket;
+import java.util.LinkedList;
+import java.util.Observable;
+import java.util.Observer;
+import trafficsim.Model;
+
+public class ClientsProcessor extends ProcessorThread<Socket> implements Observer
 {
-	public void processPacket(final Packet packet);
+
+	private LinkedList<Socket> clients = new LinkedList<Socket>();
+	private Model model = null;
+	
+	public ClientsProcessor(Model model)
+	{
+	}
+	
+	@Override
+	public void processEvent(final Socket event) {
+		// sendModel(event,this.model);
+		synchronized(clients)
+		{
+			clients.add(event);
+		}
+	}
+	@Override
+	public synchronized void update(Observable o, Object arg) {
+		// TODO: send update to all clients
+		for(Socket s : clients)
+		{
+			// sendUpdate(s);
+		}
+	}
+	
+	public void setModel(Model model) {
+		this.model = model;
+	}
+	
+	public Model getModel() {
+		return model;
+	}
+	
 }
 
 /* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */

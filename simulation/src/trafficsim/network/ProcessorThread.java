@@ -20,55 +20,22 @@
 
 package trafficsim.network;
 
-import java.util.Hashtable;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class ProcessorThread implements PacketsProcessor, Runnable
+public abstract class ProcessorThread<T> implements Runnable
 {
 
-	private static final int POLLING_TIME = 100;
-
-	private Hashtable<Integer, PacketsProcessor> processors = null;
-	private LinkedBlockingQueue<Packet> packets = new LinkedBlockingQueue<Packet>();
+	private static final int POLLING_TIME_MS = 100;
 
 	private boolean processing = false;
-	
-	@Override
-	public void processPacket(Packet packet) {
-		if ((processors!=null)&&(processors.containsKey(packet.getTypeId())))
-		{
-			PacketsProcessor processor = processors.get(packet.getTypeId());
-			if (processor!=null)
-				processor.processPacket(packet);
-			else
-				processors.remove(packet.getTypeId());
-		}
-	}
-	
-	public void registerProcessor(
-			final Integer packetTypeId,
-			final PacketsProcessor processor)
+	private LinkedBlockingQueue<T> events = new LinkedBlockingQueue<T>();
+		
+	public void addEvent(final T event)
 	{
-		if (processors==null)
-			processors = new Hashtable<Integer, PacketsProcessor>();
-		processors.put(packetTypeId, processor);
-	}
-	
-	public void unregisterProcessor(final Integer packetTypeId)
-	{
-		if (processors!=null)
-		{
-			if (processors.containsKey(packetTypeId))
-				processors.remove(packetTypeId);
-			if (processors.isEmpty())
-				processors = null;
-		}
+		events.add(event);
 	}
 
-	public void addPacket(final Packet packet)
-	{
-		packets.add(packet);
-	}
+	public abstract void processEvent(final T event);
 
 	@Override
 	public void run() {
@@ -77,13 +44,13 @@ public class ProcessorThread implements PacketsProcessor, Runnable
 			processing = true;
 			while(processing)
 			{
-				Packet p = packets.poll();
-				while(p!=null)
+				T event = events.poll();
+				while(event!=null)
 				{
-					processPacket(p);
-					p = packets.poll();
+					processEvent(event);
+					event = events.poll();
 				}
-				Thread.sleep(POLLING_TIME);
+				Thread.sleep(POLLING_TIME_MS);
 			}
 		} catch(InterruptedException e)
 		{	
