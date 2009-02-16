@@ -32,7 +32,7 @@ public class CarData extends Packet {
     
     public CarData(Car car)
     {
-    	super(PacketTypes.CAR_DATA_TYPEID);
+        super(PacketTypes.CAR_DATA_TYPEID);
         this.id              = car.getId();
         this.collided        = car.isCollided();
         this.acceleration    = car.getAcceleration();

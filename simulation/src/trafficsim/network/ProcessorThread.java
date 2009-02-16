@@ -25,45 +25,45 @@ import java.util.concurrent.LinkedBlockingQueue;
 public abstract class ProcessorThread<T> implements Runnable
 {
 
-	private static final int POLLING_TIME_MS = 100;
+    private static final int POLLING_TIME_MS = 100;
 
-	private boolean processing = false;
-	private LinkedBlockingQueue<T> events = new LinkedBlockingQueue<T>();
-		
-	public void addEvent(final T event)
-	{
-		events.add(event);
-	}
+    private boolean processing = false;
+    private LinkedBlockingQueue<T> events = new LinkedBlockingQueue<T>();
+        
+    public void addEvent(final T event)
+    {
+        events.add(event);
+    }
 
-	public abstract void processEvent(final T event);
+    public abstract void processEvent(final T event);
 
-	@Override
-	public void run() {
-		try
-		{
-			processing = true;
-			while(processing)
-			{
-				T event = events.poll();
-				while(event!=null)
-				{
-					processEvent(event);
-					event = events.poll();
-				}
-				Thread.sleep(POLLING_TIME_MS);
-			}
-		} catch(InterruptedException e)
-		{	
-		}
-	}
+    @Override
+    public void run() {
+        try
+        {
+            processing = true;
+            while(processing)
+            {
+                T event = events.poll();
+                while(event!=null)
+                {
+                    processEvent(event);
+                    event = events.poll();
+                }
+                Thread.sleep(POLLING_TIME_MS);
+            }
+        } catch(InterruptedException e)
+        {    
+        }
+    }
 
-	public void setProcessing(boolean processing) {
-		this.processing = processing;
-	}
+    public void setProcessing(boolean processing) {
+        this.processing = processing;
+    }
 
-	public boolean isProcessing() {
-		return processing;
-	}
+    public boolean isProcessing() {
+        return processing;
+    }
 }
 
 /* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */

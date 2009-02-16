@@ -32,7 +32,7 @@ public class CreateServerDialog
     extends JDialog
 {
 
-	private JButton ok_button = null;
+    private JButton ok_button = null;
     private JButton cancel_button = null;
     
     protected void initDialog()

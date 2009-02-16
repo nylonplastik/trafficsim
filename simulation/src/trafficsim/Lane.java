@@ -100,7 +100,7 @@ public class Lane implements Serializable //{{{
     
     public Lane()
     {
-    	this.speedLimit = Lane.UNLIMITED_SPEED;
+        this.speedLimit = Lane.UNLIMITED_SPEED;
         this.length = Lane.DEFAULT_LENGTH;
         this.destination = null;
         this.source = null;
@@ -109,7 +109,7 @@ public class Lane implements Serializable //{{{
     
     public Lane(LanesCross source,LanesCross destination) //{{{
     {
-    	this.speedLimit = Lane.UNLIMITED_SPEED;
+        this.speedLimit = Lane.UNLIMITED_SPEED;
         this.length = Lane.DEFAULT_LENGTH;
         this.destination = destination;
         this.source = source;
@@ -185,7 +185,7 @@ public class Lane implements Serializable //{{{
     public synchronized void carIsLeaving(int coordinate)
     {
         if (this.carsOnLane.containsKey(coordinate))
-        	this.carsOnLane.remove(coordinate);
+            this.carsOnLane.remove(coordinate);
     }
 
     public synchronized boolean moveCar(Integer coord1, Integer coord2) 
@@ -241,7 +241,7 @@ public class Lane implements Serializable //{{{
         }
         else
         {
-        	this.defaultNextLane = next;
+            this.defaultNextLane = next;
             return true;
         }
     }

@@ -102,13 +102,13 @@ public class SimulationComponent extends JComponent implements Observer {
             LanesCross l_source = null;
             LanesCross l_destination = null;
             if ((l!=null)&&((l_source=l.getLaneSource())!=null)&&
-            	((l_destination=l.getLaneDestination())!=null))
+                ((l_destination=l.getLaneDestination())!=null))
             {
-            	int x = l_source.getX();
-            	int y = l_source.getY();
-            	x += p.getCoord()*(l_destination.getX() - l_source.getX())/l.getLength();
-            	y += p.getCoord()*(l_destination.getY() - l_source.getY())/l.getLength();
-            	g.fillRect(x-5,y-5,10,10);
+                int x = l_source.getX();
+                int y = l_source.getY();
+                x += p.getCoord()*(l_destination.getX() - l_source.getX())/l.getLength();
+                y += p.getCoord()*(l_destination.getY() - l_source.getY())/l.getLength();
+                g.fillRect(x-5,y-5,10,10);
             }
         }
     }
@@ -130,15 +130,15 @@ public class SimulationComponent extends JComponent implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-    	this.invalidate();
+        this.invalidate();
         this.repaint();
     }
 
-	@Override
-	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		doUpdate(g);
-	}
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        doUpdate(g);
+    }
 }
 
 /* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */

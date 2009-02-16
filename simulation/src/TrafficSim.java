@@ -37,8 +37,8 @@ public class TrafficSim implements Runnable
 {
 
     private static Logger s_log = Logger.getLogger(TrafficSim.class.toString());
-	ServerThread st = null;
-	
+    ServerThread st = null;
+    
     /**
      * Simulation main
      *
@@ -65,21 +65,21 @@ public class TrafficSim implements Runnable
      */
     public void run()
     {
-    	try {
-			st = new ServerThread(new InetSocketAddress(InetAddress.getByName("0.0.0.0"),23456));
-		} catch (UnknownHostException e2) {
-			s_log.log(Level.SEVERE,"wtf?",e2);
-			System.exit(1);
-		}
-    	new Thread(st).start();
+        try {
+            st = new ServerThread(new InetSocketAddress(InetAddress.getByName("0.0.0.0"),23456));
+        } catch (UnknownHostException e2) {
+            s_log.log(Level.SEVERE,"wtf?",e2);
+            System.exit(1);
+        }
+        new Thread(st).start();
         // Create simple model
         serverModel = null;
         //try {
-        //		m=Model.loadModel("model.xml");
+        //        m=Model.loadModel("model.xml");
         //} catch (FileNotFoundException e1) {
         //}
-		//if (m==null)
-		{
+        //if (m==null)
+        {
                     serverModel=new Model();
 
                     int cross1 = serverModel.addCross(10,10);
@@ -115,8 +115,8 @@ public class TrafficSim implements Runnable
 
                     clientModel.addParking(lane1, lane2, 0);
                     clientModel.addParking(lane3, lane4, 1);                    
-		}
-		
+        }
+        
         ClientViewClientSide clientSideView   = new ClientViewClientSide(serverModel);
         ClientController1    clientController = 
                 new ClientController1(clientModel, clientSideView);
@@ -149,12 +149,12 @@ public class TrafficSim implements Runnable
 
             @Override
             public void windowClosed(WindowEvent e) {
-            	st.setRunning(false);
+                st.setRunning(false);
                 timeControlThread.interrupt();
                 try {
-					serverModel.saveModel("model.xml");
-				} catch (FileNotFoundException e1) {
-				}
+                    serverModel.saveModel("model.xml");
+                } catch (FileNotFoundException e1) {
+                }
                 System.exit(0);
             }
 

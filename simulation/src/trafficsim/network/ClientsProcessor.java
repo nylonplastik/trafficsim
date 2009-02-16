@@ -29,39 +29,39 @@ import trafficsim.Model;
 public class ClientsProcessor extends ProcessorThread<Socket> implements Observer
 {
 
-	private LinkedList<Socket> clients = new LinkedList<Socket>();
-	private Model model = null;
-	
-	public ClientsProcessor(Model model)
-	{
-	}
-	
-	@Override
-	public void processEvent(final Socket event) {
-		// = onConnection
-		// sendModel(event,this.model);
-		synchronized(clients)
-		{
-			clients.add(event);
-		}
-	}
-	@Override
-	public synchronized void update(Observable o, Object arg) {
-		// TODO: send update to all clients
-		for(Socket s : clients)
-		{
-			// sendUpdate(s);
-		}
-	}
-	
-	public void setModel(Model model) {
-		this.model = model;
-	}
-	
-	public Model getModel() {
-		return model;
-	}
-	
+    private LinkedList<Socket> clients = new LinkedList<Socket>();
+    private Model model = null;
+    
+    public ClientsProcessor(Model model)
+    {
+    }
+    
+    @Override
+    public void processEvent(final Socket event) {
+        // = onConnection
+        // sendModel(event,this.model);
+        synchronized(clients)
+        {
+            clients.add(event);
+        }
+    }
+    @Override
+    public synchronized void update(Observable o, Object arg) {
+        // TODO: send update to all clients
+        for(Socket s : clients)
+        {
+            // sendUpdate(s);
+        }
+    }
+    
+    public void setModel(Model model) {
+        this.model = model;
+    }
+    
+    public Model getModel() {
+        return model;
+    }
+    
 }
 
 /* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */

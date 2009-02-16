@@ -65,7 +65,7 @@ public class Car implements Serializable //{{{
      */
     public Car() //{{{
     {
-    	this.id              = getNewId();
+        this.id              = getNewId();
         this.currentParking  = null;
         this.maxAcceleration = 5;
         this.position        = new Position();
@@ -73,7 +73,7 @@ public class Car implements Serializable //{{{
     
     public Car(int id) //{{{
     {
-    	this.id              = id;
+        this.id              = id;
         this.currentParking  = null;
         this.maxAcceleration = 5;        
         this.position        = new Position();
@@ -137,11 +137,11 @@ public class Car implements Serializable //{{{
        {
            // TODO: check if lane out of parking is empty
            // and set it as the only element of planned route
-    	   this.currentParking.carIsLeaving(this);
-    	   this.currentParking = null;
-    	   this.position.setLane(this.plannedRoute.get(0));
-    	   this.plannedRoute.remove(0);
-    	   this.position.setCoord(0);
+           this.currentParking.carIsLeaving(this);
+           this.currentParking = null;
+           this.position.setLane(this.plannedRoute.get(0));
+           this.plannedRoute.remove(0);
+           this.position.setCoord(0);
            return true;
        }
        else
@@ -169,7 +169,7 @@ public class Car implements Serializable //{{{
             if (this.position.getLane() != newPosition.getLane())  
             {
                 // try to put the car on new lane
-            	this.position.getLane().carIsLeaving(this.position.getCoord());
+                this.position.getLane().carIsLeaving(this.position.getCoord());
                 if (!newPosition.getLane().putCar(newPosition.getCoord(), this))
                     return;
             }
@@ -196,7 +196,7 @@ public class Car implements Serializable //{{{
     
     public synchronized void setRoute(LinkedList<Lane> route) //{{{
     {
-    	this.plannedRoute = route;
+        this.plannedRoute = route;
     } //}}}
     
     public synchronized LinkedList<Lane> getRoute() //{{{
@@ -347,14 +347,14 @@ public class Car implements Serializable //{{{
                         iter.next();
                         if (iter.hasNext())
                         {
-                        	// get next element of the list
-                        	Car next = iter.next();
-                        	// calculate distance to that car
-                        	this.nextCarDistance = 
+                            // get next element of the list
+                            Car next = iter.next();
+                            // calculate distance to that car
+                            this.nextCarDistance = 
                                         next.getPosition().getCoord() - 
                                             position.getCoord();
-                        	// return the next car
-                        	return next;
+                            // return the next car
+                            return next;
                         }
                     }
             // preceding car not found on current lane. Calculate distance from
@@ -363,7 +363,7 @@ public class Car implements Serializable //{{{
                                                     this.position.getCoord();
         }
         else
-        	this.nextCarDistance = 0; //since the car is not riding, the 
+            this.nextCarDistance = 0; //since the car is not riding, the 
                     // distance  to next car will be calculated basing on the 
                     // planned route <B>only</B>, so for now the distance is 0.
                                 
@@ -412,7 +412,7 @@ public class Car implements Serializable //{{{
     {
         // check if we can move on
         if ( this.position.getLane() != null || 
-        	 this.plannedRoute.isEmpty() || 
+             this.plannedRoute.isEmpty() || 
              !this.currentParking.canLeaveParking(this))
         {
             return;
@@ -453,7 +453,7 @@ public class Car implements Serializable //{{{
     public float getSpeed() //{{{
     {
         return this.speed;
-    } //}}}    	
+    } //}}}        
     
     public void changeAcceleration(float newAcceleration) //{{{
     {
@@ -502,7 +502,7 @@ public class Car implements Serializable //{{{
 
     public synchronized void setCollided(boolean collided) {
             this.collided = collided;
-	}
+    }
 } //}}}
 
 /* vim: set ts=4 sw=4 sts=4 et foldmethod=marker: */

@@ -41,13 +41,13 @@ public class LightsStateController //{{{
     {
     }//}}}
 
-	public void setModel(Model p_model) {
-		this.p_model = p_model;
-	}
+    public void setModel(Model p_model) {
+        this.p_model = p_model;
+    }
 
-	public Model getModel() {
-		return p_model;
-	}
+    public Model getModel() {
+        return p_model;
+    }
 
 }//}}}
 

@@ -30,87 +30,87 @@ public class ServerThread implements Runnable {
     private static Logger s_log = Logger.getLogger(ServerThread.class.toString());
     
     private InetSocketAddress address = null;
-	private int backlog = 0;
-	private ProcessorThread<Socket> clientsProcessor = null;
-	private boolean running = false;
-	
-	public ServerThread(InetSocketAddress address)
-	{
-		setAddress(address);
-	}
-	
-	public ServerThread(InetSocketAddress address, int backlog)
-	{
-		setAddress(address);
-		setBacklog(backlog);
-	}
+    private int backlog = 0;
+    private ProcessorThread<Socket> clientsProcessor = null;
+    private boolean running = false;
+    
+    public ServerThread(InetSocketAddress address)
+    {
+        setAddress(address);
+    }
+    
+    public ServerThread(InetSocketAddress address, int backlog)
+    {
+        setAddress(address);
+        setBacklog(backlog);
+    }
 
-	@Override
-	public void run() {
-		InetSocketAddress address = getAddress();
-		int backlog = getBacklog();
-		try
-		{
-			ServerSocket socket = new ServerSocket();
-			socket.setReuseAddress(true);
-			socket.setSoTimeout(1000);
-			socket.bind(address,backlog);
-			setRunning(true);
-			while(isRunning())
-			{
-				try
-				{
-					Socket client = socket.accept();
-					ProcessorThread<Socket> cp = getClientsProcessor();
-					if (cp!=null)
-						cp.addEvent(client);
-					else
-						client.close();
-				} catch(SocketTimeoutException e)
-				{					
-				}
-			}
-			socket.close();
-		} catch(SocketException e)
-		{
-			s_log.log(Level.SEVERE,"Server Socket Exception", e);
-		} catch (IOException e)
-		{
-			s_log.log(Level.SEVERE,"Server IO Exception", e);
-		}
-	}
+    @Override
+    public void run() {
+        InetSocketAddress address = getAddress();
+        int backlog = getBacklog();
+        try
+        {
+            ServerSocket socket = new ServerSocket();
+            socket.setReuseAddress(true);
+            socket.setSoTimeout(1000);
+            socket.bind(address,backlog);
+            setRunning(true);
+            while(isRunning())
+            {
+                try
+                {
+                    Socket client = socket.accept();
+                    ProcessorThread<Socket> cp = getClientsProcessor();
+                    if (cp!=null)
+                        cp.addEvent(client);
+                    else
+                        client.close();
+                } catch(SocketTimeoutException e)
+                {                    
+                }
+            }
+            socket.close();
+        } catch(SocketException e)
+        {
+            s_log.log(Level.SEVERE,"Server Socket Exception", e);
+        } catch (IOException e)
+        {
+            s_log.log(Level.SEVERE,"Server IO Exception", e);
+        }
+    }
 
-	public void setAddress(final InetSocketAddress address) {
-		this.address = address;
-	}
+    public void setAddress(final InetSocketAddress address) {
+        this.address = address;
+    }
 
-	public InetSocketAddress getAddress() {
-		return address;
-	}
+    public InetSocketAddress getAddress() {
+        return address;
+    }
 
-	public void setBacklog(int backlog) {
-		this.backlog = backlog;
-	}
+    public void setBacklog(int backlog) {
+        this.backlog = backlog;
+    }
 
-	public int getBacklog() {
-		return backlog;
-	}
+    public int getBacklog() {
+        return backlog;
+    }
 
-	public synchronized void setRunning(boolean running) {
-		this.running = running;
-	}
+    public synchronized void setRunning(boolean running) {
+        this.running = running;
+    }
 
-	public synchronized boolean isRunning() {
-		return running;
-	}
+    public synchronized boolean isRunning() {
+        return running;
+    }
 
-	public synchronized void setClientsProcessor(ProcessorThread<Socket> clientsProcessor) {
-		this.clientsProcessor = clientsProcessor;
-	}
+    public synchronized void setClientsProcessor(ProcessorThread<Socket> clientsProcessor) {
+        this.clientsProcessor = clientsProcessor;
+    }
 
-	public synchronized ProcessorThread<Socket> getClientsProcessor() {
-		return clientsProcessor;
-	}
+    public synchronized ProcessorThread<Socket> getClientsProcessor() {
+        return clientsProcessor;
+    }
 
 }
 
