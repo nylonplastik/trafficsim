@@ -20,86 +20,76 @@
 
 package trafficsim.network;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import trafficsim.Model;
-import trafficsim.network.ClientInfo.ClientState;
+import trafficsim.network.ServerInfo.ServerState;
 
-public class ClientsProcessor extends ProcessorThread<ClientInfo> implements Observer
+public class ServerProcessor extends ProcessorThread<ServerInfo> implements Observer
 {
-    private static Logger s_log = Logger.getLogger(ClientsProcessor.class.toString());
+    private static Logger s_log = Logger.getLogger(ServerProcessor.class.toString());
 
 	private long currentUpdate = 0;
     private Model model = null;
     
-    public ClientsProcessor(Model model)
+    public ServerProcessor(Model model)
     {
     	currentUpdate = System.nanoTime();
     	setModel(model);
     }
 
-    public void sendUpdate(ClientInfo client)
-    {
-    	// TODO: really send update
-    	client.setLastUpdate(currentUpdate);
-    }
-
     @Override
-    public void processEvent(final ClientInfo client) {
-    	switch(client.getClientState())
+    public void processEvent(final ServerInfo server) {
+    	switch(server.getServerState())
     	{
-    		case NEW_CLIENT:
-    			System.out.println("New client");
-    			client.setClientState(ClientState.WAIT_FOR_CLIENT);
+    		case CONNECTED:
+    			server.setServerState(ServerState.WAIT_FOR_CLIENT);
     			break;
     		case WAIT_FOR_CLIENT:
-    			System.out.println("Waiting for client");
-				try {
-	    			InputStream is = client.getSocket().getInputStream();
-	    			int avail = is.available();
-					if (avail>0)
-					{
-		    			System.out.println("New data for client");
-						InputStreamReader isr = new InputStreamReader(is);
-						BufferedReader bis = new BufferedReader(isr);
-						System.out.println(bis.readLine());
-						client.setClientState(ClientState.WAITS_FOR_UPDATE);
-					}
-				} catch (IOException e) {
-					s_log.log(Level.SEVERE,"Waiting for client IO exception",e);
-				}
+    			try
+    			{
+    				OutputStream os = server.getSocket().getOutputStream();
+    				BufferedOutputStream bos = new BufferedOutputStream(os);
+    				PrintWriter pw = new PrintWriter(bos);
+    				pw.println("Hello world");
+    				server.setServerState(ServerState.WAITS_FOR_UPDATE);
+    			} catch(IOException e)
+    			{
+					s_log.log(Level.SEVERE,"IO Exception",e);    				
+    			}
     			break;
     		case WAITS_FOR_UPDATE:
-    			System.out.println("Client waits for update");
-    			if (currentUpdate>client.getLastUpdate())
-    				sendUpdate(client);
+				try {
+					InputStream is = server.getSocket().getInputStream();
+					int avail = is.available();
+					if (avail>0)
+					{
+						//processUpdate(is);
+						server.setServerState(ServerState.DISCONNECT);
+					}
+				} catch (IOException e1) {
+					s_log.log(Level.SEVERE,"IO Exception while waiting for update",e1);
+				}
     			break;
     		case DISCONNECT:
-    			System.out.println("Disconnecting client");
     			try {
-					client.getSocket().close();
+					server.getSocket().close();
 				} catch (IOException e) {
 					s_log.log(Level.WARNING,"Exception while closing socket",e);
 				}
-    			break;
+    			return;
     		default:
     			break;
     	}
-    	if (client.getClientState()!=ClientState.DISCONNECT)
-    	{
-    		System.out.println("Adding client");
-    		addEvent(client);
-    		System.out.println("Client added");
-    	}
+    	addEvent(server);
     }
     
     @Override
