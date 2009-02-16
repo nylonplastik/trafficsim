@@ -78,17 +78,25 @@ public class ClientController1 implements IController
             for (int i = 0; i <CONTROLLED_CARS; i++) 
             {
                 // new car parked on first parking
+                // TODO: this will be replaced by sending request to server.
+                // with no return value.
                 newCarId = serverModel.newCar(parkings.get(0).getId());
-                p_controlledCars.add(newCarId);
-               
-                // car is trying to leave the parking
-                //model.goToParkingOutQueue(newCarId)
                 
-                p_view.addObservedCar(newCarId);  
+                // TODO: when communication implemented, these lines 
+                // are to be removed. This operation will be done
+                // in newCarCallback method.
+                p_controlledCars.add(newCarId);
+                p_view.addObservedCar(newCarId);                  
             }
         }       
         
         serverModel.refresh();
+    }
+    
+    public void newCarCallback(int newCarId)
+    {
+          p_controlledCars.add(newCarId);
+          p_view.addObservedCar(newCarId);  
     }
     
     /***
