@@ -20,29 +20,48 @@
 
 package trafficsim.network;
 
-import java.io.Serializable;
+import java.net.Socket;
+import java.util.LinkedList;
+import java.util.Observable;
+import java.util.Observer;
+import trafficsim.Model;
 
-@SuppressWarnings("serial")
-public class Packet implements Serializable
+public class ClientsProcessor extends ProcessorThread<Socket> implements Observer
 {
-    private int typeId = PacketTypes.EMPTY_TYPEID;
 
-    public Packet()
+    private LinkedList<Socket> clients = new LinkedList<Socket>();
+    private Model model = null;
+    
+    public ClientsProcessor(Model model)
     {
-    }
-
-    public Packet(int typeId)
-    {
-        setTypeId(typeId);
     }
     
-    public int getTypeId() {
-        return typeId;
+    @Override
+    public void processEvent(final Socket event) {
+        // = onConnection
+        // sendModel(event,this.model);
+        synchronized(clients)
+        {
+            clients.add(event);
+        }
     }
-
-    public void setTypeId(final int typeId) {
-        this.typeId = typeId;
+    @Override
+    public synchronized void update(Observable o, Object arg) {
+        // TODO: send update to all clients
+        for(Socket s : clients)
+        {
+            // sendUpdate(s);
+        }
     }
+    
+    public void setModel(Model model) {
+        this.model = model;
+    }
+    
+    public Model getModel() {
+        return model;
+    }
+    
 }
 
 /* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */

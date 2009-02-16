@@ -22,12 +22,12 @@ package trafficsim.network;
 
 public class PacketTypes
 {
-	public static final int EMPTY_TYPEID           = 0;
-	public static final int CAR_DATA_TYPEID        = 1;
-	public static final int MODEL_DATA_TYPEID      = 2;
-	public static final int PARKING_DATA_TYPEID    = 3;
-	public static final int CLIENTVIEW_DATA_TYPEID = 4;
-	
+    public static final int EMPTY_TYPEID           = 0;
+    public static final int CAR_DATA_TYPEID        = 1;
+    public static final int MODEL_DATA_TYPEID      = 2;
+    public static final int PARKING_DATA_TYPEID    = 3;
+    public static final int CLIENTVIEW_DATA_TYPEID = 4;
+    
 }
 
 /* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */

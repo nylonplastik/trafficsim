@@ -20,83 +20,50 @@
 
 package trafficsim.network;
 
-import java.util.Hashtable;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class ProcessorThread implements PacketsProcessor, Runnable
+public abstract class ProcessorThread<T> implements Runnable
 {
 
-	private static final int POLLING_TIME = 100;
+    private static final int POLLING_TIME_MS = 100;
 
-	private Hashtable<Integer, PacketsProcessor> processors = null;
-	private LinkedBlockingQueue<Packet> packets = new LinkedBlockingQueue<Packet>();
+    private boolean processing = false;
+    private LinkedBlockingQueue<T> events = new LinkedBlockingQueue<T>();
+        
+    public void addEvent(final T event)
+    {
+        events.add(event);
+    }
 
-	private boolean processing = false;
-	
-	@Override
-	public void processPacket(Packet packet) {
-		if ((processors!=null)&&(processors.containsKey(packet.getTypeId())))
-		{
-			PacketsProcessor processor = processors.get(packet.getTypeId());
-			if (processor!=null)
-				processor.processPacket(packet);
-			else
-				processors.remove(packet.getTypeId());
-		}
-	}
-	
-	public void registerProcessor(
-			final Integer packetTypeId,
-			final PacketsProcessor processor)
-	{
-		if (processors==null)
-			processors = new Hashtable<Integer, PacketsProcessor>();
-		processors.put(packetTypeId, processor);
-	}
-	
-	public void unregisterProcessor(final Integer packetTypeId)
-	{
-		if (processors!=null)
-		{
-			if (processors.containsKey(packetTypeId))
-				processors.remove(packetTypeId);
-			if (processors.isEmpty())
-				processors = null;
-		}
-	}
+    public abstract void processEvent(final T event);
 
-	public void addPacket(final Packet packet)
-	{
-		packets.add(packet);
-	}
+    @Override
+    public void run() {
+        try
+        {
+            processing = true;
+            while(processing)
+            {
+                T event = events.poll();
+                while(event!=null)
+                {
+                    processEvent(event);
+                    event = events.poll();
+                }
+                Thread.sleep(POLLING_TIME_MS);
+            }
+        } catch(InterruptedException e)
+        {    
+        }
+    }
 
-	@Override
-	public void run() {
-		try
-		{
-			processing = true;
-			while(processing)
-			{
-				Packet p = packets.poll();
-				while(p!=null)
-				{
-					processPacket(p);
-					p = packets.poll();
-				}
-				Thread.sleep(POLLING_TIME);
-			}
-		} catch(InterruptedException e)
-		{	
-		}
-	}
+    public void setProcessing(boolean processing) {
+        this.processing = processing;
+    }
 
-	public void setProcessing(boolean processing) {
-		this.processing = processing;
-	}
-
-	public boolean isProcessing() {
-		return processing;
-	}
+    public boolean isProcessing() {
+        return processing;
+    }
 }
 
 /* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */

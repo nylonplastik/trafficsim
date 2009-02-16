@@ -33,125 +33,125 @@ import trafficsim.gui.SimulationComponent;
 public class TrafficSimEditor implements Runnable
 {
 
-	private JFrame main_frame = null;
-	private Model model = null;
-	private SimulationComponent sim_component = null;
-	private JPanel main_panel = null;
-	private JMenuBar menu_bar = null;
-	private JMenu file_menu = null;
-	private JMenuItem new_model_menu_item = null;
-	private JMenuItem quit_menu_item = null;
-	
-	public static void main(String []args) throws java.lang.reflect.InvocationTargetException
-	{
-		try {
-			SwingUtilities.invokeAndWait(new TrafficSimEditor());
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
+    private JFrame main_frame = null;
+    private Model model = null;
+    private SimulationComponent sim_component = null;
+    private JPanel main_panel = null;
+    private JMenuBar menu_bar = null;
+    private JMenu file_menu = null;
+    private JMenuItem new_model_menu_item = null;
+    private JMenuItem quit_menu_item = null;
+    
+    public static void main(String []args) throws java.lang.reflect.InvocationTargetException
+    {
+        try {
+            SwingUtilities.invokeAndWait(new TrafficSimEditor());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
-	@Override
-	public void run() {
-		try {
-			model = Model.loadModel("model.xml");
-		} catch (FileNotFoundException e1) {
-			model = new Model();
-		}
-		main_frame = new JFrame("TrafficSim Map Editor");
-		
-		/* Menu bar */
-		menu_bar = new JMenuBar();
-		
-		/* File menu */
-		file_menu = new JMenu("File");
-		file_menu.setMnemonic(KeyEvent.VK_F);
+    @Override
+    public void run() {
+        try {
+            model = Model.loadModel("model.xml");
+        } catch (FileNotFoundException e1) {
+            model = new Model();
+        }
+        main_frame = new JFrame("TrafficSim Map Editor");
+        
+        /* Menu bar */
+        menu_bar = new JMenuBar();
+        
+        /* File menu */
+        file_menu = new JMenu("File");
+        file_menu.setMnemonic(KeyEvent.VK_F);
 
-		new_model_menu_item = new JMenuItem("New model",KeyEvent.VK_N);
-		new_model_menu_item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,ActionEvent.CTRL_MASK));
-		
-		new_model_menu_item.addActionListener(new ActionListener(){
+        new_model_menu_item = new JMenuItem("New model",KeyEvent.VK_N);
+        new_model_menu_item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,ActionEvent.CTRL_MASK));
+        
+        new_model_menu_item.addActionListener(new ActionListener(){
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				model = new Model();
-				sim_component.setModel(model);
-			}
-			
-		});
-		file_menu.add(new_model_menu_item);
-		
-		/* Quit menu item */
-		quit_menu_item = new JMenuItem("Quit",KeyEvent.VK_Q);
-		quit_menu_item.setAccelerator(
-				KeyStroke.getKeyStroke(KeyEvent.VK_Q,ActionEvent.CTRL_MASK));
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                model = new Model();
+                sim_component.setModel(model);
+            }
+            
+        });
+        file_menu.add(new_model_menu_item);
+        
+        /* Quit menu item */
+        quit_menu_item = new JMenuItem("Quit",KeyEvent.VK_Q);
+        quit_menu_item.setAccelerator(
+                KeyStroke.getKeyStroke(KeyEvent.VK_Q,ActionEvent.CTRL_MASK));
 
-		quit_menu_item.addActionListener(new ActionListener(){
+        quit_menu_item.addActionListener(new ActionListener(){
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				main_frame.dispose();
-			}
-			
-		});
-		
-		file_menu.addSeparator();
-		file_menu.add(quit_menu_item);
-		
-		menu_bar.add(file_menu);
-		main_frame.setJMenuBar(menu_bar);
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                main_frame.dispose();
+            }
+            
+        });
+        
+        file_menu.addSeparator();
+        file_menu.add(quit_menu_item);
+        
+        menu_bar.add(file_menu);
+        main_frame.setJMenuBar(menu_bar);
 
-		/* Main panel */
-		main_panel = new JPanel(true);
-		
-		/* Simulation component */
-		sim_component = new SimulationComponent(model);
-		main_panel.add(sim_component);
-		
-		main_frame.add(main_panel);
+        /* Main panel */
+        main_panel = new JPanel(true);
+        
+        /* Simulation component */
+        sim_component = new SimulationComponent(model);
+        main_panel.add(sim_component);
+        
+        main_frame.add(main_panel);
 
-		/* Main frame listeners */
-		main_frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		
-		main_frame.addWindowListener(new WindowListener(){
+        /* Main frame listeners */
+        main_frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        
+        main_frame.addWindowListener(new WindowListener(){
 
-			@Override
-			public void windowActivated(WindowEvent e) {
-			}
+            @Override
+            public void windowActivated(WindowEvent e) {
+            }
 
-			@Override
-			public void windowClosed(WindowEvent e) {
-				try {
-					model.saveModel("model.xml");
-				} catch (FileNotFoundException e1) {
-				}
-				System.exit(0);
-			}
+            @Override
+            public void windowClosed(WindowEvent e) {
+                try {
+                    model.saveModel("model.xml");
+                } catch (FileNotFoundException e1) {
+                }
+                System.exit(0);
+            }
 
-			@Override
-			public void windowClosing(WindowEvent e) {
-			}
+            @Override
+            public void windowClosing(WindowEvent e) {
+            }
 
-			@Override
-			public void windowDeactivated(WindowEvent e) {
-			}
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+            }
 
-			@Override
-			public void windowDeiconified(WindowEvent e) {
-			}
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+            }
 
-			@Override
-			public void windowIconified(WindowEvent e) {
-			}
+            @Override
+            public void windowIconified(WindowEvent e) {
+            }
 
-			@Override
-			public void windowOpened(WindowEvent e) {
-			}
-			
-		});
-		main_frame.pack();
-		main_frame.setVisible(true);
-	}
+            @Override
+            public void windowOpened(WindowEvent e) {
+            }
+            
+        });
+        main_frame.pack();
+        main_frame.setVisible(true);
+    }
 }
 
 /* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */

@@ -58,10 +58,10 @@ public class Parking implements Serializable //{{{
 
     public Parking()
     {
-    	this.laneToCross = null;
-    	this.laneToParking = null;
-    	this.carsLeavingParking = new LinkedList<Car>();
-    	this.carsOnParking = new LinkedList<Car>();
+        this.laneToCross = null;
+        this.laneToParking = null;
+        this.carsLeavingParking = new LinkedList<Car>();
+        this.carsOnParking = new LinkedList<Car>();
         this.id = getNewId();
     } 
 
@@ -70,18 +70,18 @@ public class Parking implements Serializable //{{{
      */
     public Parking(Lane lane_to_cross, Lane lane_to_parking) //{{{
     {
-    	this.laneToCross = lane_to_cross;
-    	this.laneToParking = lane_to_parking;
-    	this.carsLeavingParking = new LinkedList<Car>();
+        this.laneToCross = lane_to_cross;
+        this.laneToParking = lane_to_parking;
+        this.carsLeavingParking = new LinkedList<Car>();
         this.carsOnParking = new LinkedList<Car>();
         this.id = getNewId();
     }//}}}
     
     public Parking(Lane lane_to_cross, Lane lane_to_parking, int id) //{{{
     {
-    	this.laneToCross = lane_to_cross;
-    	this.laneToParking = lane_to_parking;
-    	this.carsLeavingParking = new LinkedList<Car>();
+        this.laneToCross = lane_to_cross;
+        this.laneToParking = lane_to_parking;
+        this.carsLeavingParking = new LinkedList<Car>();
         this.carsOnParking = new LinkedList<Car>();
         this.id = id;
     }//}}}
@@ -120,7 +120,7 @@ public class Parking implements Serializable //{{{
     {
         if (this.carsLeavingParking.contains(car) == false)
         {
-        	this.carsLeavingParking.add(car);
+            this.carsLeavingParking.add(car);
         }
     }//}}}
     
@@ -128,7 +128,7 @@ public class Parking implements Serializable //{{{
     {
         if (this.carsLeavingParking.isEmpty())  // TODO: should be contains(..)
         {
-        	this.carsLeavingParking.add(car);
+            this.carsLeavingParking.add(car);
             return true;
         }
         if (this.carsLeavingParking.get(0).getId() == car.getId())

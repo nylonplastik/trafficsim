@@ -197,20 +197,20 @@ public class Model extends Observable //{{{
 
     public static Model loadModel(String fileName) throws FileNotFoundException
     {
-    	Model newModel = null;
-    	FileInputStream is = new FileInputStream(fileName);
-    	XMLDecoder decoder = new XMLDecoder(is);
-    	newModel = (Model)decoder.readObject();
-    	decoder.close();
-    	return newModel;
+        Model newModel = null;
+        FileInputStream is = new FileInputStream(fileName);
+        XMLDecoder decoder = new XMLDecoder(is);
+        newModel = (Model)decoder.readObject();
+        decoder.close();
+        return newModel;
     }
     
     public void saveModel(String fileName) throws FileNotFoundException
     {
-    	FileOutputStream os = new FileOutputStream(fileName);
-    	XMLEncoder encoder = new XMLEncoder(os);
-    	encoder.writeObject(this);
-    	encoder.close();
+        FileOutputStream os = new FileOutputStream(fileName);
+        XMLEncoder encoder = new XMLEncoder(os);
+        encoder.writeObject(this);
+        encoder.close();
     }
     
     public void setPlannedRoute(int carId, LinkedList<Integer> route)
@@ -228,25 +228,25 @@ public class Model extends Observable //{{{
         setChanged();
     }
 
-	public Hashtable<Integer, LanesCross> getCrosses() {
-		return crosses;
-	}
+    public Hashtable<Integer, LanesCross> getCrosses() {
+        return crosses;
+    }
 
-	public void setCrosses(Hashtable<Integer, LanesCross> crosses) {
-		this.crosses = crosses;
-	}
+    public void setCrosses(Hashtable<Integer, LanesCross> crosses) {
+        this.crosses = crosses;
+    }
 
-	public void setLanes(LinkedList<Lane> lanes) {
-		this.lanes = lanes;
-	}
+    public void setLanes(LinkedList<Lane> lanes) {
+        this.lanes = lanes;
+    }
 
-	public void setCars(LinkedList<Car> cars) {
-		this.cars = cars;
-	}
+    public void setCars(LinkedList<Car> cars) {
+        this.cars = cars;
+    }
 
-	public void setParkings(LinkedList<Parking> parkings) {
-		this.parkings = parkings;
-	}
+    public void setParkings(LinkedList<Parking> parkings) {
+        this.parkings = parkings;
+    }
         
         public Car getCarById(int id)
         {

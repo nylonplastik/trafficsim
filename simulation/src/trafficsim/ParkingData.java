@@ -22,7 +22,7 @@ public class ParkingData extends Packet {
     public int              id;
 
     public ParkingData(Parking p) {
-    	super(PacketTypes.PARKING_DATA_TYPEID);
+        super(PacketTypes.PARKING_DATA_TYPEID);
         carsOnParking      = new LinkedList<Integer>();
         carsLeavingParking = new LinkedList<Integer>();
                 
