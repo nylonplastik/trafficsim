@@ -27,21 +27,23 @@ package trafficsim;
 import java.util.Hashtable;
 import trafficsim.CarData;
 import trafficsim.ParkingData;
+import trafficsim.network.Packet;
 
 /**
  *
  * @author Adam Rutkowski
  */
-public class ClientViewData { //{{{
+@SuppressWarnings("serial")
+public class ClientViewData extends Packet { //{{{
     
    // Variables {{{    
     
     private Hashtable<Integer, CarData>     carData;
     protected Hashtable<Integer, ParkingData> parkingData;
-
-    public //{{{
-    // Variables {{{
-    Hashtable<Integer, CarData> getCarData() {
+    
+    // }}}
+    
+    public Hashtable<Integer, CarData> getCarData() {
         return carData;
     }
 

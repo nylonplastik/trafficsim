@@ -8,12 +8,15 @@ import java.util.LinkedList;
 import trafficsim.Car;
 import trafficsim.Lane;
 import trafficsim.Position;
+import trafficsim.network.Packet;
+import trafficsim.network.PacketTypes;
 
 /**
  *
  * @author Adam Rutkowski
  */
-public class CarData {
+@SuppressWarnings("serial")
+public class CarData extends Packet {
 
     public int          id;
     public int          positionLane;
@@ -29,6 +32,7 @@ public class CarData {
     
     public CarData(Car car)
     {
+    	super(PacketTypes.CAR_DATA_TYPEID);
         this.id              = car.getId();
         this.collided        = car.isCollided();
         this.acceleration    = car.getAcceleration();

@@ -307,13 +307,7 @@ public class Model extends Observable //{{{
             c.setRoute(newRoute);
         }      
         setChanged();
-    }
-        
-        
-        
-        
-        
-        
+    }    
         
     /* TODO TO BE REMOVED WHEN COMMUNICATION IS ON*/
     public int addCross(int X, int Y, int id)//{{{
