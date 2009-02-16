@@ -318,7 +318,6 @@ public class Model extends Observable //{{{
         
         
         
-        
     /* TODO TO BE REMOVED WHEN COMMUNICATION IS ON*/
     public int addCross(int X, int Y, int id)//{{{
     {

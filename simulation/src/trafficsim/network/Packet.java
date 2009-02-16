@@ -20,10 +20,22 @@
 
 package trafficsim.network;
 
-public class Packet
-{
-	private int typeId;
+import java.io.Serializable;
 
+@SuppressWarnings("serial")
+public class Packet implements Serializable
+{
+	private int typeId = PacketTypes.EMPTY_TYPEID;
+
+	public Packet()
+	{
+	}
+
+	public Packet(int typeId)
+	{
+		setTypeId(typeId);
+	}
+	
 	public int getTypeId() {
 		return typeId;
 	}
