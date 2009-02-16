@@ -40,7 +40,7 @@ public class ClientController1 implements IController
     private LinkedList<Integer>        p_controlledCars;
     
     // Safe distance between the cars to make one car start moving.
-    private static final int           SAFE_START_DISTANCE = 50;  
+    private static final int           SAFE_START_DISTANCE = 5;  
    
     // Each car performs prediction of other cars movement basing on their
     // current speed and acceleration. This constant determines length of
@@ -53,7 +53,7 @@ public class ClientController1 implements IController
     // treshold value of predicted distance between cars.
     private static final int           SAFE_MOVE_DISTANCE = 50;  
     
-    private static final int           CONTROLLED_CARS    = 1;
+    private static final int           CONTROLLED_CARS    = 3;
         
     private Random                     randomizer;
     
