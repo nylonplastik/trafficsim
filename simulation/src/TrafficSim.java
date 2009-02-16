@@ -29,7 +29,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import trafficsim.gui.*;
+import trafficsim.network.ClientThread;
 import trafficsim.network.ClientsProcessor;
+import trafficsim.network.ServerProcessor;
 import trafficsim.network.ServerThread;
 import trafficsim.*;
 import javax.swing.*;
@@ -40,6 +42,8 @@ public class TrafficSim implements Runnable
     private static Logger s_log = Logger.getLogger(TrafficSim.class.toString());
     private ServerThread st = null;
     private ClientsProcessor cp = null;
+    private ClientThread ct = null;
+    private ServerProcessor sp = null;
     
     /**
      * Simulation main
@@ -113,18 +117,30 @@ public class TrafficSim implements Runnable
                     clientModel.addParking(lane3, lane4, 1);                    
         }
         
-
+        // Server
         try {
         	cp = new ClientsProcessor(serverModel);
-            st = new ServerThread(new InetSocketAddress(InetAddress.getByName("0.0.0.0"),23456));
+            st = new ServerThread(new InetSocketAddress(InetAddress.getByName("127.0.0.1"),23456));
             st.setClientsProcessor(cp);
         } catch (UnknownHostException e2) {
             s_log.log(Level.SEVERE,"wtf?",e2);
             System.exit(1);
         }
+        
+		new Thread(cp).start();
         new Thread(st).start();
         
+        sp = new ServerProcessor(clientModel);
+        try {
+			ct = new ClientThread(new InetSocketAddress(InetAddress.getByName("127.0.0.1"),23456));
+		} catch (UnknownHostException e2) {
+			s_log.log(Level.SEVERE,"wtf?",e2);
+			System.exit(1);
+		}
 
+		new Thread(sp).start();
+        new Thread(ct).start();
+        
         ClientViewClientSide clientSideView   = new ClientViewClientSide(clientModel);
         ClientController1    clientController = 
                 new ClientController1(clientModel, clientSideView);
@@ -135,7 +151,8 @@ public class TrafficSim implements Runnable
         @SuppressWarnings("unused")
         Client c = new Client(serverModel, clientSideView, v);
         
-        /* TODO TO BE REMOVED */clientController.setServerModel(serverModel);
+        /* TODO TO BE REMOVED */
+        clientController.setServerModel(serverModel);
         clientController.start();
         
    
@@ -158,6 +175,7 @@ public class TrafficSim implements Runnable
             @Override
             public void windowClosed(WindowEvent e) {
                 st.setRunning(false);
+                cp.setProcessing(false);
                 timeControlThread.interrupt();
                 try {
                     serverModel.saveModel("model.xml");

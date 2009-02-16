@@ -40,12 +40,10 @@ public abstract class ProcessorThread<T> implements Runnable
     	events = p.getEvents();
     }
     
-    public void addEvent(final T event)
+    public synchronized void addEvent(final T event)
     {
-    	synchronized(events)
-    	{
-    		events.add(event);
-    	}
+    	while(events.offer(event)==false)
+    		Thread.yield();
     }
 
     public abstract void processEvent(final T event);
@@ -57,6 +55,7 @@ public abstract class ProcessorThread<T> implements Runnable
             setProcessing(true);
             while(isProcessing())
             {
+            	System.out.println("Events size:"+events.size());
                 T event = events.poll();
                 T first_event = event;
                 while(event!=null)
