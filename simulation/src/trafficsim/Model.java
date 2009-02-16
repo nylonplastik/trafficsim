@@ -176,12 +176,8 @@ public class Model extends Observable //{{{
             return FAILED;
         Parking parking = parkingById.get(parkinId);
         
-        Car newCar;
-        synchronized(parking)
-        {
-            newCar = parking.newCar();  
-        }
-        
+        Car newCar = parking.newCar();  
+  
         synchronized(cars)
         {
             cars.add(newCar);

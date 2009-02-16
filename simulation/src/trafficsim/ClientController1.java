@@ -20,7 +20,6 @@
 
 package trafficsim;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.Date;
@@ -54,7 +53,7 @@ public class ClientController1 implements IController
     // treshold value of predicted distance between cars.
     private static final int           SAFE_MOVE_DISTANCE = 50;  
     
-    private static final int           CONTROLLED_CARS    = 10;
+    private static final int           CONTROLLED_CARS    = 1;
         
     private Random                     randomizer;
     
@@ -69,7 +68,6 @@ public class ClientController1 implements IController
     public void start()
     {
         int newCarId;
-        Car newCar;
         LinkedList<Parking> parkings;
         
         if (!(parkings = p_model.getParkings()).isEmpty())

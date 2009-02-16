@@ -95,7 +95,7 @@ public class Parking implements Serializable //{{{
     /**
      * Create new car that drives from Parking
      */
-    public Car newCar()//{{{
+    public synchronized Car newCar()//{{{
     {
         Car newCar = new Car();
         
@@ -108,9 +108,12 @@ public class Parking implements Serializable //{{{
         return newCar;
     }//}}}
         
-    public synchronized void park(Car car)//{{{
+    public void park(Car car)//{{{
     {
-    	this.carsOnParking.add(car);
+    	synchronized (this.carsOnParking)
+        {
+            this.carsOnParking.add(car);
+        }
     }//}}}
     
     public synchronized void goToLeavingQueue(Car car)//{{{
@@ -123,7 +126,7 @@ public class Parking implements Serializable //{{{
     
     public synchronized boolean canLeaveParking(Car car)//{{{
     {
-        if (this.carsLeavingParking.isEmpty())
+        if (this.carsLeavingParking.isEmpty())  // TODO: should be contains(..)
         {
         	this.carsLeavingParking.add(car);
             return true;
