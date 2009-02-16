@@ -20,42 +20,82 @@
 
 package trafficsim.network;
 
-import java.net.Socket;
-import java.util.LinkedList;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import trafficsim.Model;
+import trafficsim.network.ClientInfo.ClientState;
 
-public class ClientsProcessor extends ProcessorThread<Socket> implements Observer
+public class ClientsProcessor extends ProcessorThread<ClientInfo> implements Observer
 {
+    private static Logger s_log = Logger.getLogger(ClientsProcessor.class.toString());
 
-    private LinkedList<Socket> clients = new LinkedList<Socket>();
+	private long currentUpdate = 0;
     private Model model = null;
     
     public ClientsProcessor(Model model)
     {
+    	currentUpdate = System.nanoTime();
+    	setModel(model);
+    }
+
+    public void sendUpdate(ClientInfo client)
+    {
+    	// TODO: really send update
+    	client.setLastUpdate(currentUpdate);
+    }
+
+    @Override
+    public void processEvent(final ClientInfo client) {
+    	switch(client.getClientState())
+    	{
+    		case NEW_CLIENT:
+    			client.setClientState(ClientState.WAIT_FOR_CLIENT);
+    			break;
+    		case WAIT_FOR_CLIENT:
+				try {
+	    			InputStream is = client.getSocket().getInputStream();
+	    			int avail = is.available();
+					if (avail>0)
+					{
+					}
+				} catch (IOException e) {
+					s_log.log(Level.SEVERE,"Waiting for client IO exception",e);
+				}
+				client.setClientState(ClientState.WAITS_FOR_UPDATE);
+    			break;
+    		case WAITS_FOR_UPDATE:
+    			if (currentUpdate>client.getLastUpdate())
+    				sendUpdate(client);
+    			break;
+    		case DISCONNECT:
+    			try {
+					client.getSocket().close();
+				} catch (IOException e) {
+					s_log.log(Level.WARNING,"Exception while closing socket",e);
+				}
+    			return;
+    		default:
+    			break;
+    	}
+    	addEvent(client);
     }
     
     @Override
-    public void processEvent(final Socket event) {
-        // = onConnection
-        // sendModel(event,this.model);
-        synchronized(clients)
-        {
-            clients.add(event);
-        }
-    }
-    @Override
     public synchronized void update(Observable o, Object arg) {
-        // TODO: send update to all clients
-        for(Socket s : clients)
-        {
-            // sendUpdate(s);
-        }
+    	currentUpdate = System.nanoTime();
     }
     
     public void setModel(Model model) {
+    	if (this.model!=null)
+    		this.model.deleteObserver(this);
         this.model = model;
+    	if (this.model!=null)
+    		this.model.addObserver(this);
     }
     
     public Model getModel() {

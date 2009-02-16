@@ -75,7 +75,7 @@ public class TrafficSim implements Runnable
         // Create simple model
         serverModel = null;
         //try {
-        //        m=Model.loadModel("model.xml");
+        //    m=Model.loadModel("model.xml");
         //} catch (FileNotFoundException e1) {
         //}
         //if (m==null)
