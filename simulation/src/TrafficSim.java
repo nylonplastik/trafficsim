@@ -22,14 +22,23 @@
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.FileNotFoundException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import trafficsim.gui.*;
+import trafficsim.network.ServerThread;
 import trafficsim.*;
 import javax.swing.*;
 
 public class TrafficSim implements Runnable
 {
 
+    private static Logger s_log = Logger.getLogger(TrafficSim.class.toString());
+	ServerThread st = null;
+	
     /**
      * Simulation main
      *
@@ -56,11 +65,18 @@ public class TrafficSim implements Runnable
      */
     public void run()
     {
-                // Create simple model
+    	try {
+			st = new ServerThread(new InetSocketAddress(InetAddress.getByName("0.0.0.0"),23456));
+		} catch (UnknownHostException e2) {
+			s_log.log(Level.SEVERE,"wtf?",e2);
+			System.exit(1);
+		}
+    	new Thread(st).start();
+        // Create simple model
         serverModel = null;
         //try {
-	//		m=Model.loadModel("model.xml");
-	//	} catch (FileNotFoundException e1) {
+        //		m=Model.loadModel("model.xml");
+        //} catch (FileNotFoundException e1) {
         //}
 		//if (m==null)
 		{
@@ -133,6 +149,7 @@ public class TrafficSim implements Runnable
 
             @Override
             public void windowClosed(WindowEvent e) {
+            	st.setRunning(false);
                 timeControlThread.interrupt();
                 try {
 					serverModel.saveModel("model.xml");

@@ -24,11 +24,10 @@ import java.io.IOException;
 import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import trafficsim.Server;
 
 public class ServerThread implements Runnable {
 
-    private static Logger s_log = Logger.getLogger(Server.class.toString());
+    private static Logger s_log = Logger.getLogger(ServerThread.class.toString());
     
     private InetSocketAddress address = null;
 	private int backlog = 0;
@@ -62,19 +61,20 @@ public class ServerThread implements Runnable {
 				try
 				{
 					Socket client = socket.accept();
-					synchronized(this)
-					{
-						if (getClientsProcessor()!=null)
-							getClientsProcessor().addEvent(client);
-						else
-							client.close();
-					}
+					ProcessorThread<Socket> cp = getClientsProcessor();
+					if (cp!=null)
+						cp.addEvent(client);
+					else
+						client.close();
 				} catch(SocketTimeoutException e)
 				{					
 				}
 			}
 			socket.close();
-		} catch(IOException e)
+		} catch(SocketException e)
+		{
+			s_log.log(Level.SEVERE,"Server Socket Exception", e);
+		} catch (IOException e)
 		{
 			s_log.log(Level.SEVERE,"Server IO Exception", e);
 		}
