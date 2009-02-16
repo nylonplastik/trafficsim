@@ -29,6 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import trafficsim.gui.*;
+import trafficsim.network.ClientsProcessor;
 import trafficsim.network.ServerThread;
 import trafficsim.*;
 import javax.swing.*;
@@ -37,7 +38,8 @@ public class TrafficSim implements Runnable
 {
 
     private static Logger s_log = Logger.getLogger(TrafficSim.class.toString());
-    ServerThread st = null;
+    private ServerThread st = null;
+    private ClientsProcessor cp = null;
     
     /**
      * Simulation main
@@ -65,13 +67,6 @@ public class TrafficSim implements Runnable
      */
     public void run()
     {
-        try {
-            st = new ServerThread(new InetSocketAddress(InetAddress.getByName("0.0.0.0"),23456));
-        } catch (UnknownHostException e2) {
-            s_log.log(Level.SEVERE,"wtf?",e2);
-            System.exit(1);
-        }
-        new Thread(st).start();
         // Create simple model
         serverModel = null;
         //try {
@@ -81,6 +76,7 @@ public class TrafficSim implements Runnable
         //if (m==null)
         {
                     serverModel=new Model();
+
 
                     int cross1 = serverModel.addCross(10,10);
                     int cross2 = serverModel.addCross(200,200);
@@ -116,6 +112,16 @@ public class TrafficSim implements Runnable
                     clientModel.addParking(lane1, lane2, 0);
                     clientModel.addParking(lane3, lane4, 1);                    
         }
+        
+        try {
+        	cp = new ClientsProcessor(serverModel);
+            st = new ServerThread(new InetSocketAddress(InetAddress.getByName("0.0.0.0"),23456));
+            st.setClientsProcessor(cp);
+        } catch (UnknownHostException e2) {
+            s_log.log(Level.SEVERE,"wtf?",e2);
+            System.exit(1);
+        }
+        new Thread(st).start();
         
         ClientViewClientSide clientSideView   = new ClientViewClientSide(serverModel);
         ClientController1    clientController = 
