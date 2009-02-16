@@ -32,7 +32,7 @@ public class ServerThread implements Runnable {
     
     private InetSocketAddress address = null;
 	private int backlog = 0;
-	private ProcessorThread<Socket> clients_processor = null;
+	private ProcessorThread<Socket> clientsProcessor = null;
 	private boolean running = false;
 	
 	public ServerThread(InetSocketAddress address)
@@ -64,8 +64,8 @@ public class ServerThread implements Runnable {
 					Socket client = socket.accept();
 					synchronized(this)
 					{
-						if (clients_processor!=null)
-							clients_processor.addEvent(client);
+						if (getClientsProcessor()!=null)
+							getClientsProcessor().addEvent(client);
 						else
 							client.close();
 					}
@@ -102,6 +102,14 @@ public class ServerThread implements Runnable {
 
 	public synchronized boolean isRunning() {
 		return running;
+	}
+
+	public synchronized void setClientsProcessor(ProcessorThread<Socket> clientsProcessor) {
+		this.clientsProcessor = clientsProcessor;
+	}
+
+	public synchronized ProcessorThread<Socket> getClientsProcessor() {
+		return clientsProcessor;
 	}
 
 }

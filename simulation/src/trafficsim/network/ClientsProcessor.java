@@ -38,6 +38,7 @@ public class ClientsProcessor extends ProcessorThread<Socket> implements Observe
 	
 	@Override
 	public void processEvent(final Socket event) {
+		// = onConnection
 		// sendModel(event,this.model);
 		synchronized(clients)
 		{
