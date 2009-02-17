@@ -119,7 +119,7 @@ public class TrafficSim implements Runnable
         
         // Server
         try {
-        	cp = new ClientsProcessor(serverModel);
+            cp = new ClientsProcessor(serverModel);
             st = new ServerThread(new InetSocketAddress(InetAddress.getByName("127.0.0.1"),23456));
             st.setClientsProcessor(cp);
         } catch (UnknownHostException e2) {
@@ -127,18 +127,19 @@ public class TrafficSim implements Runnable
             System.exit(1);
         }
         
-		new Thread(cp).start();
+        new Thread(cp).start();
         new Thread(st).start();
         
         sp = new ServerProcessor(clientModel);
         try {
-			ct = new ClientThread(new InetSocketAddress(InetAddress.getByName("127.0.0.1"),23456));
-		} catch (UnknownHostException e2) {
-			s_log.log(Level.SEVERE,"wtf?",e2);
-			System.exit(1);
-		}
+            ct = new ClientThread(new InetSocketAddress(InetAddress.getByName("127.0.0.1"),23456));
+            ct.setServerProcessor(sp);
+        } catch (UnknownHostException e2) {
+            s_log.log(Level.SEVERE,"wtf?",e2);
+            System.exit(1);
+        }
 
-		new Thread(sp).start();
+        new Thread(sp).start();
         new Thread(ct).start();
         
         ClientViewClientSide clientSideView   = new ClientViewClientSide(clientModel);

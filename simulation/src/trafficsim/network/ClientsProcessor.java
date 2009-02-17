@@ -38,81 +38,85 @@ public class ClientsProcessor extends ProcessorThread<ClientInfo> implements Obs
 {
     private static Logger s_log = Logger.getLogger(ClientsProcessor.class.toString());
 
-	private long currentUpdate = 0;
+    private long currentUpdate = 0;
     private Model model = null;
     
     public ClientsProcessor(Model model)
     {
-    	currentUpdate = System.nanoTime();
-    	setModel(model);
+        currentUpdate = System.nanoTime();
+        setModel(model);
     }
 
     public void sendUpdate(ClientInfo client)
     {
-    	// TODO: really send update
-    	client.setLastUpdate(currentUpdate);
+        // TODO: really send update
+        client.setLastUpdate(currentUpdate);
     }
 
     @Override
-    public void processEvent(final ClientInfo client) {
-    	switch(client.getClientState())
-    	{
-    		case NEW_CLIENT:
-    			System.out.println("New client");
-    			client.setClientState(ClientState.WAIT_FOR_CLIENT);
-    			break;
-    		case WAIT_FOR_CLIENT:
-    			System.out.println("Waiting for client");
-				try {
-	    			InputStream is = client.getSocket().getInputStream();
-	    			int avail = is.available();
-					if (avail>0)
-					{
-		    			System.out.println("New data for client");
-						InputStreamReader isr = new InputStreamReader(is);
-						BufferedReader bis = new BufferedReader(isr);
-						System.out.println(bis.readLine());
-						client.setClientState(ClientState.WAITS_FOR_UPDATE);
-					}
-				} catch (IOException e) {
-					s_log.log(Level.SEVERE,"Waiting for client IO exception",e);
-				}
-    			break;
-    		case WAITS_FOR_UPDATE:
-    			System.out.println("Client waits for update");
-    			if (currentUpdate>client.getLastUpdate())
-    				sendUpdate(client);
-    			break;
-    		case DISCONNECT:
-    			System.out.println("Disconnecting client");
-    			try {
-					client.getSocket().close();
-				} catch (IOException e) {
-					s_log.log(Level.WARNING,"Exception while closing socket",e);
-				}
-    			break;
-    		default:
-    			break;
-    	}
-    	if (client.getClientState()!=ClientState.DISCONNECT)
-    	{
-    		System.out.println("Adding client");
-    		addEvent(client);
-    		System.out.println("Client added");
-    	}
+    public void processEvent(ClientInfo client) {
+        switch(client.getClientState())
+        {
+            case NEW_CLIENT:
+                System.out.println("New client");
+                client.setClientState(ClientState.WAIT_FOR_CLIENT);
+                break;
+            case WAIT_FOR_CLIENT:
+                //System.out.println("Waiting for client");
+                try {
+                    InputStream is = client.getSocket().getInputStream();
+                    int avail = is.available();
+                    if (avail>0)
+                    {
+                        System.out.println("New data for client");
+                        InputStreamReader isr = new InputStreamReader(is);
+                        BufferedReader bis = new BufferedReader(isr);
+                        System.out.println(bis.readLine());
+                        client.setClientState(ClientState.WAITS_FOR_UPDATE);
+                    }
+                } catch (IOException e) {
+                    s_log.log(Level.SEVERE,"Waiting for client IO exception",e);
+                }
+                break;
+            case WAITS_FOR_UPDATE:
+                //System.out.println("Client waits for update");
+                if (currentUpdate>client.getLastUpdate())
+                    sendUpdate(client);
+                break;
+            case DISCONNECT:
+                System.out.println("Disconnecting client");
+                try {
+                    client.getSocket().close();
+                } catch (IOException e) {
+                    s_log.log(Level.WARNING,"Exception while closing socket",e);
+                }
+                break;
+            default:
+                break;
+        }
+        if ((client.getSocket().isConnected())&&
+            (client.getClientState()!=ClientState.DISCONNECT))
+        {
+            //System.out.println("Adding client");
+            ClientInfo cinfo = new ClientInfo(client.getSocket());
+            cinfo.setClientState(client.getClientState());
+            cinfo.setLastUpdate(client.getLastUpdate());
+            addEvent(cinfo);
+            //System.out.println("Client added");
+        }
     }
     
     @Override
     public synchronized void update(Observable o, Object arg) {
-    	currentUpdate = System.nanoTime();
+        currentUpdate = System.nanoTime();
     }
     
     public void setModel(Model model) {
-    	if (this.model!=null)
-    		this.model.deleteObserver(this);
+        if (this.model!=null)
+            this.model.deleteObserver(this);
         this.model = model;
-    	if (this.model!=null)
-    		this.model.addObserver(this);
+        if (this.model!=null)
+            this.model.addObserver(this);
     }
     
     public Model getModel() {

@@ -20,30 +20,30 @@
 
 package trafficsim.network;
 
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 
-public abstract class ProcessorThread<T> implements Runnable
+public abstract class ProcessorThread<T extends Cloneable> implements Runnable
 {
 
     private static final int POLLING_TIME_MS = 100;
 
     private boolean processing = false;
-    private LinkedBlockingQueue<T> events = null;
+    private LinkedBlockingDeque<T> events = null;
     
     public ProcessorThread()
     {
-    	events = new LinkedBlockingQueue<T>();
+        events = new LinkedBlockingDeque<T>();
     }
     
     public ProcessorThread(ProcessorThread<T> p)
     {
-    	events = p.getEvents();
+        events = p.getEvents();
     }
     
-    public synchronized void addEvent(final T event)
+    public synchronized void addEvent(T event)
     {
-    	while(events.offer(event)==false)
-    		Thread.yield();
+        while(events.offer(event)==false)
+            Thread.yield();
     }
 
     public abstract void processEvent(final T event);
@@ -53,22 +53,17 @@ public abstract class ProcessorThread<T> implements Runnable
         try
         {
             setProcessing(true);
+            LinkedBlockingDeque<T> events = getEvents();
             while(isProcessing())
             {
-            	System.out.println("Events size:"+events.size());
+                //System.out.println("Events size:"+events.size());
                 T event = events.poll();
-                T first_event = event;
-                while(event!=null)
-                {
+                if(event!=null)
                     processEvent(event);
-                    event = events.poll();
-                    if (first_event==event)
-                    	break;
-                }
                 Thread.sleep(POLLING_TIME_MS);
             }
         } catch(InterruptedException e)
-        {    
+        {
         }
     }
 
@@ -80,8 +75,8 @@ public abstract class ProcessorThread<T> implements Runnable
         return processing;
     }
     
-    public synchronized LinkedBlockingQueue<T> getEvents() {
-    	return events;
+    public synchronized LinkedBlockingDeque<T> getEvents() {
+        return events;
     }
 
 }
