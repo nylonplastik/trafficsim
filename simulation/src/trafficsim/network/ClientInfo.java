@@ -27,14 +27,15 @@ public class ClientInfo implements Cloneable
     public enum ClientState
     {
         NEW_CLIENT,
-        WAIT_FOR_CLIENT,
-        WAITS_FOR_UPDATE,
+        SENDS_REQUEST,
+        WAITS_FOR_ANSWER,
         DISCONNECT
     };
 
     private ClientState clientState = ClientState.NEW_CLIENT;
     private Socket socket = null;
     private long lastUpdate = 0;
+    private Object request = null;
     
     public ClientInfo(Socket socket)
     {
@@ -49,6 +50,15 @@ public class ClientInfo implements Cloneable
         this.setLastUpdate(System.nanoTime());
     }
     
+    @Override
+    public Object clone()
+    {
+    	ClientInfo copy = new ClientInfo(getSocket(),getClientState());
+    	copy.setLastUpdate(getLastUpdate());
+    	copy.setRequest(getRequest());
+		return copy;
+    }
+
     public void setSocket(Socket socket) {
         this.socket = socket;
     }
@@ -72,6 +82,14 @@ public class ClientInfo implements Cloneable
     public long getLastUpdate() {
         return lastUpdate;
     }
+
+	public void setRequest(Object request) {
+		this.request = request;
+	}
+
+	public Object getRequest() {
+		return request;
+	}
 };
 
 /* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */

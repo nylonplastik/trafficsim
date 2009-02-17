@@ -20,68 +20,78 @@
 
 package trafficsim.network;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.util.Observable;
-import java.util.Observer;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import trafficsim.Model;
 import trafficsim.network.ClientInfo.ClientState;
 
-public class ClientsProcessor extends ProcessorThread<ClientInfo> implements Observer
+public class ClientsProcessor extends ProcessorThread<ClientInfo>
 {
     private static Logger s_log = Logger.getLogger(ClientsProcessor.class.toString());
 
-    private long currentUpdate = 0;
-    private Model model = null;
+    public ClientsProcessor()
+    {
+    }
+
+    public Object processRequest(ClientInfo client)
+    {
+    	client.setRequest(null);
+    	client.setClientState(ClientState.SENDS_REQUEST);
+    	return null;
+    }
     
-    public ClientsProcessor(Model model)
-    {
-        currentUpdate = System.nanoTime();
-        setModel(model);
-    }
-
-    public void sendUpdate(ClientInfo client)
-    {
-        // TODO: really send update
-        client.setLastUpdate(currentUpdate);
-    }
-
     @Override
     public void processEvent(ClientInfo client) {
         switch(client.getClientState())
         {
             case NEW_CLIENT:
                 System.out.println("New client");
-                client.setClientState(ClientState.WAIT_FOR_CLIENT);
+                client.setClientState(ClientState.SENDS_REQUEST);
                 break;
-            case WAIT_FOR_CLIENT:
+            case SENDS_REQUEST:
                 //System.out.println("Waiting for client");
                 try {
                     InputStream is = client.getSocket().getInputStream();
                     int avail = is.available();
                     if (avail>0)
                     {
-                        System.out.println("New data for client");
-                        InputStreamReader isr = new InputStreamReader(is);
-                        BufferedReader bis = new BufferedReader(isr);
-                        System.out.println(bis.readLine());
-                        client.setClientState(ClientState.WAITS_FOR_UPDATE);
+                        System.out.println("New request from client");
+                        try
+                        {
+                        	ObjectInputStream ois = new ObjectInputStream(is);
+                        	Object request = ois.readObject();
+                        	client.setRequest(request);
+                        	ois.close();
+                        	client.setClientState(ClientState.WAITS_FOR_ANSWER);
+                        } catch(ClassNotFoundException e)
+                        {
+                        	s_log.log(Level.SEVERE,"Class not found!!!",e);
+                        }
                     }
                 } catch (IOException e) {
                     s_log.log(Level.SEVERE,"Waiting for client IO exception",e);
                 }
                 break;
-            case WAITS_FOR_UPDATE:
-                //System.out.println("Client waits for update");
-                if (currentUpdate>client.getLastUpdate())
-                    sendUpdate(client);
+            case WAITS_FOR_ANSWER:
+            	Object answer = processRequest(client);
+            	if (answer!=null)
+            	{
+            		try
+            		{
+            			OutputStream os = client.getSocket().getOutputStream();
+            			ObjectOutputStream oos = new ObjectOutputStream(os);
+            			oos.writeObject(answer);
+            			oos.close();
+            		} catch(IOException e)
+            		{
+            			s_log.log(Level.SEVERE,"IO Exception",e);
+            		}
+            	}
                 break;
             case DISCONNECT:
                 System.out.println("Disconnecting client");
@@ -97,32 +107,10 @@ public class ClientsProcessor extends ProcessorThread<ClientInfo> implements Obs
         if ((client.getSocket().isConnected())&&
             (client.getClientState()!=ClientState.DISCONNECT))
         {
-            //System.out.println("Adding client");
-            ClientInfo cinfo = new ClientInfo(client.getSocket());
-            cinfo.setClientState(client.getClientState());
-            cinfo.setLastUpdate(client.getLastUpdate());
-            addEvent(cinfo);
-            //System.out.println("Client added");
+            addEvent((ClientInfo)client.clone());
         }
     }
-    
-    @Override
-    public synchronized void update(Observable o, Object arg) {
-        currentUpdate = System.nanoTime();
-    }
-    
-    public void setModel(Model model) {
-        if (this.model!=null)
-            this.model.deleteObserver(this);
-        this.model = model;
-        if (this.model!=null)
-            this.model.addObserver(this);
-    }
-    
-    public Model getModel() {
-        return model;
-    }
-    
+        
 }
 
 /* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */

@@ -119,7 +119,7 @@ public class TrafficSim implements Runnable
         
         // Server
         try {
-            cp = new ClientsProcessor(serverModel);
+            cp = new ClientsProcessor();
             st = new ServerThread(new InetSocketAddress(InetAddress.getByName("127.0.0.1"),23456));
             st.setClientsProcessor(cp);
         } catch (UnknownHostException e2) {
@@ -130,7 +130,7 @@ public class TrafficSim implements Runnable
         new Thread(cp).start();
         new Thread(st).start();
         
-        sp = new ServerProcessor(clientModel);
+        sp = new ServerProcessor();
         try {
             ct = new ClientThread(new InetSocketAddress(InetAddress.getByName("127.0.0.1"),23456));
             ct.setServerProcessor(sp);
