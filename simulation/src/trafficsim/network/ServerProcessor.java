@@ -37,83 +37,83 @@ public class ServerProcessor extends ProcessorThread<ServerInfo> implements Obse
 {
     private static Logger s_log = Logger.getLogger(ServerProcessor.class.toString());
 
-	private long currentUpdate = 0;
+    private long currentUpdate = 0;
     private Model model = null;
     
     public ServerProcessor(Model model)
     {
-    	currentUpdate = System.nanoTime();
-    	setModel(model);
+        currentUpdate = System.nanoTime();
+        setModel(model);
     }
 
     @Override
     public void processEvent(ServerInfo server) {
-    	switch(server.getServerState())
-    	{
-    		case CONNECTED:
-    			server.setServerState(ServerState.WAIT_FOR_CLIENT);
-    			break;
-    		case WAIT_FOR_CLIENT:
-    			//System.out.println("Client: Server waits for client");
-    			try
-    			{
-    				OutputStream os = server.getSocket().getOutputStream();
-    				BufferedOutputStream bos = new BufferedOutputStream(os);
-    				PrintWriter pw = new PrintWriter(bos);
-    				pw.println("Hello world");
-    				pw.flush();
-    				bos.flush();
-    				os.flush();
-    				server.setServerState(ServerState.WAITS_FOR_UPDATE);
-    			} catch(IOException e)
-    			{
-					s_log.log(Level.SEVERE,"IO Exception",e);    				
-    			}
-    			break;
-    		case WAITS_FOR_UPDATE:
-				try {
-					InputStream is = server.getSocket().getInputStream();
-					int avail = is.available();
-					if (avail>0)
-					{
-						//processUpdate(is);
-						server.setServerState(ServerState.DISCONNECT);
-					}
-				} catch (IOException e1) {
-					s_log.log(Level.SEVERE,"IO Exception while waiting for update",e1);
-				}
-    			break;
-    		case DISCONNECT:
-    			try {
-					server.getSocket().close();
-				} catch (IOException e) {
-					s_log.log(Level.WARNING,"Exception while closing socket",e);
-				}
-    			return;
-    		default:
-    			break;
-    	}
-    	if (server.getSocket().isConnected())
-    	{
-    		ServerInfo sinfo = new ServerInfo(server.getSocket());
-    		sinfo.setLastUpdate(server.getLastUpdate());
-    		sinfo.setServerState(server.getServerState());
-    		addEvent(sinfo);
-    	} else
-    		System.out.println("Not connected to server");
+        switch(server.getServerState())
+        {
+            case CONNECTED:
+                server.setServerState(ServerState.WAIT_FOR_CLIENT);
+                break;
+            case WAIT_FOR_CLIENT:
+                //System.out.println("Client: Server waits for client");
+                try
+                {
+                    OutputStream os = server.getSocket().getOutputStream();
+                    BufferedOutputStream bos = new BufferedOutputStream(os);
+                    PrintWriter pw = new PrintWriter(bos);
+                    pw.println("Hello world");
+                    pw.flush();
+                    bos.flush();
+                    os.flush();
+                    server.setServerState(ServerState.WAITS_FOR_UPDATE);
+                } catch(IOException e)
+                {
+                    s_log.log(Level.SEVERE,"IO Exception",e);                    
+                }
+                break;
+            case WAITS_FOR_UPDATE:
+                try {
+                    InputStream is = server.getSocket().getInputStream();
+                    int avail = is.available();
+                    if (avail>0)
+                    {
+                        //processUpdate(is);
+                        server.setServerState(ServerState.DISCONNECT);
+                    }
+                } catch (IOException e1) {
+                    s_log.log(Level.SEVERE,"IO Exception while waiting for update",e1);
+                }
+                break;
+            case DISCONNECT:
+                try {
+                    server.getSocket().close();
+                } catch (IOException e) {
+                    s_log.log(Level.WARNING,"Exception while closing socket",e);
+                }
+                return;
+            default:
+                break;
+        }
+        if (server.getSocket().isConnected())
+        {
+            ServerInfo sinfo = new ServerInfo(server.getSocket());
+            sinfo.setLastUpdate(server.getLastUpdate());
+            sinfo.setServerState(server.getServerState());
+            addEvent(sinfo);
+        } else
+            System.out.println("Not connected to server");
     }
     
     @Override
     public synchronized void update(Observable o, Object arg) {
-    	currentUpdate = System.nanoTime();
+        currentUpdate = System.nanoTime();
     }
     
     public void setModel(Model model) {
-    	if (this.model!=null)
-    		this.model.deleteObserver(this);
+        if (this.model!=null)
+            this.model.deleteObserver(this);
         this.model = model;
-    	if (this.model!=null)
-    		this.model.addObserver(this);
+        if (this.model!=null)
+            this.model.addObserver(this);
     }
     
     public Model getModel() {

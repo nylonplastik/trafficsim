@@ -51,11 +51,11 @@ public class ClientThread implements Runnable
             if (socket.isConnected())
             {
                 System.out.println("Connected...");
-        		ProcessorThread<ServerInfo> sp = getServerProcessor();
-        		if (sp!=null)
-        			sp.addEvent(new ServerInfo(socket));
+                ProcessorThread<ServerInfo> sp = getServerProcessor();
+                if (sp!=null)
+                    sp.addEvent(new ServerInfo(socket));
             } else
-            	System.out.println("Not connected...");
+                System.out.println("Not connected...");
         } catch(SocketException e)
         {
             s_log.log(Level.SEVERE,"Server Socket Exception", e);
@@ -88,7 +88,7 @@ public class ClientThread implements Runnable
     public synchronized ProcessorThread<ServerInfo> getServerProcessor() {
         return serverProcessor;
     }
-	
+    
 }
 
 /* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */

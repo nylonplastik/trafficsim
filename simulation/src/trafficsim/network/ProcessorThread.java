@@ -32,18 +32,18 @@ public abstract class ProcessorThread<T extends Cloneable> implements Runnable
     
     public ProcessorThread()
     {
-    	events = new LinkedBlockingDeque<T>();
+        events = new LinkedBlockingDeque<T>();
     }
     
     public ProcessorThread(ProcessorThread<T> p)
     {
-    	events = p.getEvents();
+        events = p.getEvents();
     }
     
     public synchronized void addEvent(T event)
     {
-    	while(events.offer(event)==false)
-    		Thread.yield();
+        while(events.offer(event)==false)
+            Thread.yield();
     }
 
     public abstract void processEvent(final T event);
@@ -56,7 +56,7 @@ public abstract class ProcessorThread<T extends Cloneable> implements Runnable
             LinkedBlockingDeque<T> events = getEvents();
             while(isProcessing())
             {
-            	//System.out.println("Events size:"+events.size());
+                //System.out.println("Events size:"+events.size());
                 T event = events.poll();
                 T first_event = event;
                 while(event!=null)
@@ -64,7 +64,7 @@ public abstract class ProcessorThread<T extends Cloneable> implements Runnable
                     processEvent(event);
                     event = events.poll();
                     if (first_event==event)
-                    	break;
+                        break;
                 }
                 Thread.sleep(POLLING_TIME_MS);
             }
@@ -82,7 +82,7 @@ public abstract class ProcessorThread<T extends Cloneable> implements Runnable
     }
     
     public synchronized LinkedBlockingDeque<T> getEvents() {
-    	return events;
+        return events;
     }
 
 }

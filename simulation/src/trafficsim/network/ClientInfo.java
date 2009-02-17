@@ -24,54 +24,54 @@ import java.net.Socket;
 public class ClientInfo implements Cloneable
 {
     
-	public enum ClientState
-	{
-		NEW_CLIENT,
-		WAIT_FOR_CLIENT,
-		WAITS_FOR_UPDATE,
-		DISCONNECT
-	};
+    public enum ClientState
+    {
+        NEW_CLIENT,
+        WAIT_FOR_CLIENT,
+        WAITS_FOR_UPDATE,
+        DISCONNECT
+    };
 
-	private ClientState clientState = ClientState.NEW_CLIENT;
-	private Socket socket = null;
-	private long lastUpdate = 0;
-	
-	public ClientInfo(Socket socket)
-	{
-		this.setSocket(socket);
-		this.setLastUpdate(System.nanoTime());
-	}
+    private ClientState clientState = ClientState.NEW_CLIENT;
+    private Socket socket = null;
+    private long lastUpdate = 0;
+    
+    public ClientInfo(Socket socket)
+    {
+        this.setSocket(socket);
+        this.setLastUpdate(System.nanoTime());
+    }
 
-	public ClientInfo(Socket socket,ClientState state)
-	{
-		this.setSocket(socket);
-		this.setClientState(state);
-		this.setLastUpdate(System.nanoTime());
-	}
-	
-	public void setSocket(Socket socket) {
-		this.socket = socket;
-	}
+    public ClientInfo(Socket socket,ClientState state)
+    {
+        this.setSocket(socket);
+        this.setClientState(state);
+        this.setLastUpdate(System.nanoTime());
+    }
+    
+    public void setSocket(Socket socket) {
+        this.socket = socket;
+    }
 
-	public Socket getSocket() {
-		return socket;
-	}
+    public Socket getSocket() {
+        return socket;
+    }
 
-	public void setClientState(ClientState clientState) {
-		this.clientState = clientState;
-	}
+    public void setClientState(ClientState clientState) {
+        this.clientState = clientState;
+    }
 
-	public ClientState getClientState() {
-		return clientState;
-	}
+    public ClientState getClientState() {
+        return clientState;
+    }
 
-	public void setLastUpdate(long lastUpdate) {
-		this.lastUpdate = lastUpdate;
-	}
+    public void setLastUpdate(long lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
 
-	public long getLastUpdate() {
-		return lastUpdate;
-	}
+    public long getLastUpdate() {
+        return lastUpdate;
+    }
 };
 
 /* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */
