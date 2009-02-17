@@ -21,7 +21,7 @@ package trafficsim.network;
 
 import java.net.Socket;
 
-public class ClientInfo
+public class ClientInfo implements Cloneable
 {
     
 	public enum ClientState

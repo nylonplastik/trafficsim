@@ -47,19 +47,23 @@ public class ServerProcessor extends ProcessorThread<ServerInfo> implements Obse
     }
 
     @Override
-    public void processEvent(final ServerInfo server) {
+    public void processEvent(ServerInfo server) {
     	switch(server.getServerState())
     	{
     		case CONNECTED:
     			server.setServerState(ServerState.WAIT_FOR_CLIENT);
     			break;
     		case WAIT_FOR_CLIENT:
+    			//System.out.println("Client: Server waits for client");
     			try
     			{
     				OutputStream os = server.getSocket().getOutputStream();
     				BufferedOutputStream bos = new BufferedOutputStream(os);
     				PrintWriter pw = new PrintWriter(bos);
     				pw.println("Hello world");
+    				pw.flush();
+    				bos.flush();
+    				os.flush();
     				server.setServerState(ServerState.WAITS_FOR_UPDATE);
     			} catch(IOException e)
     			{
@@ -89,7 +93,14 @@ public class ServerProcessor extends ProcessorThread<ServerInfo> implements Obse
     		default:
     			break;
     	}
-    	addEvent(server);
+    	if (server.getSocket().isConnected())
+    	{
+    		ServerInfo sinfo = new ServerInfo(server.getSocket());
+    		sinfo.setLastUpdate(server.getLastUpdate());
+    		sinfo.setServerState(server.getServerState());
+    		addEvent(sinfo);
+    	} else
+    		System.out.println("Not connected to server");
     }
     
     @Override

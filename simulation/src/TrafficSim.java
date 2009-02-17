@@ -133,6 +133,7 @@ public class TrafficSim implements Runnable
         sp = new ServerProcessor(clientModel);
         try {
 			ct = new ClientThread(new InetSocketAddress(InetAddress.getByName("127.0.0.1"),23456));
+			ct.setServerProcessor(sp);
 		} catch (UnknownHostException e2) {
 			s_log.log(Level.SEVERE,"wtf?",e2);
 			System.exit(1);

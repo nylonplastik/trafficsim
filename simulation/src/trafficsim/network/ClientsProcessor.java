@@ -54,7 +54,7 @@ public class ClientsProcessor extends ProcessorThread<ClientInfo> implements Obs
     }
 
     @Override
-    public void processEvent(final ClientInfo client) {
+    public void processEvent(ClientInfo client) {
     	switch(client.getClientState())
     	{
     		case NEW_CLIENT:
@@ -62,7 +62,7 @@ public class ClientsProcessor extends ProcessorThread<ClientInfo> implements Obs
     			client.setClientState(ClientState.WAIT_FOR_CLIENT);
     			break;
     		case WAIT_FOR_CLIENT:
-    			System.out.println("Waiting for client");
+    			//System.out.println("Waiting for client");
 				try {
 	    			InputStream is = client.getSocket().getInputStream();
 	    			int avail = is.available();
@@ -79,7 +79,7 @@ public class ClientsProcessor extends ProcessorThread<ClientInfo> implements Obs
 				}
     			break;
     		case WAITS_FOR_UPDATE:
-    			System.out.println("Client waits for update");
+    			//System.out.println("Client waits for update");
     			if (currentUpdate>client.getLastUpdate())
     				sendUpdate(client);
     			break;
@@ -94,11 +94,15 @@ public class ClientsProcessor extends ProcessorThread<ClientInfo> implements Obs
     		default:
     			break;
     	}
-    	if (client.getClientState()!=ClientState.DISCONNECT)
+    	if ((client.getSocket().isConnected())&&
+    		(client.getClientState()!=ClientState.DISCONNECT))
     	{
-    		System.out.println("Adding client");
-    		addEvent(client);
-    		System.out.println("Client added");
+    		//System.out.println("Adding client");
+    		ClientInfo cinfo = new ClientInfo(client.getSocket());
+    		cinfo.setClientState(client.getClientState());
+    		cinfo.setLastUpdate(client.getLastUpdate());
+    		addEvent(cinfo);
+    		//System.out.println("Client added");
     	}
     }
     
