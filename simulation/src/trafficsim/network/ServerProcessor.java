@@ -115,10 +115,7 @@ public class ServerProcessor extends ProcessorThread<ServerInfo>
         }
         if (server.getSocket().isConnected())
         {
-            ServerInfo sinfo = new ServerInfo(server.getSocket());
-            sinfo.setLastUpdate(server.getLastUpdate());
-            sinfo.setServerState(server.getServerState());
-            addEvent(sinfo);
+            addEvent((ServerInfo)server.clone());
         } else
             System.out.println("Not connected to server");
     }
