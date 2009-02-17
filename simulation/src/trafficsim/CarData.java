@@ -21,7 +21,7 @@ public class CarData extends Packet {
     public int          id;
     public int          positionLane;
     public Position.e_info positionInfo;
-    public int          positionCoord;
+    public float        positionCoord;
     public float        speed;
     public float        acceleration; 
     public float        maxSpeed;
@@ -41,14 +41,8 @@ public class CarData extends Packet {
         if (car.getCurrentParking() == null)
             this.parkingId = -1;
         else this.parkingId = car.getCurrentParking().getId();
-        if (car.getPosition().getCoord() == null)
-        {
-            this.positionCoord = -1;
-        }
-        else
-        {
-            this.positionCoord   = car.getPosition().getCoord();
-        }
+        this.positionCoord   = car.getPosition().getCoord();
+
         this.positionInfo    = car.getPosition().getInfo();
         
         if (car.getPosition().getLane() == null)

@@ -38,7 +38,7 @@ public class Car implements Serializable //{{{
     // Variables {{{
     private final int    id;
     private static int   carsCount = 0;
-    private int          nextCarDistance;
+    private float        nextCarDistance;
     private Position     position;
     private float        speed;
     private float        acceleration; 
@@ -217,7 +217,7 @@ public class Car implements Serializable //{{{
                     return false;
                 
                 getNextCar();
-                int nextDistance = getNextCarDistance();
+                float nextDistance = getNextCarDistance();
                 if (nextDistance > laneOut.getLength())
                     return true;
                 
@@ -247,7 +247,7 @@ public class Car implements Serializable //{{{
             return result;
         }
         
-        int newCoordinate;
+        float newCoordinate;
         float current_speed        = this.speed;
         float current_acceleration = this.acceleration;
         
@@ -344,7 +344,7 @@ public class Car implements Serializable //{{{
                     {
                         // get the part of car list starting with this car
                         Iterator<Car> iter = carsOnLane.tailMap(
-                                this.position.getCoord()
+                                (int) this.position.getCoord()
                                 ).values().iterator();
                         
                         // get this car element of the list
@@ -404,7 +404,7 @@ public class Car implements Serializable //{{{
      * Works properly only after successful call to  getNextCar().
      * @return distance to the next car on this car planned route.
      */
-    public synchronized int getNextCarDistance() //{{{
+     public synchronized float getNextCarDistance() //{{{
     {
         return this.nextCarDistance;
     } //}}}
