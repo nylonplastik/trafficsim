@@ -74,7 +74,6 @@ public class ServerProcessor extends ProcessorThread<ServerInfo>
 	            		OutputStream os = server.getSocket().getOutputStream();
 	            		ObjectOutputStream oos = new ObjectOutputStream(os);
 	            		oos.writeObject(request);
-	            		oos.close();
 	                    server.setServerState(ServerState.SENDS_ANSWER);            		
             		} catch(IOException e)
             		{
@@ -97,7 +96,6 @@ public class ServerProcessor extends ProcessorThread<ServerInfo>
                     	{
                     		s_log.log(Level.SEVERE,"Class not found",e);
                     	}
-                    	ois.close();
                     }
                 } catch (IOException e1) {
                     s_log.log(Level.SEVERE,"IO Exception while waiting for update",e1);

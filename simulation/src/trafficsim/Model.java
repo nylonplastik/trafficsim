@@ -26,6 +26,7 @@ import java.beans.XMLEncoder;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Observable;
@@ -36,7 +37,8 @@ import java.util.concurrent.*;
  *
  * @author Adam Rutkowski
  */
-public class Model extends Observable //{{{
+@SuppressWarnings("serial")
+public class Model extends Observable implements Serializable //{{{
 {
     // Variables {{{
 

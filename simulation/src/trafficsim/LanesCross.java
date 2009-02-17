@@ -22,9 +22,8 @@ package trafficsim;
 
 // imports {{{
 
+import java.io.Serializable;
 import java.util.*;
-import java.util.Hashtable;
-import java.util.Observable;
 
 // }}}
 
@@ -33,7 +32,8 @@ import java.util.Observable;
  * 
  * @author Adam Rutkowski
  */
-public class LanesCross extends Observable //{{{
+@SuppressWarnings("serial")
+public class LanesCross extends Observable implements Serializable //{{{
 {
     // Variables {{{
     private int    X_coordinate;

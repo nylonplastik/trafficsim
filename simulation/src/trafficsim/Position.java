@@ -24,11 +24,14 @@
 
 package trafficsim;
 
+import java.io.Serializable;
+
 /**
  * Position of car
  * @author Adam Rutkowski
  */
-public class Position  {
+@SuppressWarnings("serial")
+public class Position implements Serializable  {
     private Lane     lane;
     private Integer  coord;
     public enum     e_info

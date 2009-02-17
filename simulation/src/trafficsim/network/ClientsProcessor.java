@@ -66,7 +66,6 @@ public class ClientsProcessor extends ProcessorThread<ClientInfo>
                         	ObjectInputStream ois = new ObjectInputStream(is);
                         	Object request = ois.readObject();
                         	client.setRequest(request);
-                        	ois.close();
                         	client.setClientState(ClientState.WAITS_FOR_ANSWER);
                         } catch(ClassNotFoundException e)
                         {
@@ -86,7 +85,6 @@ public class ClientsProcessor extends ProcessorThread<ClientInfo>
             			OutputStream os = client.getSocket().getOutputStream();
             			ObjectOutputStream oos = new ObjectOutputStream(os);
             			oos.writeObject(answer);
-            			oos.close();
             		} catch(IOException e)
             		{
             			s_log.log(Level.SEVERE,"IO Exception",e);
