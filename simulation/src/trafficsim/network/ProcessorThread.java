@@ -58,14 +58,8 @@ public abstract class ProcessorThread<T extends Cloneable> implements Runnable
             {
                 //System.out.println("Events size:"+events.size());
                 T event = events.poll();
-                T first_event = event;
-                while(event!=null)
-                {
+                if(event!=null)
                     processEvent(event);
-                    event = events.poll();
-                    if (first_event==event)
-                        break;
-                }
                 Thread.sleep(POLLING_TIME_MS);
             }
         } catch(InterruptedException e)
