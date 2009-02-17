@@ -253,7 +253,7 @@ public class Car implements Serializable //{{{
         
         for (int i=0; i<periodsCount; i++)
         {
-            newCoordinate =result.getCoord() + (int)(timeSeconds*current_speed);
+            newCoordinate =result.getCoord() + timeSeconds*current_speed;
             current_speed +=  (timeSeconds * current_acceleration);   
             if (current_speed > this.maxSpeed)
             {
