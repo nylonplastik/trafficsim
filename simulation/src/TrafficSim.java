@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 import trafficsim.gui.*;
 import trafficsim.network.ClientThread;
 import trafficsim.network.ClientsProcessor;
+import trafficsim.network.Request;
 import trafficsim.network.ServerProcessor;
 import trafficsim.network.ServerThread;
 import trafficsim.*;
@@ -41,9 +42,9 @@ public class TrafficSim implements Runnable
 
     private static Logger s_log = Logger.getLogger(TrafficSim.class.toString());
     private ServerThread st = null;
-    private ClientsProcessor cp = null;
+    private trafficsim.network.server.ClientsProcessor cp = null;
     private ClientThread ct = null;
-    private ServerProcessor sp = null;
+    private trafficsim.network.client.ServerProcessor sp = null;
     
     /**
      * Simulation main
@@ -119,7 +120,7 @@ public class TrafficSim implements Runnable
         
         // Server
         try {
-            cp = new ClientsProcessor(serverModel);
+            cp = new trafficsim.network.server.ClientsProcessor(serverModel);
             st = new ServerThread(new InetSocketAddress(InetAddress.getByName("127.0.0.1"),23456));
             st.setClientsProcessor(cp);
         } catch (UnknownHostException e2) {
@@ -130,7 +131,7 @@ public class TrafficSim implements Runnable
         new Thread(cp).start();
         new Thread(st).start();
         
-        sp = new ServerProcessor(clientModel);
+        sp = new trafficsim.network.client.ServerProcessor();
         try {
             ct = new ClientThread(new InetSocketAddress(InetAddress.getByName("127.0.0.1"),23456));
             ct.setServerProcessor(sp);
@@ -141,6 +142,12 @@ public class TrafficSim implements Runnable
 
         new Thread(sp).start();
         new Thread(ct).start();
+        
+        try {
+			sp.addRequest(new Request(1));
+		} catch (InterruptedException e2) {
+			s_log.log(Level.SEVERE,"Can't add request",e2);
+		}
         
         ClientViewClientSide clientSideView   = new ClientViewClientSide(clientModel);
         ClientController1    clientController = 

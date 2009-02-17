@@ -27,8 +27,8 @@ public class ServerInfo implements Cloneable
     public enum ServerState
     {
         CONNECTED,
-        WAIT_FOR_CLIENT,
-        WAITS_FOR_UPDATE,
+        WAITS_FOR_REQUEST,
+        SENDS_ANSWER,
         DISCONNECT
     };
 
@@ -49,6 +49,15 @@ public class ServerInfo implements Cloneable
         this.setLastUpdate(System.nanoTime());
     }
     
+    @Override
+    public Object clone()
+    {
+    	ServerInfo copy = new ServerInfo(getSocket(),getServerState());
+    	copy.setLastUpdate(getLastUpdate());
+    	//copy.setRequest(getRequest());
+		return copy;
+    }
+
     public void setSocket(Socket socket) {
         this.socket = socket;
     }
