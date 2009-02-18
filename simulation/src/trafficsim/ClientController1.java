@@ -143,7 +143,7 @@ public class ClientController1 implements ICarController
                     {
                         // there is enough space on lane to move and we know 
                         // where to go.
-                        networkClient.startMoving(car.getId(), 3);
+                        networkClient.startMoving(3, car.getId());
                     }  
                 }
                 continue;

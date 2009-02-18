@@ -19,6 +19,6 @@ public class changePlannedRouteData {
         this.carId        = id;
     }
     
-    LinkedList<Integer> plannedRoute;
+    public LinkedList<Integer> plannedRoute;
     public int carId;
 }

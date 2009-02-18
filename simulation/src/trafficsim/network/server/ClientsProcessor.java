@@ -31,6 +31,7 @@ import trafficsim.network.ConnectionInfo;
 import trafficsim.network.Packet;
 import trafficsim.network.PacketTypes;
 import trafficsim.network.ProcessorThread;
+import trafficsim.data.*;
 
  public class ClientsProcessor
 	extends trafficsim.network.ConnectionProcessor 
@@ -94,6 +95,18 @@ import trafficsim.network.ProcessorThread;
                                                         System.out.println("Put car in queue request");
                                                         m = getModel();
                                                         m.gotoParkingQueue((Integer)request.getData());
+                                                        break;
+                                                case PacketTypes.START_MOVING:
+                                                        startMovingData data = (startMovingData)request.getData();
+                                                        model.startMoving(data.carId, data.acceleration);
+                                                        break;
+                                                case PacketTypes.CHANGE_ACCELER_TYPEID:
+                                                        data = (startMovingData)request.getData();
+                                                        model.setAcceleration(data.carId, data.acceleration);
+                                                        break;
+                                                case PacketTypes.CHANGE_ROUTE_TYPEID:
+                                                        changePlannedRouteData routeData = (changePlannedRouteData)request.getData();
+                                                        model.setRoute(routeData.carId, routeData.plannedRoute);
                                                         break;
                                                         
 					}
