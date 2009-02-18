@@ -28,6 +28,7 @@ import trafficsim.Model;
 import trafficsim.network.ConnectionInfo;
 import trafficsim.network.Packet;
 import trafficsim.network.PacketTypes;
+import trafficsim.network.ProcessorThread;
 import trafficsim.network.server.ClientsProcessor;
 
 public class ServerProcessor extends trafficsim.network.ConnectionProcessor
@@ -41,6 +42,11 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
 		this.model = model;
 	}
 
+	public ServerProcessor(Model model, ProcessorThread<ConnectionInfo> p) {
+		super(p);
+		this.model = model;
+	}
+	
 	@Override
 	public void processRequest(ConnectionInfo client) {
 		try {

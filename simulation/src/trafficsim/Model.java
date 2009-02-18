@@ -43,7 +43,8 @@ public class Model extends Observable implements Serializable //{{{
     // Variables {{{
 
     private int nextCrossId = 1;
-    
+    private long lastUpdate = 0;
+
     /**
      * Hashtable of all lane crosses.
      */
@@ -308,7 +309,13 @@ public class Model extends Observable implements Serializable //{{{
         setChanged();
     }
         
-        
+    @Override
+    public void setChanged()
+    {
+    	lastUpdate = System.nanoTime();
+    	super.setChanged();
+    }
+
     void gotoParkingQueue(int id) { //{{{
         Car car = carsById.get(id);
         car.goToParkingOutQueue();
@@ -363,7 +370,10 @@ public class Model extends Observable implements Serializable //{{{
 		// updates this model from updated model
 	}
     
-    
+    public long getLastUpdate()
+    {
+    	return lastUpdate;
+    }
  
 }//}}}
 
