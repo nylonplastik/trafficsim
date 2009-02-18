@@ -48,6 +48,8 @@ public class ClientViewServerSide implements Observer  //{{{
         
     private LinkedList<Car>      p_observedCars;
     
+    private boolean changed = false;
+    
     //}}}
     
     public ClientViewServerSide(
@@ -116,18 +118,29 @@ public class ClientViewServerSide implements Observer  //{{{
             parkingData.put(p.getId(),  new ParkingData(p));
         }
         
-        updateClientSideView();
+        setChanged();
     } //}}}
     
-    void updateClientSideView()
-    {
-        
-    }
     
     @Override
     public void finalize() throws Throwable
     {
         p_model.deleteObserver(this);
+    }
+
+    public synchronized  boolean hasChanged() {
+        boolean bRet = changed;
+        changed = false;
+        return bRet;
+    }
+
+    public synchronized  void setChanged() {
+        this.changed = true;
+    }
+    
+    public synchronized ClientViewData getData()
+    {
+        return p_data;
     }
 
 } //}}}

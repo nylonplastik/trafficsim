@@ -26,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import trafficsim.ClientViewClientSide;
+import trafficsim.ClientViewData;
 import trafficsim.ICarController;
 import trafficsim.IController;
 import trafficsim.Model;
@@ -80,7 +81,7 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
 				Packet answer = (Packet)ansObject;
 				switch(answer.getType())
 				{
-					case PacketTypes.UPDATE_ANSWER_TYPEID:
+					case PacketTypes.NEW_MODEL_DATA:
                                             // server sends model
                                             model.update((Model)answer.getData());
                                             if (!isControllerStarted())
@@ -95,12 +96,15 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
                                             // save assigned id number
                                             setClientId((int) (Integer)answer.getData());
                                             // send model update request
-                                            Packet p = new Packet(PacketTypes.UPDATE_REQUEST_TYPEID);
+                                            Packet p = new Packet(PacketTypes.NEW_MODEL_DATA_TYPEID);
                                             client.writeObject(p);
                                             break;
                                         case PacketTypes.NEW_CAR_SPAWNED:
                                             System.out.println("New car spawned");
                                             controller.newCarCallback((Integer)answer.getData());
+                                            break;
+                                        case PacketTypes.MODEL_DATA_UPDATE_TYPEID:
+                                            view.viewChanged((ClientViewData)answer.getData());
                                             break;
                                             
 				}
@@ -172,7 +176,7 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
         }
         
         public void gotoParkingQueue(int newCarId) {
-            sendData(PacketTypes.PUT_CAR_IN_QUEUE);
+            sendData(newCarId, PacketTypes.PUT_CAR_IN_QUEUE);
         }
 
         public void newCar(int parkingId) {

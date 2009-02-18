@@ -73,6 +73,12 @@ public class EditorFrame extends JFrame
         super(title, gc);
         initFrame();
     }
+    
+    public EditorFrame(String title, Model model) throws HeadlessException {
+        super(title);
+        this.model = model;
+        initFrame();
+    }    
 
     public EditorFrame(String title) throws HeadlessException {
         super(title);

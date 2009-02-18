@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import trafficsim.ClientViewData;
 import trafficsim.Model;
 import trafficsim.Server;
 import trafficsim.network.ConnectionInfo;
@@ -64,13 +65,13 @@ import trafficsim.network.ProcessorThread;
 					Packet request = (Packet)reqObject;
 					switch(request.getType())
 					{
-						case PacketTypes.UPDATE_REQUEST_TYPEID:
+						case PacketTypes.NEW_MODEL_DATA_TYPEID:
 							System.out.println("Update request");
 							Model m = getModel();
 							synchronized(m)
 							{
 								long lastUpdate = m.getLastUpdate();
-								Object answer = new Packet(PacketTypes.UPDATE_ANSWER_TYPEID,m);
+								Object answer = new Packet(PacketTypes.NEW_MODEL_DATA,m);
 								client.setLastUpdate(lastUpdate);
 								client.writeObject(answer);
 							}
@@ -83,21 +84,37 @@ import trafficsim.network.ProcessorThread;
                             client.writeObject(answer);
 							break;  
 						case PacketTypes.SPAWN_NEW_CAR:
-                            System.out.println("Server: Spawning car");
-                            int newCarId = model.newCar((Integer) request.getData());
-                            answer = new Packet(PacketTypes.NEW_CAR_SPAWNED,newCarId);
-                            client.writeObject(answer);
-							break;                                                        
-                                                        
+                                                        System.out.println("Spawn car request");
+                                                        int newCarId = model.newCar((Integer)request.getData());
+                                                        server.addObservedCar(client.getClientId(), newCarId);
+                                                        answer = new Packet(PacketTypes.NEW_CAR_SPAWNED, newCarId);
+                                                        client.writeObject(answer);
+							break;  
+                                                case PacketTypes.PUT_CAR_IN_QUEUE:
+                                                        System.out.println("Put car in queue request");
+                                                        m = getModel();
+                                                        m.gotoParkingQueue((Integer)request.getData());
+                                                        break;
 					}
 				}
 			}
+
+                    boolean bRet = server.wasViewUpdated(client.getClientId());
+                    if (bRet)
+                    {
+                        ClientViewData data = server.getViewData(client.getClientId());
+                        Packet update = new Packet(PacketTypes.MODEL_DATA_UPDATE_TYPEID, data);
+                        client.writeObject(update);
+                    }                        
+                        
 		} catch(ClassNotFoundException e)
 		{
 			s_log.log(Level.SEVERE,"Class not found exception",e);
 		} catch (IOException e) {
 			s_log.log(Level.SEVERE,"Clients processor IO exception",e);
 		}
+                
+
                 
                 /*
 		if (client.getLastUpdate()<model.getLastUpdate())

@@ -173,7 +173,7 @@ public class Model extends Observable implements Serializable //{{{
         
     }//}}}
      
-    public synchronized int newCar(int parkinId)//{{{
+    public int newCar(int parkinId)//{{{
     {
         if (!parkingById.keySet().contains(parkinId))
             return FAILED;
@@ -187,6 +187,8 @@ public class Model extends Observable implements Serializable //{{{
         }
         
         carsById.put(newCar.getId(), newCar);
+        newCar.goToParkingOutQueue();
+        
         this.setChanged();
         //this.notifyObservers(WhatHasChanged.Cars);
         return newCar.getId();
@@ -312,7 +314,7 @@ public class Model extends Observable implements Serializable //{{{
     	super.setChanged();
     }
 
-    synchronized void gotoParkingQueue(int id) { //{{{
+    public synchronized void gotoParkingQueue(int id) { //{{{
         Car car = carsById.get(id);
         car.goToParkingOutQueue();
     } //}}}  
