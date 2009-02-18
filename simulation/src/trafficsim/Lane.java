@@ -110,16 +110,16 @@ public class Lane implements Serializable //{{{
     public Lane(LanesCross source,LanesCross destination) //{{{
     {
         this.speedLimit = Lane.UNLIMITED_SPEED;
-        this.length = Lane.DEFAULT_LENGTH;
+        this.length = distance(source, destination);
         this.destination = destination;
         this.source = source;
         this.id = getNewId();
     } //}}}
     
-    public Lane(int speedLimit, int length, LanesCross source, LanesCross destination) //{{{
+    public Lane(int speedLimit, LanesCross source, LanesCross destination) //{{{
     {
         this.speedLimit = speedLimit;
-        this.length = length;
+        this.length = distance(source, destination);
         this.destination = destination;
         this.source = source;
         this.id = getNewId();
@@ -314,11 +314,19 @@ public class Lane implements Serializable //{{{
         return id;
     }
     
+        
+    private int distance(LanesCross c1, LanesCross c2)
+    {
+        int x = c1.getX() - c2.getX();
+        int y = c1.getY() - c2.getY();
+        return (int) Math.sqrt(x*x+y*y);
+    }
+    
    /* TODO TO BE REMOVED WHEN COMMUNICATION IS ON*/
-    public Lane(int speedLimit, int length, LanesCross source, LanesCross destination, int id) //{{{
+    public Lane(int speedLimit, LanesCross source, LanesCross destination, int id) //{{{
     {
         this.speedLimit = speedLimit;
-        this.length = length;
+        this.length = distance(source, destination);
         this.destination = destination;
         this.source = source;
         this.id = id;
