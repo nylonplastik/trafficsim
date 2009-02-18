@@ -87,9 +87,9 @@ public class TrafficSim implements Runnable
                     int cross1 = serverModel.addCross(250,50);
                     int cross2 = serverModel.addCross(375,300);
                     int cross3 = serverModel.addCross(125, 300);
-                    Lane lane1 = serverModel.addLane(cross1, cross2, 20, 500);
-                    Lane lane2 = serverModel.addLane(cross2, cross3, 20, 500);
-                    Lane lane3 = serverModel.addLane(cross3, cross1, 20, 500);
+                    Lane lane1 = serverModel.addLane(cross1, cross2, 20);
+                    Lane lane2 = serverModel.addLane(cross2, cross3, 20);
+                    Lane lane3 = serverModel.addLane(cross3, cross1, 20);
                     if (lane1 != null)
                         lane1.setDefaultNextLane(lane2);
                     if (lane2 != null)
@@ -106,9 +106,9 @@ public class TrafficSim implements Runnable
                     cross1 = clientModel.addCross(250,50, 0);
                     cross2 = clientModel.addCross(375,300, 1);
                     cross3 = clientModel.addCross(125, 300, 2);
-                    lane1 = clientModel.addLane(cross1, cross2, 20, 500, 0);
-                    lane2 = clientModel.addLane(cross2, cross3, 20, 500, 1);
-                    lane3 = clientModel.addLane(cross3, cross1, 20, 500, 2);
+                    lane1 = clientModel.addLane(cross1, cross2, 20, 0);
+                    lane2 = clientModel.addLane(cross2, cross3, 20, 1);
+                    lane3 = clientModel.addLane(cross3, cross1, 20, 2);
                     if (lane1 != null)
                         lane1.setDefaultNextLane(lane2);
                     if (lane2 != null)
