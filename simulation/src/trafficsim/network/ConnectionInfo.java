@@ -38,6 +38,7 @@ public class ConnectionInfo implements Cloneable
     private int clientId;
     
 	private OutputStream outputStream = null;
+	private Object data = null;
 
 	private ConnectionInfo()
 	{	
@@ -118,6 +119,7 @@ public class ConnectionInfo implements Cloneable
     public synchronized void setClientId(int clientId) {
         this.clientId = clientId;
     }
+
 
 };
 
