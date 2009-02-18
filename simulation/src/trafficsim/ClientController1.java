@@ -82,18 +82,28 @@ public class ClientController1 implements ICarController
     {
         if (networkClient != null)
         {
+            System.out.println("Registering client");
             networkClient.register();
+            System.out.println("Waiting for answer");
             while(!isRegistered())
-                try {Thread.sleep(100);} catch (Exception e) {}
+                try {Thread.sleep(100);} catch (Exception e) 
+                {
+                    e.printStackTrace();
+                }
+            System.out.println("done");
             LinkedList<Parking> parkings;            
             if (!(parkings = model.getParkings()).isEmpty())
             {
+                System.out.println("Spawning cars");
                 // start one new cars on first available parking
                 for (int i = 0; i <CONTROLLED_CARS; i++) 
                 {
+                    System.out.println("Spawning car on parking 0");
                     // new car parked on first parking
                     networkClient.newCar(parkings.get(0).getId());              
+                    System.out.println("done");
                 }
+                System.out.println("done");
             }
             return true;
         }

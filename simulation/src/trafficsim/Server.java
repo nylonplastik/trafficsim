@@ -75,7 +75,8 @@ public class Server {
     public void close() {
         st.setRunning(false);
         cp.setProcessing(false);
-        timeControlThread.interrupt();
+        if (timeControlThread!=null)
+            timeControlThread.interrupt();
         try {
             model.saveModel("model.xml");
         } catch (FileNotFoundException e1) {

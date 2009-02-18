@@ -77,15 +77,16 @@ import trafficsim.network.ProcessorThread;
 							break;
 						case PacketTypes.REGISTER_CLIENT_TYPEID:
 							System.out.println("Register request");
-                                                        Integer newId = server.newClient();
-                                                        client.setClientId(newId);
+                            Integer newId = server.newClient();
+                            client.setClientId(newId);
 							Packet answer = new Packet(PacketTypes.REGISTRED_TYPEID, newId);
-                                                        client.writeObject(answer);
+                            client.writeObject(answer);
 							break;  
 						case PacketTypes.SPAWN_NEW_CAR:
-                                                        int newCarId = model.newCar((Integer)reqObject);
-                                                        answer = new Packet(PacketTypes.NEW_CAR_SPAWNED, newCarId);
-                                                        client.writeObject(answer);
+                            System.out.println("Server: Spawning car");
+                            int newCarId = model.newCar((Integer) request.getData());
+                            answer = new Packet(PacketTypes.NEW_CAR_SPAWNED,newCarId);
+                            client.writeObject(answer);
 							break;                                                        
                                                         
 					}
