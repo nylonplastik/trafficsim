@@ -54,6 +54,8 @@ public class ClientController1 implements IController
     private static final int           SAFE_MOVE_DISTANCE = 50;  
     
     private static final int           CONTROLLED_CARS    = 3;
+    
+    private static final int           MAX_SPEED_ON_90_DEGREE_ANGLE = 3;
         
     private Random                     randomizer;
     
@@ -193,7 +195,7 @@ public class ClientController1 implements IController
                             newAcc = (int) car.getSpeed();
                         if (newAcc > 3)
                             newAcc = 3;
-                        car.changeAcceleration(newAcc);
+                        car.setAcceleration(newAcc);
                     }
                 }
                 
@@ -211,7 +213,7 @@ public class ClientController1 implements IController
                 if (distanceToEnd == 0)
                 {
                     if (car.getSpeed() > 0)
-                        car.changeAcceleration(car.getSpeed());
+                        car.setAcceleration(car.getSpeed());
                     break;
                 }
                 
@@ -221,24 +223,39 @@ public class ClientController1 implements IController
                         distanceToEnd += l.getLength();
                 }
                 
-                float acceleration = adjustAcceleration(distanceToEnd, 
+                float accFactor1 = adjustAcceleration(distanceToEnd, 
                                                         car.getSpeed(), 
                                                         car.getAcceleration()
                                                         );
                 
-                // When approaching to the end, keep slowing down
-                if (acceleration < -1*car.getMaxAcceleration()/2 && distanceToEnd > car.getMaxAcceleration())
-                    car.changeAcceleration((float)acceleration);
+                float accFactor2 = adjustAccelerationToCornerAngle(
+                                                        car.getSpeed(), 
+                                                        car.getMaxSpeed(), 
+                                                        car.getPosition(), 
+                                                        car.getPlannedRoute(), 
+                                                        accFactor1
+                                                        );
+                float newAcceleration =accFactor2;
+                if (accFactor1 < accFactor2)
+                    newAcceleration  = accFactor1;
+                    
                 
+                // When approaching to the end, keep slowing down
+                if (newAcceleration < -1*car.getMaxAcceleration()/2 && distanceToEnd > car.getMaxAcceleration())
+                {
+                    car.setAcceleration(newAcceleration);
+                }
+                else car.setAcceleration(3);
+
                 // When close enough, stop slowing down
                 if (distanceToEnd < car.getMaxAcceleration())
-                    car.changeAcceleration(0);
+                    car.setAcceleration(0);
                 
                 // final stop
                 if (2*car.getSpeed() + car.getAcceleration() > distanceToEnd)
                 {
                     float newAcc2 = distanceToEnd - 2*((int)(car.getSpeed()));
-                    car.changeAcceleration(newAcc2);
+                    car.setAcceleration(newAcc2);
                 }  
                 
             }        
@@ -279,9 +296,79 @@ public class ClientController1 implements IController
         return speed/(1-2*dist/speed);
     }
     
+    private static float accelerationToChangeSpeed(
+                                float initialSpeed,
+                                float endSpeed,
+                                float dist)
+    {
+        return acccelerationToStopAt(endSpeed - initialSpeed, dist);
+    }
+    
     private static float accelerationToMove(int time, float dist)
     {
         return 2*dist/(float)(time*time);
+    }
+    
+    private static float angle(
+                            int x1, int y1, 
+                            int x2, int y2,
+                            int x3, int y3 )
+    {
+        int v1x = x1-x2;
+        int v1y = y1-y2;
+        int v2x = x3-x2;
+        int v2y = y3-y2;
+        
+        int product = v1x*v2x + v1y*v2y;
+        
+        if (product == 0)
+            return (float) Math.PI/2;
+        float d1 = (float) Math.sqrt(v1x*v1x+v1y*v1y);
+        float d2 = (float) Math.sqrt(v2x*v2x+v2y*v2y);
+        
+        float angle = (float) Math.acos(product/(d1*d2));
+        if (angle > Math.PI)
+            angle = 2* (float)Math.PI - angle;
+        return angle;
+    }
+    
+    private float angle (Lane l1, Lane l2)
+    {
+        if (l1.getDestination() != l2.getSource())
+            return 0;
+        
+        return angle(
+                l1.getSource().getX(), l1.getSource().getY(),
+                l2.getSource().getX(), l2.getSource().getY(),
+                l2.getDestination().getX(), l2.getDestination().getY()
+                );
+    }
+    
+    private float adjustAccelerationToCornerAngle (
+                            float currentSpeed,
+                            float maxSpeed,
+                            Position position,
+                            LinkedList<Lane> plannedRoute,
+                            float defaultAcceleration)
+    {
+        if (plannedRoute.isEmpty())
+            return defaultAcceleration;
+        
+        float distanceToCorner = position.getLane().getLength() - position.getCoord();
+        float angle = angle(position.getLane(), plannedRoute.get(0));
+        float newSpeed = (float) ((Math.PI - angle)/(Math.PI/2) * 
+                                    MAX_SPEED_ON_90_DEGREE_ANGLE);
+        if (newSpeed < 0)
+            newSpeed = 0;
+        if (newSpeed < currentSpeed)
+        {
+            return accelerationToChangeSpeed(
+                                        currentSpeed, 
+                                        newSpeed, 
+                                        distanceToCorner
+                                        );
+        }
+        else return defaultAcceleration;
     }
 
 }

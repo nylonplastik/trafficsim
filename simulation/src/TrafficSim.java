@@ -94,6 +94,9 @@ public class TrafficSim implements Runnable
                         lane1.setDefaultNextLane(lane2);
                     if (lane2 != null)
                         lane2.setDefaultNextLane(lane3);
+                    if (lane3 != null)
+                        lane1.setDefaultNextLane(lane1);
+                    
 
 
                     serverModel.addParking(lane1, lane2);
@@ -105,11 +108,13 @@ public class TrafficSim implements Runnable
                     cross3 = clientModel.addCross(125, 300, 2);
                     lane1 = clientModel.addLane(cross1, cross2, 20, 500, 0);
                     lane2 = clientModel.addLane(cross2, cross3, 20, 500, 1);
-                    lane3 = clientModel.addLane(cross1, cross1, 20, 500, 2);
+                    lane3 = clientModel.addLane(cross3, cross1, 20, 500, 2);
                     if (lane1 != null)
                         lane1.setDefaultNextLane(lane2);
                     if (lane2 != null)
                         lane2.setDefaultNextLane(lane3);
+                    if (lane3 != null)
+                        lane1.setDefaultNextLane(lane1);                    
 
 
                     clientModel.addParking(lane1, lane2, 0);             
