@@ -154,7 +154,7 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
         }
 
         public void newCar(int parkingId) {
-            sendData(PacketTypes.SPAWN_NEW_CAR, parkingId);
+            sendData(parkingId, PacketTypes.SPAWN_NEW_CAR);
         }
 
     public synchronized int getClientId() {

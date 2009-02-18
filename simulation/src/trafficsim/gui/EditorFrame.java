@@ -48,12 +48,6 @@ public class EditorFrame extends JFrame
     
     protected void initFrame()
     {
-        model = new Model();
-        int cross1 = model.addCross(10,10);
-        int cross2 = model.addCross(20,20);
-        model.addLane(cross1, cross2, 50, 200);
-        model.addLane(cross2, cross1, 50, 200);
-        model.getCars().add(model.addParking(model.getLanes().get(0), model.getLanes().get(1)).newCar());
         setLayout(new BorderLayout());
         sim_component = new SimulationComponent(model);
         sim_component.addMouseListener(this);
