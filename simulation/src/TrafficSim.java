@@ -84,39 +84,35 @@ public class TrafficSim implements Runnable
                     serverModel=new Model();
 
 
-                    int cross1 = serverModel.addCross(10,10);
-                    int cross2 = serverModel.addCross(200,200);
-                    int cross3 = serverModel.addCross(200, 300);
+                    int cross1 = serverModel.addCross(250,50);
+                    int cross2 = serverModel.addCross(375,300);
+                    int cross3 = serverModel.addCross(125, 300);
                     Lane lane1 = serverModel.addLane(cross1, cross2, 20, 500);
-                    Lane lane2 = serverModel.addLane(cross2, cross1, 20, 500);
-                    Lane lane3 = serverModel.addLane(cross2, cross3, 20, 500);
-                    Lane lane4 = serverModel.addLane(cross3, cross2, 20, 500);
+                    Lane lane2 = serverModel.addLane(cross2, cross3, 20, 500);
+                    Lane lane3 = serverModel.addLane(cross3, cross1, 20, 500);
                     if (lane1 != null)
-                        lane1.setDefaultNextLane(lane3);
+                        lane1.setDefaultNextLane(lane2);
                     if (lane2 != null)
-                        lane4.setDefaultNextLane(lane2);
+                        lane2.setDefaultNextLane(lane3);
 
 
                     serverModel.addParking(lane1, lane2);
-                    serverModel.addParking(lane3, lane4);
                     
                     clientModel=new Model();
 
-                    cross1 = clientModel.addCross(10,10, 0);
-                    cross2 = clientModel.addCross(200,200, 1);
-                    cross3 = clientModel.addCross(200, 300, 2);
+                    cross1 = clientModel.addCross(250,50, 0);
+                    cross2 = clientModel.addCross(375,300, 1);
+                    cross3 = clientModel.addCross(125, 300, 2);
                     lane1 = clientModel.addLane(cross1, cross2, 20, 500, 0);
-                    lane2 = clientModel.addLane(cross2, cross1, 20, 500, 1);
-                    lane3 = clientModel.addLane(cross2, cross3, 20, 500, 2);
-                    lane4 = clientModel.addLane(cross3, cross2, 20, 500, 3);
+                    lane2 = clientModel.addLane(cross2, cross3, 20, 500, 1);
+                    lane3 = clientModel.addLane(cross1, cross1, 20, 500, 2);
                     if (lane1 != null)
-                        lane1.setDefaultNextLane(lane3);
+                        lane1.setDefaultNextLane(lane2);
                     if (lane2 != null)
-                        lane4.setDefaultNextLane(lane2);
+                        lane2.setDefaultNextLane(lane3);
 
 
-                    clientModel.addParking(lane1, lane2, 0);
-                    clientModel.addParking(lane3, lane4, 1);                    
+                    clientModel.addParking(lane1, lane2, 0);             
         }
         
         // Server

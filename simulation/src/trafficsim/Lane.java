@@ -174,40 +174,44 @@ public class Lane implements Serializable //{{{
         return this.lights.get(distance);
     } //}}}
     
-    public synchronized boolean putCar(int coord, Car car) //{{{
+    public synchronized boolean putCar(float coord, Car car) //{{{
     {
-        if (coord > this.length)
+        int coordinate = (int) coord;
+        if (coordinate > this.length)
             return false;
-        this.carsOnLane.put(coord, car);
+        this.carsOnLane.put(coordinate, car);
         return true;
     } //}}}
 
-    public synchronized void carIsLeaving(int coordinate)
+    public synchronized void carIsLeaving(float coord)
     {
+        int coordinate = (int)coord;
         if (this.carsOnLane.containsKey(coordinate))
             this.carsOnLane.remove(coordinate);
     }
 
-    public synchronized boolean moveCar(Integer coord1, Integer coord2) 
+    public synchronized boolean moveCar(float coord1, float coord2) 
     {
+        int coordinate1 = (int) coord1;
+        int coordinate2 = (int) coord2;
         // if start and end position are the same, we're done.
-        if (coord1 == coord2 && this.carsOnLane.containsKey(coord1))
+        if (coordinate1 == coordinate2 && this.carsOnLane.containsKey(coordinate1))
             return true;
 
-        if (coord1 > coord2)
+        if (coordinate1 > coordinate2)
             return false;
 
         // check if all coords from coord1+1 to coord2 are free
         for(Integer d : carsOnLane.keySet())
         {
-            if ((d>coord1)&&(d<=coord2))
+            if ((d>coordinate1)&&(d<=coordinate2))
                 return false;
-            if (d>coord2)
+            if (d>coordinate2)
                 break;
         }
         // They are so put car on coord2
-        carsOnLane.put(coord2, carsOnLane.get(coord1));
-        carsOnLane.remove(coord1);
+        carsOnLane.put(coordinate2, carsOnLane.get(coordinate1));
+        carsOnLane.remove(coordinate1);
         return true;
     }
 

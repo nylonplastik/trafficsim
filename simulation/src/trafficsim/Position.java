@@ -33,7 +33,7 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class Position implements Serializable  {
     private Lane     lane;
-    private Integer  coord;
+    private float    coord;
     public enum     e_info
     {
         OK,             // lane and coord fields describe accurate position after time
@@ -48,10 +48,10 @@ public class Position implements Serializable  {
     public synchronized Lane getLane() {
         return lane;
     }
-    public synchronized void setCoord(Integer coord) {
+    public synchronized void setCoord(float coord) {
         this.coord = coord;
     }
-    public synchronized Integer getCoord() {
+    public synchronized float getCoord() {
         return coord;
     }
     

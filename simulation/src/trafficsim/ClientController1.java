@@ -40,7 +40,7 @@ public class ClientController1 implements IController
     private LinkedList<Integer>        p_controlledCars;
     
     // Safe distance between the cars to make one car start moving.
-    private static final int           SAFE_START_DISTANCE = 50;  
+    private static final int           SAFE_START_DISTANCE = 5;  
    
     // Each car performs prediction of other cars movement basing on their
     // current speed and acceleration. This constant determines length of
@@ -53,7 +53,7 @@ public class ClientController1 implements IController
     // treshold value of predicted distance between cars.
     private static final int           SAFE_MOVE_DISTANCE = 50;  
     
-    private static final int           CONTROLLED_CARS    = 1;
+    private static final int           CONTROLLED_CARS    = 3;
         
     private Random                     randomizer;
     
@@ -118,7 +118,7 @@ public class ClientController1 implements IController
                  // if car is parked, try to leave the parking
                 if (car.canLeaveParking(SAFE_START_DISTANCE))
                 {
-                    int  distanceToNextCar;
+                    float  distanceToNextCar;
                     Car nextCar = car.getNextCar();
                     LinkedList<Lane> carsPlannedRoute = car.getRoute();
                     
@@ -176,7 +176,7 @@ public class ClientController1 implements IController
                 float newAcc;
                 if (nextCar != null)
                 {
-                    int predictedDiscance =  distancePrediction(
+                    float predictedDiscance =  distancePrediction(
                                                 car.getSpeed(), 
                                                 nextCar.getSpeed(), 
                                                 car.getNextCarDistance(), 
@@ -185,7 +185,7 @@ public class ClientController1 implements IController
                    
                     if (predictedDiscance < SAFE_MOVE_DISTANCE)
                     {
-                        double accCorection = accelerationToMove(
+                        float accCorection = accelerationToMove(
                                                 PREDICTION_TIME_FRAME,
                                                 SAFE_MOVE_DISTANCE - predictedDiscance);
                         newAcc = (float) (car.getAcceleration() - accCorection);
@@ -205,7 +205,7 @@ public class ClientController1 implements IController
                 // get distance to the end of planned route
                 LinkedList<Lane> plannedRoute = car.getRoute();
                 Position currentPosition = car.getPosition();
-                int distanceToEnd = currentPosition.getLane().getLength()
+                float distanceToEnd = currentPosition.getLane().getLength()
                                                - currentPosition.getCoord();
                 
                 if (distanceToEnd == 0)
@@ -221,7 +221,7 @@ public class ClientController1 implements IController
                         distanceToEnd += l.getLength();
                 }
                 
-                double acceleration = adjustAcceleration(distanceToEnd, 
+                float acceleration = adjustAcceleration(distanceToEnd, 
                                                         car.getSpeed(), 
                                                         car.getAcceleration()
                                                         );
@@ -253,35 +253,35 @@ public class ClientController1 implements IController
     private static int distancePrediction(
             float speed1, 
             float speed2, 
-            int distance,
+            float distance,
             int timeFrame)
     {
         return (int)( distance + speed2*timeFrame - speed1*timeFrame);
     }
     
-    private static double adjustAcceleration(int distance, 
-                                            double speed, 
-                                            double maxAcc                                      
+    private static float adjustAcceleration(float distance, 
+                                            float speed, 
+                                            float maxAcc                                      
                                             )
     {
         return acccelerationToStopAt(speed, distance);
     }
     
-    private static double timeToReachPoint(int dist, double speed, double acc)
+    private static float timeToReachPoint(float dist, float speed, float acc)
     {
-        double delta = (2*speed-acc)*(2*speed-acc) + 4*acc*dist;
-        double time = (acc - 2*speed + Math.sqrt(delta)) / (2*acc);
+        float delta = (2*speed-acc)*(2*speed-acc) + 4*acc*dist;
+        float time = (acc - 2*speed + (float)Math.sqrt(delta)) / (2*acc);
         return time;
     }
     
-    private static double acccelerationToStopAt(double speed, int dist)
+    private static float acccelerationToStopAt(float speed, float dist)
     {
         return speed/(1-2*dist/speed);
     }
     
-    private static double accelerationToMove(int time, int dist)
+    private static float accelerationToMove(int time, float dist)
     {
-        return 2*dist/(double)(time*time);
+        return 2*dist/(float)(time*time);
     }
 
 }
