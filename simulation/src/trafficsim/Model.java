@@ -363,8 +363,23 @@ public class Model extends Observable implements Serializable //{{{
     }//}}}  
 
 	public synchronized void update(Model updated) {
-		// updates this model from updated model
+		// shallow copy of model
+                this.cars = updated.cars;
+                this.carsById = updated.carsById;
+                this.crosses = updated.crosses;
+                this.lanes = updated.lanes;
+                this.lanesById = updated.lanesById;
+                this.lastUpdate = updated.lastUpdate;
+                this.nextCrossId = updated.nextCrossId;
+                this.parkingById = updated.parkingById;
+                this.parkings = updated.parkings;      
 	}
+        
+        public void notifyObservers()
+        {
+            this.setChanged();
+            this.notify();
+        }
     
     public synchronized long getLastUpdate()
     {

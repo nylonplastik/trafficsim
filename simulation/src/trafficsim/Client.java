@@ -36,6 +36,7 @@ public class Client //{{{
     // Variables {{{
     private ClientViewClientSide p_view;
     private ClientController1    p_controller;
+    private Model                p_model;
     
     private static Logger s_log = Logger.getLogger(Client.class.toString());
     
@@ -45,13 +46,14 @@ public class Client //{{{
 
     public Client()//{{{
     {
-        p_view = new ClientViewClientSide();
-        p_controller =new ClientController1(p_view);
+        p_model = new Model();
+        p_view = new ClientViewClientSide(p_model);
+        p_controller =new ClientController1(p_view, p_model);
         p_view.setController(p_controller);
         
         // Client
       
-        sp = new trafficsim.network.client.ServerProcessor(p_controller, p_view);
+        sp = new trafficsim.network.client.ServerProcessor(p_controller, p_view, p_model);
         
         try {
             ct = new ClientThread(new InetSocketAddress(InetAddress.getByName("127.0.0.1"),23456));
@@ -65,7 +67,8 @@ public class Client //{{{
         //new Thread(ct).start();
         ct.run();
 
-        sp.register();
+        p_controller.setNetworkClient(sp);
+        p_controller.start();
         /*
         try {
         	for(ConnectionInfo cc : sp.getEvents())

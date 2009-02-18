@@ -64,8 +64,9 @@ public class ClientController1 implements ICarController
     
     private boolean registered = false;
     
-    public ClientController1(ClientViewClientSide view)
+    public ClientController1(ClientViewClientSide view, Model model)
     {
+        this.model       = model;
         p_view           = view;
         p_controlledCars = new LinkedList<Integer>();
         randomizer       = new Random(new Date().getTime());  

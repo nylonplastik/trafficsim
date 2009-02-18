@@ -41,13 +41,14 @@ public class ClientViewClientSide { //{{{
     private Model               p_model;
 
     
-    public ClientViewClientSide()
+    public ClientViewClientSide(Model model)
     {
+        p_model = model;
         p_cars = new Hashtable<Integer, Car>();
     }
     
     
-    public void setController(IController controller)
+    public void setController(ICarController controller)
     {
         p_controller = controller;
     }    

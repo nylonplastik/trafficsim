@@ -46,18 +46,21 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
         private boolean registered;
         private boolean controllerStarted = false;
 	
-	public ServerProcessor(ICarController controller, ClientViewClientSide view)
+	public ServerProcessor(ICarController controller, ClientViewClientSide view, Model model)
 	{
+                this.model = model;
                 this.view = view;
                 this.controller = controller;
 	}
 
 	public ServerProcessor(ICarController controller, 
                                ClientViewClientSide view,
+                               Model model,
                                ProcessorThread<ConnectionInfo> p
                                ) 
         {
 		super(p);
+                this.model = model;
                 this.view = view;
                 this.controller = controller;                
 	}
