@@ -31,11 +31,7 @@ import trafficsim.network.client.ServerProcessor;
  * @author Adam Rutkowski
  */
 public class ClientController1 implements ICarController
-{       
-    // TODO: to be removed when communication is implemented
-    private Model                serverModel;
-    public void setServerModel(Model model) { serverModel = model; }
-    
+{          
     private Model                      model;
     private ClientViewClientSide       p_view;
     private LinkedList<Integer>        p_controlledCars;
@@ -107,7 +103,6 @@ public class ClientController1 implements ICarController
 
     public void newCarCallback(int newCarId)
     {
-         networkClient.gotoParkingQueue(newCarId);
          p_controlledCars.add(newCarId);   
     }
     
@@ -123,6 +118,8 @@ public class ClientController1 implements ICarController
         // for each controlled car in client's view
         for (int carId : p_controlledCars)
         {
+            if (!carsInView.containsKey(carId))
+                break;
             car = carsInView.get(carId);
             boolean routeHasChanged = false;
             
@@ -146,7 +143,7 @@ public class ClientController1 implements ICarController
                     {
                         // there is enough space on lane to move and we know 
                         // where to go.
-                        serverModel.startMoving(car.getId(), 3);
+//ALZ                        serverModel.startMoving(car.getId(), 3);
                     }  
                 }
                 continue;
@@ -177,7 +174,7 @@ public class ClientController1 implements ICarController
                         int rand = randomizer.nextInt(possibleRoutes.size());
                         LinkedList<Integer> newRoute = new LinkedList<Integer>();
                         newRoute.add(possibleRoutes.get(rand).getId());
-                        serverModel.setPlannedRoute(car.getId(), newRoute);
+//ALZ                        serverModel.setPlannedRoute(car.getId(), newRoute);
                     }
                 }
                 
@@ -271,7 +268,7 @@ public class ClientController1 implements ICarController
                 
             }        
             
-            serverModel.setAcceleration(car.getId(), car.getAcceleration());
+//ALZ            serverModel.setAcceleration(car.getId(), car.getAcceleration());
         }
     }
   

@@ -69,7 +69,12 @@ public class Server {
         }
         
         new Thread(cp).start();
-        new Thread(st).start();        
+        new Thread(st).start();   
+        this.start();
+    }
+
+    public void addObservedCar(int clientId, int newCarId) {
+        clientsViews.get(clientId).addObservedCar(newCarId);
     }
 
     public void close() {
@@ -84,6 +89,10 @@ public class Server {
 
     public synchronized Model getModel() {
         return this.model;
+    }
+
+    public ClientViewData getViewData(int clientId) {
+        return clientsViews.get(clientId).getData();
     }
 
     public Integer newClient() {
@@ -103,6 +112,10 @@ public class Server {
     
     private static int newClientId() {
         return clientsCount++;
-    } 
+    }
+
+    public boolean wasViewUpdated(int clientId) {
+        return clientsViews.get(clientId).hasChanged();
+    }
     
 }

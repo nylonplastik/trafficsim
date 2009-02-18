@@ -109,8 +109,7 @@ public class MainFrame
         } else
         if (e.getSource() == map_editor_menu_item)
         {
-            EditorFrame editor = new EditorFrame("Map editor");
-            editor.setModel(model);
+            EditorFrame editor = new EditorFrame("Map editor", model);
             editor.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             editor.pack();
             editor.setVisible(true);

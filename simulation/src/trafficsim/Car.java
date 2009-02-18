@@ -53,6 +53,8 @@ public class Car implements Serializable //{{{
      */
     private LinkedList<Lane> plannedRoute;
     
+    private boolean newCar = true;
+    
      //}}}
     
     private synchronized int getNewId() //{{{
@@ -507,6 +509,14 @@ public class Car implements Serializable //{{{
 
     public synchronized void setCollided(boolean collided) {
             this.collided = collided;
+    }
+
+    public boolean isNewCar() {
+        return newCar;
+    }
+
+    public void setNewCar(boolean newCar) {
+        this.newCar = newCar;
     }
 } //}}}
 

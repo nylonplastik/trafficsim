@@ -22,20 +22,19 @@ package trafficsim.network;
 
 public class PacketTypes
 {
-    public static final int EMPTY_TYPEID           = 0;
-    public static final int UPDATE_REQUEST_TYPEID  = 1;
-    public static final int UPDATE_ANSWER_TYPEID   = 2;
-    public static final int CAR_DATA_TYPEID 	   = 3;
-    public static final int MODEL_DATA_TYPEID      = 4;
-    public static final int PARKING_DATA_TYPEID    = 5;
-    public static final int CLIENTVIEW_DATA_TYPEID = 6;
-    public static final int REGISTER_CLIENT_TYPEID = 7;
-    public static final int REGISTRED_TYPEID       = 8;
-    public static final int PUT_CAR_IN_QUEUE       = 9;
-    public static final int CAR_IN_QUEUE           = 10;
-    public static final int SPAWN_NEW_CAR          = 11;
-    public static final int NEW_CAR_SPAWNED        = 12;
-    
+    public static final int EMPTY_TYPEID             = 0;
+    public static final int NEW_MODEL_DATA           = 1;
+    public static final int MODEL_DATA_UPDATE_TYPEID = 2;
+    public static final int CAR_DATA_TYPEID 	     = 3;
+    public static final int MODEL_DATA_TYPEID        = 4;
+    public static final int PARKING_DATA_TYPEID      = 5;
+    public static final int CLIENTVIEW_DATA_TYPEID   = 6;
+    public static final int REGISTER_CLIENT_TYPEID   = 7;
+    public static final int REGISTRED_TYPEID         = 8;
+    public static final int PUT_CAR_IN_QUEUE         = 9;
+    public static final int SPAWN_NEW_CAR            = 10;
+    public static final int NEW_CAR_SPAWNED          = 11;
+    public static final int NEW_MODEL_DATA_TYPEID    = 12;
 }
 
 /* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */
