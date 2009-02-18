@@ -20,6 +20,13 @@
 
 package trafficsim;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import trafficsim.network.ClientThread;
+
 /**
  *
  * @author Adam Rutkowski
@@ -27,24 +34,54 @@ package trafficsim;
 public class Client //{{{
 {
     // Variables {{{
-    private ClientViewServerSide p_serverSideView;
-    private Model                p_model;
+    private ClientViewClientSide p_view;
+    private ClientController1    p_controller;
     
-    // TODO: this field should be removed, references to it replaced by 
-    // communication with client process.
-    private ClientViewClientSide p_clientSideView;
+    private static Logger s_log = Logger.getLogger(Client.class.toString());
+    
+    private ClientThread ct = null;
+    private trafficsim.network.client.ServerProcessor sp = null;
     //}}}
 
-    public Client(
-            Model model, 
-            ClientViewClientSide clientSideView, 
-            ClientViewServerSide serverSideView
-            )//{{{
+    public Client()//{{{
     {
-        p_serverSideView = serverSideView;
-        p_model          = model;
-        p_clientSideView = clientSideView;
+        p_view = new ClientViewClientSide();
+        p_controller =new ClientController1(p_view);
+        p_view.setController(p_controller);
+        
+        // Client
+      
+        sp = new trafficsim.network.client.ServerProcessor(p_controller, p_view);
+        
+        try {
+            ct = new ClientThread(new InetSocketAddress(InetAddress.getByName("127.0.0.1"),23456));
+            ct.setConnectionProcessor(sp);
+        } catch (UnknownHostException e2) {
+            s_log.log(Level.SEVERE,"wtf?",e2);
+            System.exit(1);
+        }
+
+        new Thread(sp).start();
+        //new Thread(ct).start();
+        ct.run();
+
+        sp.register();
+        /*
+        try {
+        	for(ConnectionInfo cc : sp.getEvents())
+        		cc.writeObject(new Packet(PacketTypes.UPDATE_REQUEST_TYPEID));
+		} catch(IOException e)
+        {
+			s_log.log(Level.SEVERE,"Can't send request",e);        	
+        }
+         * */
+        
     }//}}}
+
+    public void close() {
+    }
+    
+    
 }//}}}
 
 /* vim: set ts=4 sw=4 sts=4 et foldmethod=marker: */

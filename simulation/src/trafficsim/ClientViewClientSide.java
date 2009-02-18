@@ -41,39 +41,17 @@ public class ClientViewClientSide { //{{{
     private Model               p_model;
 
     
-    public ClientViewClientSide(Model m)
+    public ClientViewClientSide()
     {
-        this.p_model = m;
         p_cars = new Hashtable<Integer, Car>();
     }
     
-    // TODO: this field should be removed and it's methods invocation replaced
-    // by interprocess communication
-    private ClientViewServerSide p_serverSideView;
-    
-    //}}}    
-    
-    // TODO: when communication implemented, this should be removed as well.
-    public void setServerSideView(ClientViewServerSide serverSideView)
-    {
-        p_serverSideView = serverSideView;
-    }
     
     public void setController(IController controller)
     {
         p_controller = controller;
     }    
 
-    public void addObservedCar(int carId)
-    {
-        if (p_serverSideView != null)
-            p_serverSideView.addObservedCar(carId);
-    }
-    
-    public void delObservedCar(Car car)
-    {
-        p_serverSideView.delObservedCar(car.getId());
-    }
     
     // TODO: eventually this class should be made private when interprocess
     // communication is implemented. It should be invoked by communication 
@@ -126,6 +104,14 @@ public class ClientViewClientSide { //{{{
 
     public Hashtable<Integer, Car> getCars() {
         return p_cars;
+    }
+
+    private synchronized Model getMmodel() {
+        return p_model;
+    }
+
+    public synchronized void setMmodel(Model p_model) {
+        this.p_model = p_model;
     }
 
 } //}}}

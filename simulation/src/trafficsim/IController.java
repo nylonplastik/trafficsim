@@ -25,11 +25,12 @@ package trafficsim;
  * @author Adam Rutkowski
  */
 public interface IController //{{{
-{
+{   
     /**
      * Method invoked by client view on its update.
      */
     public void viewChanged();
+    
 }//}}}
 
 /* vim: set ts=4 sw=4 sts=4 et foldmethod=marker: */

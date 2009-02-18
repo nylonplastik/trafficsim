@@ -25,8 +25,6 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
-import trafficsim.CarData;
-import trafficsim.ParkingData;
 //}}}
 
 
@@ -49,20 +47,13 @@ public class ClientViewServerSide implements Observer  //{{{
     private Model                p_model;
         
     private LinkedList<Car>      p_observedCars;
-     
-    
-    // TODO: this field should be removed and it's methods invocation replaced
-    // by interprocess communication
-    private ClientViewClientSide p_clientSideView;
     
     //}}}
     
     public ClientViewServerSide(
-            ClientViewClientSide clientSideView,
             Model model
             ) //{{{
     {
-        p_clientSideView = clientSideView;
         p_data           = new ClientViewData();
         p_model          = model;
         p_observedCars   = new LinkedList<Car>();
@@ -130,7 +121,7 @@ public class ClientViewServerSide implements Observer  //{{{
     
     void updateClientSideView()
     {
-        p_clientSideView.viewChanged(p_data);
+        
     }
     
     @Override
@@ -138,98 +129,7 @@ public class ClientViewServerSide implements Observer  //{{{
     {
         p_model.deleteObserver(this);
     }
-        
-    private void createClientView(Model model)
-    {
-        /*
-        p_data.getBorderCrosses().clear();
-        p_data.getCars().clear();
-        p_data.getCrosses().clear();
-        p_data.getLanes().clear();
-        
-        LinkedList<Lane>        closestLanes   = new LinkedList<Lane>();
-        LinkedList<LanesCross>  closestCrosses = new LinkedList<LanesCross>();
-        LinkedList<Car>         closestCars    = new LinkedList<Car>(); 
-        
-        for (Car c : p_observedCars)
-        {
-            addClosestLanesAndCrossses(c, closestLanes, closestCrosses);
-            closestCars.add(c);
-        }
-        
-        
-        // Get all cars from close lanes
-        for (Lane l : closestLanes)
-        {
-            SortedMap<Integer, Car> carsOnLane = l.getCarsOnLane();
-            Set<Integer> ids;
-            
-            synchronized(carsOnLane)
-            {
-                ids = carsOnLane.keySet();
-            
-                for(Integer id : ids)
-                    if (!closestCars.contains(carsOnLane.get(id)))
-                        closestCars.add(carsOnLane.get(id));
-            }       
-        }
-        
-        p_data.setCars(closestCars);
-        p_data.setLanes(closestLanes);
-        
-        for(LanesCross c : closestCrosses)
-            p_data.getCrosses().put(c.getId(), c);
-        
-        updateClientSideView();
-         * */
-    }
-/*    
-    private void addClosestLanesAndCrossses(
-                                 Car car, 
-                                 LinkedList<Lane> lanes,
-                                 LinkedList<LanesCross> crosses
-                                 )
-    { 
-        if (car.getPosition().info == Position.e_info.NOT_DRIVING)
-            return;
-        
-        Lane currentLane = car.getPosition().getLane();
-        LinkedList<Lane> adjecentLanes = currentLane.getAdjacentLanes();
-        
-        // add adjecent lines
-        for (Lane l : adjecentLanes)
-            if (!lanes.contains(l))
-                lanes.add(l);
-        
-        // add crosses on the end of added lanes
-        LinkedList<LanesCross> closestCrosses = new LinkedList<LanesCross>();
-        LinkedList<LanesCross> endingCrosses  = new LinkedList<LanesCross>();
-        LinkedList<LanesCross> borderCrosses  = new LinkedList<LanesCross>();
-        
-        for (Lane l : adjecentLanes)
-        {
-            if (!closestCrosses.contains(l.getDestination()))
-            {
-                 closestCrosses.add(l.getDestination());       
-                 endingCrosses.add(l.getDestination());
-            }
-            if (!closestCrosses.contains(l.getSource()))
-                closestCrosses.add(l.getSource());                  
-        }
-        
-        // add lanes outgoing from adjecent crosses
-        for (LanesCross c : endingCrosses)
-        {
-            if (!crosses.contains(c))
-                crosses.add(c);
-            
-            for( Lane l : c.getOutgoingLanes() )
-                if (!lanes.contains(l))
-                    lanes.add(l);
-        }
-          
-    }
-    */
+
 } //}}}
 
 

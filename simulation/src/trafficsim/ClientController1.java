@@ -24,18 +24,19 @@ import java.util.LinkedList;
 import java.util.Random;
 import java.util.Date;
 import java.util.Hashtable;
+import trafficsim.network.client.ServerProcessor;
 
 /**
  * Singleton class responsible for somulation control.
  * @author Adam Rutkowski
  */
-public class ClientController1 implements IController
+public class ClientController1 implements ICarController
 {       
     // TODO: to be removed when communication is implemented
     private Model                serverModel;
     public void setServerModel(Model model) { serverModel = model; }
     
-    private Model                      p_model;
+    private Model                      model;
     private ClientViewClientSide       p_view;
     private LinkedList<Integer>        p_controlledCars;
     
@@ -59,45 +60,54 @@ public class ClientController1 implements IController
         
     private Random                     randomizer;
     
-    public ClientController1(Model model, ClientViewClientSide view)
+    private ServerProcessor networkClient = null;
+    
+    private boolean registered = false;
+    
+    public ClientController1(ClientViewClientSide view)
     {
-        p_model          = model;
         p_view           = view;
         p_controlledCars = new LinkedList<Integer>();
-        randomizer       = new Random(new Date().getTime());   
+        randomizer       = new Random(new Date().getTime());  
     }
     
-    public void start()
+    public void setNetworkClient(ServerProcessor client)
     {
-        int newCarId;
-        LinkedList<Parking> parkings;
-        
-        if (!(parkings = p_model.getParkings()).isEmpty())
+        this.networkClient = client;
+    }
+   
+            
+    public boolean start()
+    {
+        if (networkClient != null)
         {
-            // start one new cars on first available parking
-            for (int i = 0; i <CONTROLLED_CARS; i++) 
+            networkClient.register();
+            while(!isRegistered())
+                try {Thread.sleep(100);} catch (Exception e) {}
+            LinkedList<Parking> parkings;            
+            if (!(parkings = model.getParkings()).isEmpty())
             {
-                // new car parked on first parking
-                // TODO: this will be replaced by sending request to server.
-                // with no return value.
-                newCarId = serverModel.newCar(parkings.get(0).getId());
-                
-                // TODO: when communication implemented, these lines 
-                // are to be removed. This operation will be done
-                // in newCarCallback method.
-                serverModel.gotoParkingQueue(newCarId);
-                p_controlledCars.add(newCarId);
-                p_view.addObservedCar(newCarId);                  
+                // start one new cars on first available parking
+                for (int i = 0; i <CONTROLLED_CARS; i++) 
+                {
+                    // new car parked on first parking
+                    networkClient.newCar(parkings.get(0).getId());              
+                }
             }
-        }       
-        
-        serverModel.refresh();
+            return true;
+        }
+        else return false;
     }
     
+    public synchronized void registered() 
+    {
+        setRegistered(true);
+    }
+
     public void newCarCallback(int newCarId)
     {
-          p_controlledCars.add(newCarId);
-          p_view.addObservedCar(newCarId);  
+         networkClient.gotoParkingQueue(newCarId);
+         p_controlledCars.add(newCarId);   
     }
     
     /***
@@ -369,6 +379,22 @@ public class ClientController1 implements IController
                                         );
         }
         else return defaultAcceleration;
+    }
+
+    private synchronized boolean isRegistered() {
+        return this.registered;
+    }
+    
+    private synchronized void setRegistered(boolean registered) {
+        this.registered = registered;
+    }
+
+    private Model getModel() {
+        return model;
+    }
+
+    public void setModel(Model model) {
+        this.model = model;
     }
 
 }

@@ -25,27 +25,31 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import trafficsim.Model;
+import trafficsim.Server;
 import trafficsim.network.ConnectionInfo;
 import trafficsim.network.Packet;
 import trafficsim.network.PacketTypes;
 import trafficsim.network.ProcessorThread;
 
-public class ClientsProcessor
+ public class ClientsProcessor
 	extends trafficsim.network.ConnectionProcessor 
 {
 
 	private static Logger s_log = Logger.getLogger(ClientsProcessor.class.toString());
 
 	private Model model = null;
+        private Server server = null;
 	
-	public ClientsProcessor(Model model)
+	public ClientsProcessor(Model model, Server server)
 	{
 		setModel(model);
+                this.server = server;
 	}
 
-	public ClientsProcessor(Model model, ProcessorThread<ConnectionInfo> p) {
+	public ClientsProcessor(Model model, Server server, ProcessorThread<ConnectionInfo> p) {
 		super(p);
 		setModel(model);
+                this.server = server;
 	}
 
 	@Override
@@ -67,6 +71,13 @@ public class ClientsProcessor
 							answer = new Packet(PacketTypes.UPDATE_ANSWER_TYPEID,getModel());
 							client.setLastUpdate(lastUpdate);
 							break;
+						case PacketTypes.REGISTER_CLIENT_TYPEID:
+							System.out.println("Register request");
+                                                        Integer newId = server.newClient();
+                                                        client.setClientId(newId);
+							answer = new Packet(PacketTypes.REGISTRED_TYPEID, newId);
+							break;                                                        
+                                                        
 					}
 					if (answer!=null)
 					{
@@ -86,6 +97,8 @@ public class ClientsProcessor
 		} catch (IOException e) {
 			s_log.log(Level.SEVERE,"Cant read object",e);
 		}
+                
+                /*
 		if (client.getLastUpdate()<model.getLastUpdate())
 		{
 			try
@@ -98,6 +111,8 @@ public class ClientsProcessor
 				s_log.log(Level.SEVERE,"Can't send update",e);
 			}
 		}
+                 * */
+                
 		try {
 			addEvent((ConnectionInfo)client.clone());
 		} catch (InterruptedException e) {

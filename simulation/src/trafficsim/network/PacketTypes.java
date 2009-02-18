@@ -29,6 +29,12 @@ public class PacketTypes
     public static final int MODEL_DATA_TYPEID      = 4;
     public static final int PARKING_DATA_TYPEID    = 5;
     public static final int CLIENTVIEW_DATA_TYPEID = 6;
+    public static final int REGISTER_CLIENT_TYPEID = 7;
+    public static final int REGISTRED_TYPEID       = 8;
+    public static final int PUT_CAR_IN_QUEUE       = 9;
+    public static final int CAR_IN_QUEUE           = 10;
+    public static final int SPAWN_NEW_CAR          = 11;
+    public static final int NEW_CAR_SPAWNED        = 12;
     
 }
 

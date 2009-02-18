@@ -35,6 +35,8 @@ public class ConnectionInfo implements Cloneable
     private Socket socket = null;
     private long lastUpdate = 0;
     private InputStream inputStream = null;
+    private int clientId;
+    
 	private OutputStream outputStream = null;
 
 	private ConnectionInfo()
@@ -54,6 +56,7 @@ public class ConnectionInfo implements Cloneable
 	    	ConnectionInfo copy = new ConnectionInfo();
 	    	copy.setSocket(getSocket());
 	    	copy.setLastUpdate(getLastUpdate());
+                copy.setClientId(getClientId());
 	    	return copy;
 		} catch (IOException e) {
 			return null;
@@ -106,6 +109,14 @@ public class ConnectionInfo implements Cloneable
     		 return null;
 		ObjectInputStream ois = new ObjectInputStream(inputStream);
 		return ois.readObject();
+    }
+
+    public synchronized int getClientId() {
+        return clientId;
+    }
+
+    public synchronized void setClientId(int clientId) {
+        this.clientId = clientId;
     }
 
 };

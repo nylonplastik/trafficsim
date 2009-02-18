@@ -21,9 +21,13 @@
 package trafficsim.network.client;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import trafficsim.ClientViewClientSide;
+import trafficsim.ICarController;
+import trafficsim.IController;
 import trafficsim.Model;
 import trafficsim.network.ConnectionInfo;
 import trafficsim.network.Packet;
@@ -36,16 +40,28 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
 
 	private static Logger s_log = Logger.getLogger(ClientsProcessor.class.toString());
 	private Model model = null;
+        private ICarController controller = null;
+        private ClientViewClientSide view = null;
+        private int clientId = 0;
+        private boolean registered;
+        private boolean controllerStarted = false;
 	
-	public ServerProcessor(Model model)
+	public ServerProcessor(ICarController controller, ClientViewClientSide view)
 	{
-		this.model = model;
+                this.view = view;
+                this.controller = controller;
 	}
 
-	public ServerProcessor(Model model, ProcessorThread<ConnectionInfo> p) {
+	public ServerProcessor(ICarController controller, 
+                               ClientViewClientSide view,
+                               ProcessorThread<ConnectionInfo> p
+                               ) 
+        {
 		super(p);
-		this.model = model;
+                this.view = view;
+                this.controller = controller;                
 	}
+
 	
 	@Override
 	public void processRequest(ConnectionInfo client) {
@@ -62,9 +78,27 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
 				switch(answer.getType())
 				{
 					case PacketTypes.UPDATE_ANSWER_TYPEID:
-						// server sends model
-						model.update((Model)answer.getData());
-						break;
+                                            // server sends model
+                                            model.update((Model)answer.getData());
+                                            if (!isControllerStarted())
+                                            {
+                                                setControllerStarted(true);
+                                                // tell the controller that
+                                                // we're ready to start
+                                                controller.registered();
+                                            }
+                                            break;
+                                        case PacketTypes.REGISTRED_TYPEID:
+                                            // save assigned id number
+                                            setClientId((int) (Integer)answer.getData());
+                                            // send model update request
+                                            Packet p = new Packet(PacketTypes.UPDATE_REQUEST_TYPEID);
+                                            client.writeObject(p);
+                                            break;
+                                        case PacketTypes.NEW_CAR_SPAWNED:
+                                            controller.newCarCallback((Integer)answer.getData());
+                                            break;
+                                            
 				}
 			}
 		} catch (IOException e) {
@@ -74,11 +108,75 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
 		} catch (InterruptedException e) {
 			s_log.log(Level.SEVERE,"ServerProcessor Interrupted",e);
 		}
+                
 		try {
 			addEvent((ConnectionInfo)client.clone());
 		} catch (InterruptedException e) {
 		}
 	}
+        
+        private void sendData (Serializable data, int packetType)
+        {
+            ConnectionInfo server = getEvents().getFirst();
+            Packet packet = new Packet(packetType, data);
+            try
+            {
+                    server.writeObject(packet);
+            } catch(IOException e)
+            {
+                    s_log.log(Level.SEVERE,"Can't send data to server",e);
+            }           
+        }
+        
+        private void sendData (int packetType)
+        {
+            ConnectionInfo server = getEvents().getFirst();
+            Packet packet = new Packet(packetType);
+            try
+            {
+                    server.writeObject(packet);
+            } catch(IOException e)
+            {
+                    s_log.log(Level.SEVERE,"Can't send data to server",e);
+            }           
+        }        
+        
+        public void register()
+        {
+            sendData(new Integer(0), PacketTypes.REGISTER_CLIENT_TYPEID);
+        }
+        
+        public void gotoParkingQueue(int newCarId) {
+            sendData(PacketTypes.PUT_CAR_IN_QUEUE);
+        }
+
+        public void newCar(int parkingId) {
+            sendData(PacketTypes.SPAWN_NEW_CAR);
+        }
+
+    public synchronized int getClientId() {
+        return clientId;
+    }
+
+    public synchronized void setClientId(int clientId) {
+        this.clientId = clientId;
+    }
+
+    public synchronized boolean isRegistered() {
+        return registered;
+    }
+
+    public synchronized void setRegistered(boolean registered) {
+        this.registered = registered;
+    }
+
+    public boolean isControllerStarted() {
+        return controllerStarted;
+    }
+
+    public void setControllerStarted(boolean controllerStarted) {
+        this.controllerStarted = controllerStarted;
+    }
 }
 
 /* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */
