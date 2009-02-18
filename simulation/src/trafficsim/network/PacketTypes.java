@@ -23,10 +23,12 @@ package trafficsim.network;
 public class PacketTypes
 {
     public static final int EMPTY_TYPEID           = 0;
-    public static final int CAR_DATA_TYPEID        = 1;
-    public static final int MODEL_DATA_TYPEID      = 2;
-    public static final int PARKING_DATA_TYPEID    = 3;
-    public static final int CLIENTVIEW_DATA_TYPEID = 4;
+    public static final int UPDATE_REQUEST_TYPEID  = 1;
+    public static final int UPDATE_ANSWER_TYPEID   = 2;
+    public static final int CAR_DATA_TYPEID 	   = 3;
+    public static final int MODEL_DATA_TYPEID      = 4;
+    public static final int PARKING_DATA_TYPEID    = 5;
+    public static final int CLIENTVIEW_DATA_TYPEID = 6;
     
 }
 

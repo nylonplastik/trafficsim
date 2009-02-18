@@ -25,24 +25,40 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class Packet implements Serializable
 {
-    private int typeId = PacketTypes.EMPTY_TYPEID;
+	private int type = 0;
+	private Serializable data = null;
+	
+	public Packet()
+	{		
+	}
+	
+	public Packet(int type)
+	{
+		setType(type);
+	}
+	
+	public Packet(int type, Serializable data)
+	{
+		setType(type);
+		setData(data);
+	}
 
-    public Packet()
-    {
-    }
+	public void setType(int type) {
+		this.type = type;
+	}
 
-    public Packet(int typeId)
-    {
-        setTypeId(typeId);
-    }
-    
-    public int getTypeId() {
-        return typeId;
-    }
+	public int getType() {
+		return type;
+	}
 
-    public void setTypeId(final int typeId) {
-        this.typeId = typeId;
-    }
+	public void setData(Serializable data) {
+		this.data = data;
+	}
+
+	public Serializable getData() {
+		return data;
+	}
+	
 }
 
 /* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */

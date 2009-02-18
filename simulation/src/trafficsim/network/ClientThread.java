@@ -31,8 +31,9 @@ public class ClientThread implements Runnable
 {
     private static Logger s_log = Logger.getLogger(ClientThread.class.toString());
     
+    private Socket clientSocket = null;
     private InetSocketAddress address = null;
-    private ProcessorThread<ServerInfo> serverProcessor = null;
+    private ProcessorThread<ConnectionInfo> connectionProcessor = null;
     private boolean running = false;
     
     public ClientThread(InetSocketAddress address)
@@ -45,24 +46,28 @@ public class ClientThread implements Runnable
         InetSocketAddress address = getAddress();
         try
         {
-            Socket socket = new Socket();
+            clientSocket = new Socket();
             System.out.println("Connecting..."+address.getHostName()+":"+address.getPort());
-            socket.connect(address);
-            if (socket.isConnected())
+            clientSocket.connect(address);
+            if (clientSocket.isConnected())
             {
                 System.out.println("Connected...");
-                ProcessorThread<ServerInfo> sp = getServerProcessor();
+                ProcessorThread<ConnectionInfo> sp = getConnectionProcessor();
                 if (sp!=null)
-                    sp.addEvent(new ServerInfo(socket));
+                {
+                    sp.addEvent(new ConnectionInfo(clientSocket));
+                }
             } else
                 System.out.println("Not connected...");
         } catch(SocketException e)
         {
-            s_log.log(Level.SEVERE,"Server Socket Exception", e);
+            s_log.log(Level.SEVERE,"Client Socket Exception", e);
         } catch (IOException e)
         {
-            s_log.log(Level.SEVERE,"Server IO Exception", e);
-        }
+            s_log.log(Level.SEVERE,"Client IO Exception", e);
+        } catch (InterruptedException e) {
+            s_log.log(Level.SEVERE,"Client interrupted", e);
+		}
     }
 
     public void setAddress(final InetSocketAddress address) {
@@ -81,12 +86,12 @@ public class ClientThread implements Runnable
         return running;
     }
 
-    public synchronized void setServerProcessor(ProcessorThread<ServerInfo> serverProcessor) {
-        this.serverProcessor = serverProcessor;
+    public synchronized void setConnectionProcessor(ProcessorThread<ConnectionInfo> connectionProcessor) {
+        this.connectionProcessor = connectionProcessor;
     }
 
-    public synchronized ProcessorThread<ServerInfo> getServerProcessor() {
-        return serverProcessor;
+    public synchronized ProcessorThread<ConnectionInfo> getConnectionProcessor() {
+        return connectionProcessor;
     }
     
 }

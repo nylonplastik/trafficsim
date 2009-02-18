@@ -31,7 +31,7 @@ public class ServerThread implements Runnable {
     
     private InetSocketAddress address = null;
     private int backlog = 0;
-    private ProcessorThread<ClientInfo> clientsProcessor = null;
+    private ProcessorThread<ConnectionInfo> connnectionProcessor = null;
     private boolean running = false;
     
     public ServerThread(InetSocketAddress address)
@@ -61,14 +61,14 @@ public class ServerThread implements Runnable {
                 try
                 {
                     Socket client = socket.accept();
-                    ProcessorThread<ClientInfo> cp = getClientsProcessor();
+                    ProcessorThread<ConnectionInfo> cp = getConnectionProcessor();
                     if (cp!=null)
-                        cp.addEvent(new ClientInfo(client));
+                        cp.addEvent(new ConnectionInfo(client));
                     else
                         client.close();
                 } catch(SocketTimeoutException e)
                 {                    
-                }
+ 				}
             }
             socket.close();
         } catch(SocketException e)
@@ -77,6 +77,7 @@ public class ServerThread implements Runnable {
         } catch (IOException e)
         {
             s_log.log(Level.SEVERE,"Server IO Exception", e);
+        } catch (InterruptedException e) {
         }
     }
 
@@ -104,12 +105,12 @@ public class ServerThread implements Runnable {
         return running;
     }
 
-    public synchronized void setClientsProcessor(ProcessorThread<ClientInfo> clientsProcessor) {
-        this.clientsProcessor = clientsProcessor;
+    public synchronized void setConnectionProcessor(ProcessorThread<ConnectionInfo> connectionProcessor) {
+        this.connnectionProcessor = connectionProcessor;
     }
 
-    public synchronized ProcessorThread<ClientInfo> getClientsProcessor() {
-        return clientsProcessor;
+    public synchronized ProcessorThread<ConnectionInfo> getConnectionProcessor() {
+        return connnectionProcessor;
     }
 
 }

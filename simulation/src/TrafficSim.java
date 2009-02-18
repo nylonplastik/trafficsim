@@ -22,6 +22,7 @@
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
@@ -30,9 +31,9 @@ import java.util.logging.Logger;
 
 import trafficsim.gui.*;
 import trafficsim.network.ClientThread;
-import trafficsim.network.ClientsProcessor;
-import trafficsim.network.Request;
-import trafficsim.network.ServerProcessor;
+import trafficsim.network.ConnectionInfo;
+import trafficsim.network.Packet;
+import trafficsim.network.PacketTypes;
 import trafficsim.network.ServerThread;
 import trafficsim.*;
 import javax.swing.*;
@@ -122,7 +123,7 @@ public class TrafficSim implements Runnable
         try {
             cp = new trafficsim.network.server.ClientsProcessor(serverModel);
             st = new ServerThread(new InetSocketAddress(InetAddress.getByName("127.0.0.1"),23456));
-            st.setClientsProcessor(cp);
+            st.setConnectionProcessor(cp);
         } catch (UnknownHostException e2) {
             s_log.log(Level.SEVERE,"wtf?",e2);
             System.exit(1);
@@ -131,23 +132,28 @@ public class TrafficSim implements Runnable
         new Thread(cp).start();
         new Thread(st).start();
         
+        // Client
+       
         sp = new trafficsim.network.client.ServerProcessor();
         try {
             ct = new ClientThread(new InetSocketAddress(InetAddress.getByName("127.0.0.1"),23456));
-            ct.setServerProcessor(sp);
+            ct.setConnectionProcessor(sp);
         } catch (UnknownHostException e2) {
             s_log.log(Level.SEVERE,"wtf?",e2);
             System.exit(1);
         }
 
         new Thread(sp).start();
-        new Thread(ct).start();
-        
+        //new Thread(ct).start();
+        ct.run();
+
         try {
-			sp.addRequest(new Request(1));
-		} catch (InterruptedException e2) {
-			s_log.log(Level.SEVERE,"Can't add request",e2);
-		}
+        	for(ConnectionInfo c : sp.getEvents())
+        		c.writeObject(new Packet(PacketTypes.UPDATE_REQUEST_TYPEID));
+		} catch(IOException e)
+        {
+			s_log.log(Level.SEVERE,"Can't send request",e);        	
+        }
         
         ClientViewClientSide clientSideView   = new ClientViewClientSide(clientModel);
         ClientController1    clientController = 

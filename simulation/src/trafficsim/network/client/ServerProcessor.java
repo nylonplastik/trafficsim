@@ -20,28 +20,45 @@
 
 package trafficsim.network.client;
 
-import trafficsim.network.Answer;
-import trafficsim.network.ServerInfo;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class ServerProcessor extends trafficsim.network.ServerProcessor
+import trafficsim.network.ConnectionInfo;
+import trafficsim.network.Packet;
+import trafficsim.network.PacketTypes;
+import trafficsim.network.server.ClientsProcessor;
+
+public class ServerProcessor extends trafficsim.network.ConnectionProcessor
 {
 
+	private static Logger s_log = Logger.getLogger(ClientsProcessor.class.toString());
+	
 	@Override
-	public void processAnswer(ServerInfo server, Object ansObject) {
-		if (ansObject==null)
-		{
-			super.processAnswer(server, ansObject);
-			return;
+	public void processRequest(ConnectionInfo client) {
+		try {
+			Object ansObject = client.readObject();
+			if (ansObject==null)
+			{
+				addEvent((ConnectionInfo)client.clone());
+				return;
+			}
+			Packet answer = (Packet)ansObject;
+			switch(answer.getType())
+			{
+				case PacketTypes.UPDATE_ANSWER_TYPEID:
+					// server sends model
+					System.out.println("Updating model");
+					break;
+			}
+			addEvent((ConnectionInfo)client.clone());
+		} catch (IOException e) {
+			s_log.log(Level.SEVERE,"IO exception",e);
+		} catch (ClassNotFoundException e) {
+			s_log.log(Level.SEVERE,"Class not found exception",e);
+		} catch (InterruptedException e) {
+			s_log.log(Level.SEVERE,"ServerProcessor Interrupted",e);
 		}
-		Answer answer = (Answer)ansObject;
-		switch(answer.getType())
-		{
-			case 1:
-				// server sends model
-				System.out.println("updating model");
-				break;
-		}
-		super.processAnswer(server, ansObject);
 	}
 }
 

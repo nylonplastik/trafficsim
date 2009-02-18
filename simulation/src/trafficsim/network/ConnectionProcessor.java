@@ -15,49 +15,35 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
+    along with TrafficSim.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 package trafficsim.network;
 
-import java.io.Serializable;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-@SuppressWarnings("serial")
-public class Answer implements Serializable
+public abstract class ConnectionProcessor extends ProcessorThread<ConnectionInfo>
 {
-	private int type = 0;
-	private Serializable data = null;
-	
-	public Answer()
-	{		
-	}
-	
-	public Answer(int type)
-	{
-		setType(type);
-	}
-	
-	public Answer(int type, Serializable data)
-	{
-		setType(type);
-		setData(data);
-	}
+    private static Logger s_log = Logger.getLogger(ConnectionProcessor.class.toString());
 
-	public void setType(int type) {
-		this.type = type;
-	}
+    public ConnectionProcessor()
+    {
+    }
 
-	public int getType() {
-		return type;
-	}
-
-	public void setData(Serializable data) {
-		this.data = data;
-	}
-
-	public Serializable getData() {
-		return data;
-	}
-	
+    public abstract void processRequest(ConnectionInfo client);
+    
+    @Override
+    public void processEvent(ConnectionInfo client) {
+    	try {
+			if (client.isDataAvailable())
+				processRequest(client);
+		} catch (IOException e) {
+			s_log.log(Level.SEVERE,"IO Exception",e);
+		}
+    }
+        
 }
 
 /* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */

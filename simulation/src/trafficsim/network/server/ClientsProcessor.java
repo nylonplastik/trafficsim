@@ -20,20 +20,26 @@
 
 package trafficsim.network.server;
 
+import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import trafficsim.Model;
-import trafficsim.network.Answer;
-import trafficsim.network.ClientInfo;
-import trafficsim.network.Request;
+import trafficsim.network.ConnectionInfo;
+import trafficsim.network.Packet;
+import trafficsim.network.PacketTypes;
 
 public class ClientsProcessor
-	extends trafficsim.network.ClientsProcessor 
+	extends trafficsim.network.ConnectionProcessor 
 	implements Observer
 {
 
-	private Model  model = null;
+	private static Logger s_log = Logger.getLogger(ClientsProcessor.class.toString());
+
+	private Model model = null;
+	private long lastUpdate = 0;
 	
 	public ClientsProcessor(Model model)
 	{
@@ -41,26 +47,62 @@ public class ClientsProcessor
 	}
 
 	@Override
-	public Object processRequest(ClientInfo client) {
-		Object reqObject = client.getRequest();
-		if (reqObject==null)
-			return super.processRequest(client);
-		Request request = (Request)reqObject;
-		Object answer = null;
-		switch(request.getType())
+	public void processRequest(ConnectionInfo client) {
+		try
 		{
-			case 1:
-				answer = new Answer(1,getModel());
-				break;
+			Object reqObject = client.readObject();
+			if (reqObject!=null)
+			{
+				Packet request = (Packet)reqObject;
+				Object answer = null;
+				switch(request.getType())
+				{
+					case PacketTypes.UPDATE_REQUEST_TYPEID:
+						System.out.println("Update request");
+						answer = new Packet(PacketTypes.UPDATE_ANSWER_TYPEID,getModel());
+						client.setLastUpdate(lastUpdate);
+						break;
+				}
+				if (answer!=null)
+				{
+					try
+					{
+						client.writeObject(answer);
+					} catch(IOException e)
+					{
+						s_log.log(Level.SEVERE,"Can't send answer",e);
+					}
+				}
+			}
+		} catch(ClassNotFoundException e)
+		{
+			s_log.log(Level.SEVERE,"Class not found exception",e);
+		} catch (IOException e) {
+			s_log.log(Level.SEVERE,"Cant read object",e);
 		}
-		super.processRequest(client);
-		return answer;
+		if (client.getLastUpdate()<lastUpdate)
+		{
+			try
+			{
+				client.writeObject(new Packet(PacketTypes.UPDATE_ANSWER_TYPEID,getModel()));
+				client.setLastUpdate(lastUpdate);
+			} catch(IOException e)
+			{
+				s_log.log(Level.SEVERE,"Can't send update",e);
+			}
+		}
+		try {
+			addEvent((ConnectionInfo)client.clone());
+		} catch (InterruptedException e) {
+			s_log.log(Level.SEVERE,"Can't add event",e);
+		}
 	}
 
 	public void setModel(Model model) {
 		if (this.model != null)
 			this.model.deleteObserver(this);
 		this.model = model;
+		lastUpdate = System.nanoTime();
 		if (this.model != null)
 			this.model.addObserver(this);
 	}
@@ -71,6 +113,7 @@ public class ClientsProcessor
 
 	@Override
 	public void update(Observable o, Object arg) {
+		lastUpdate = System.nanoTime();
 	}
 	
 }

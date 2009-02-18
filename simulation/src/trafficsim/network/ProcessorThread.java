@@ -40,10 +40,9 @@ public abstract class ProcessorThread<T extends Cloneable> implements Runnable
         events = p.getEvents();
     }
     
-    public synchronized void addEvent(T event)
+    public synchronized void addEvent(T event) throws InterruptedException
     {
-        while(events.offer(event)==false)
-            Thread.yield();
+    	events.put(event);
     }
 
     public abstract void processEvent(final T event);
