@@ -5,4 +5,5 @@ simulation/build.xml
 simulation/dist/*
 simulation/src/.classpath
 simulation/src/.project
+simulation/src/model.xml
 
