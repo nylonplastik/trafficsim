@@ -108,7 +108,7 @@ public class Model extends Observable implements Serializable //{{{
         //this.notifyObservers(WhatHasChanged.Crosses);
     }//}}}
     
-    public synchronized Lane addLane(int start, int end, int maxSpeed)//{{{
+    public synchronized Lane addLane(int start, int end, int maxSpeed, int length)//{{{
     {
         if (!crosses.containsKey(start) || !crosses.containsKey(end))
             return null;
@@ -116,7 +116,7 @@ public class Model extends Observable implements Serializable //{{{
         LanesCross cStart = crosses.get(start);
         LanesCross cEnd = crosses.get(end);
         
-        Lane newLane = new Lane(maxSpeed, cStart, cEnd);
+        Lane newLane = new Lane(maxSpeed, length, cStart, cEnd);
         
         cStart.addConnection(end, newLane );
         cEnd.addIncoming(newLane);
@@ -333,14 +333,15 @@ public class Model extends Observable implements Serializable //{{{
     }//}}}
     
     /* TODO TO BE REMOVED WHEN COMMUNICATION IS ON*/
-    public synchronized Lane addLane(int start, int end, int maxSpeed, int id)//{{{
+    public synchronized Lane addLane(int start, int end, int maxSpeed, int length, int id)//{{{
     {
         if (!crosses.containsKey(start) || !crosses.containsKey(end))
             return null;
         
         LanesCross cStart = crosses.get(start);
-        LanesCross cEnd = crosses.get(end);;
-        Lane newLane = new Lane(maxSpeed, cStart, cEnd, id);
+        LanesCross cEnd = crosses.get(end);
+        
+        Lane newLane = new Lane(maxSpeed, length, cStart, cEnd, id);
         
         cStart.addConnection(end, newLane );
         cEnd.addIncoming(newLane);
