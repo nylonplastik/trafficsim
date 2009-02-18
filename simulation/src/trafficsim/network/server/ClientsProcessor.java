@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import trafficsim.ClientViewData;
+import trafficsim.data.ClientViewData;
 import trafficsim.Model;
 import trafficsim.Server;
 import trafficsim.network.ConnectionInfo;

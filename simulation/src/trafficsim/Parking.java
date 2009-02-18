@@ -22,6 +22,7 @@ package trafficsim;
 
 // imports {{{
 
+import trafficsim.data.ParkingData;
 import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.LinkedList;

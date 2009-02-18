@@ -143,7 +143,7 @@ public class ClientController1 implements ICarController
                     {
                         // there is enough space on lane to move and we know 
                         // where to go.
-//ALZ                        serverModel.startMoving(car.getId(), 3);
+                        networkClient.startMoving(car.getId(), 3);
                     }  
                 }
                 continue;
@@ -174,7 +174,7 @@ public class ClientController1 implements ICarController
                         int rand = randomizer.nextInt(possibleRoutes.size());
                         LinkedList<Integer> newRoute = new LinkedList<Integer>();
                         newRoute.add(possibleRoutes.get(rand).getId());
-//ALZ                        serverModel.setPlannedRoute(car.getId(), newRoute);
+                        networkClient.changePlanneRoute(newRoute, car.getId());
                     }
                 }
                 
@@ -268,7 +268,7 @@ public class ClientController1 implements ICarController
                 
             }        
             
-//ALZ            serverModel.setAcceleration(car.getId(), car.getAcceleration());
+            networkClient.changeAcceleration(car.getAcceleration(),car.getId());
         }
     }
   

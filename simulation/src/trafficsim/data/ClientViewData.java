@@ -23,10 +23,11 @@
  * and open the template in the editor.
  */
 
-package trafficsim;
+package trafficsim.data;
+import trafficsim.*;
 import java.util.Hashtable;
-import trafficsim.CarData;
-import trafficsim.ParkingData;
+import trafficsim.data.CarData;
+import trafficsim.data.ParkingData;
 import trafficsim.network.Packet;
 
 /**

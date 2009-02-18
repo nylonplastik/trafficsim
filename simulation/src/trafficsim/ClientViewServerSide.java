@@ -21,11 +21,14 @@
 package trafficsim;
 
 // imports {{{
+import trafficsim.data.ClientViewData;
+import trafficsim.data.CarData;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 //}}}
+import trafficsim.data.ParkingData;
 
 
 
@@ -102,7 +105,7 @@ public class ClientViewServerSide implements Observer  //{{{
         p_data.setCarData(carData);
         
         /* Set information about current state of parkings */
-        p_data.setParkingData(new Hashtable<Integer, trafficsim.ParkingData>());
+        p_data.setParkingData(new Hashtable<Integer, trafficsim.data.ParkingData>());
         Hashtable<Integer, ParkingData> parkingData  = p_data.getParkingData();
         
         /* find parkings that our cars are parked at */

@@ -269,7 +269,7 @@ public class Model extends Observable implements Serializable //{{{
         }
         
 
-    void startMoving(int carId, int acceleration) 
+    void startMoving(float carId, int acceleration) 
     {
         Car c = carsById.get(carId);
         synchronized (c)

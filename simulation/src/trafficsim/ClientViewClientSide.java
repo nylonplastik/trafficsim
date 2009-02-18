@@ -25,6 +25,7 @@
 
 package trafficsim;
 
+import trafficsim.data.ClientViewData;
 import java.util.Hashtable;
 
 /**

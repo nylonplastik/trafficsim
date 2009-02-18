@@ -22,19 +22,22 @@ package trafficsim.network.client;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import trafficsim.ClientViewClientSide;
-import trafficsim.ClientViewData;
+import trafficsim.data.ClientViewData;
 import trafficsim.ICarController;
-import trafficsim.IController;
+import trafficsim.Lane;
 import trafficsim.Model;
 import trafficsim.network.ConnectionInfo;
 import trafficsim.network.Packet;
 import trafficsim.network.PacketTypes;
 import trafficsim.network.ProcessorThread;
 import trafficsim.network.server.ClientsProcessor;
+import trafficsim.data.startMovingData;
+import trafficsim.data.*;
 
 public class ServerProcessor extends trafficsim.network.ConnectionProcessor
 {
@@ -46,6 +49,7 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
         private int clientId = 0;
         private boolean registered;
         private boolean controllerStarted = false;
+        private ConnectionInfo currentClient = null;
 	
 	public ServerProcessor(ICarController controller, ClientViewClientSide view, Model model)
 	{
@@ -103,7 +107,9 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
                                             controller.newCarCallback((Integer)answer.getData());
                                             break;
                                         case PacketTypes.MODEL_DATA_UPDATE_TYPEID:
+                                            currentClient = client;
                                             view.viewChanged((ClientViewData)answer.getData());
+                                            currentClient = null;
                                             break;
                                             
 				}
@@ -156,6 +162,51 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
         public void gotoParkingQueue(int newCarId) {
             sendData(newCarId, PacketTypes.PUT_CAR_IN_QUEUE);
         }
+        
+        public void changeAcceleration(float newAcceleration, int carId)
+        {
+            if (currentClient != null)
+            {
+                startMovingData data = new startMovingData(newAcceleration, carId);
+                Packet packet = new Packet(PacketTypes.CHANGE_ACCELER_TYPEID, newAcceleration);
+                try
+                {
+                    currentClient.writeObject(packet);
+                }
+                catch (IOException e)
+                {}
+            }
+        }
+        
+        public void changePlanneRoute(LinkedList<Integer> route, int carId)
+        {
+            if (currentClient != null)
+            {
+                changePlannedRouteData data = new changePlannedRouteData(route, carId);
+                Packet packet = new Packet(PacketTypes.CHANGE_ROUTE_TYPEID, route);
+                try
+                {
+                    currentClient.writeObject(packet);
+                }
+                catch (IOException e)
+                {}
+            }
+        }    
+        
+        public void startMoving(float initialAcceleration, int id)
+        {
+            if (currentClient != null)
+            {
+                startMovingData data = new startMovingData(initialAcceleration, id);
+                Packet packet = new Packet(PacketTypes.START_MOVING, data);
+                try
+                {
+                    currentClient.writeObject(packet);
+                }
+                catch (IOException e)
+                {}
+            }
+        }        
 
         public void newCar(int parkingId) {
             sendData(parkingId, PacketTypes.SPAWN_NEW_CAR);
