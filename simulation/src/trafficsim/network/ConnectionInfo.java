@@ -91,7 +91,7 @@ public class ConnectionInfo implements Cloneable
     	return (inputStream.available()>0);
     }
 
-    public void writeObject(Object object) throws IOException
+    public synchronized void writeObject(Object object) throws IOException
     {
     	if (outputStream!=null)
     	{
@@ -100,7 +100,7 @@ public class ConnectionInfo implements Cloneable
     	}
     }
     
-    public Object readObject() throws IOException, ClassNotFoundException
+    public synchronized Object readObject() throws IOException, ClassNotFoundException
     {
     	if (inputStream == null)
     		 return null;

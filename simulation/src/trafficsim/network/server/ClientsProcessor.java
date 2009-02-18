@@ -21,8 +21,6 @@
 package trafficsim.network.server;
 
 import java.io.IOException;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,19 +28,23 @@ import trafficsim.Model;
 import trafficsim.network.ConnectionInfo;
 import trafficsim.network.Packet;
 import trafficsim.network.PacketTypes;
+import trafficsim.network.ProcessorThread;
 
 public class ClientsProcessor
 	extends trafficsim.network.ConnectionProcessor 
-	implements Observer
 {
 
 	private static Logger s_log = Logger.getLogger(ClientsProcessor.class.toString());
 
 	private Model model = null;
-	private long lastUpdate = 0;
 	
 	public ClientsProcessor(Model model)
 	{
+		setModel(model);
+	}
+
+	public ClientsProcessor(Model model, ProcessorThread<ConnectionInfo> p) {
+		super(p);
 		setModel(model);
 	}
 
@@ -61,6 +63,7 @@ public class ClientsProcessor
 					{
 						case PacketTypes.UPDATE_REQUEST_TYPEID:
 							System.out.println("Update request");
+							long lastUpdate = getModel().getLastUpdate();
 							answer = new Packet(PacketTypes.UPDATE_ANSWER_TYPEID,getModel());
 							client.setLastUpdate(lastUpdate);
 							break;
@@ -83,10 +86,11 @@ public class ClientsProcessor
 		} catch (IOException e) {
 			s_log.log(Level.SEVERE,"Cant read object",e);
 		}
-		if (client.getLastUpdate()<lastUpdate)
+		if (client.getLastUpdate()<model.getLastUpdate())
 		{
 			try
 			{
+				long lastUpdate = getModel().getLastUpdate();
 				client.writeObject(new Packet(PacketTypes.UPDATE_ANSWER_TYPEID,getModel()));
 				client.setLastUpdate(lastUpdate);
 			} catch(IOException e)
@@ -102,23 +106,22 @@ public class ClientsProcessor
 	}
 
 	public void setModel(Model model) {
+		/*
 		if (this.model != null)
 			this.model.deleteObserver(this);
+		*/
 		this.model = model;
+		/*
 		lastUpdate = System.nanoTime();
 		if (this.model != null)
 			this.model.addObserver(this);
+		*/
 	}
 
 	public Model getModel() {
 		return model;
 	}
 
-	@Override
-	public void update(Observable o, Object arg) {
-		lastUpdate = System.nanoTime();
-	}
-	
 }
 
 /* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */

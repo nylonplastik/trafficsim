@@ -24,11 +24,15 @@ import java.util.logging.Logger;
 
 public abstract class ConnectionProcessor extends ProcessorThread<ConnectionInfo>
 {
-    private static Logger s_log = Logger.getLogger(ConnectionProcessor.class.toString());
+	private static Logger s_log = Logger.getLogger(ConnectionProcessor.class.toString());
 
     public ConnectionProcessor()
     {
     }
+
+    public ConnectionProcessor(ProcessorThread<ConnectionInfo> p) {
+		super(p);
+	}
 
     public abstract void processRequest(ConnectionInfo client);
     
