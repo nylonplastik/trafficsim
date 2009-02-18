@@ -58,25 +58,19 @@ public class ClientsProcessor
 				if (reqObject!=null)
 				{
 					Packet request = (Packet)reqObject;
-					Object answer = null;
 					switch(request.getType())
 					{
 						case PacketTypes.UPDATE_REQUEST_TYPEID:
 							System.out.println("Update request");
-							long lastUpdate = getModel().getLastUpdate();
-							answer = new Packet(PacketTypes.UPDATE_ANSWER_TYPEID,getModel());
-							client.setLastUpdate(lastUpdate);
+							Model m = getModel();
+							synchronized(m)
+							{
+								long lastUpdate = m.getLastUpdate();
+								Object answer = new Packet(PacketTypes.UPDATE_ANSWER_TYPEID,m);
+								client.setLastUpdate(lastUpdate);
+								client.writeObject(answer);
+							}
 							break;
-					}
-					if (answer!=null)
-					{
-						try
-						{
-							client.writeObject(answer);
-						} catch(IOException e)
-						{
-							s_log.log(Level.SEVERE,"Can't send answer",e);
-						}
 					}
 				}
 			}
@@ -84,15 +78,19 @@ public class ClientsProcessor
 		{
 			s_log.log(Level.SEVERE,"Class not found exception",e);
 		} catch (IOException e) {
-			s_log.log(Level.SEVERE,"Cant read object",e);
+			s_log.log(Level.SEVERE,"Clients processor IO exception",e);
 		}
 		if (client.getLastUpdate()<model.getLastUpdate())
 		{
 			try
 			{
-				long lastUpdate = getModel().getLastUpdate();
-				client.writeObject(new Packet(PacketTypes.UPDATE_ANSWER_TYPEID,getModel()));
-				client.setLastUpdate(lastUpdate);
+				Model m = getModel();
+				synchronized(m)
+				{
+					long lastUpdate = m.getLastUpdate();
+					client.writeObject(new Packet(PacketTypes.UPDATE_ANSWER_TYPEID,m));
+					client.setLastUpdate(lastUpdate);
+				}
 			} catch(IOException e)
 			{
 				s_log.log(Level.SEVERE,"Can't send update",e);

@@ -99,7 +99,7 @@ public class Model extends Observable implements Serializable //{{{
         parkingById = new ConcurrentHashMap<Integer, Parking>(); 
     }//}}}
     
-    public int addCross(int X, int Y)//{{{
+    public synchronized int addCross(int X, int Y)//{{{
     {
         int crossId = nextCrossId++;
         crosses.put(crossId, new LanesCross(crossId, X, Y) );
@@ -108,7 +108,7 @@ public class Model extends Observable implements Serializable //{{{
         //this.notifyObservers(WhatHasChanged.Crosses);
     }//}}}
     
-    public Lane addLane(int start, int end, int maxSpeed)//{{{
+    public synchronized Lane addLane(int start, int end, int maxSpeed)//{{{
     {
         if (!crosses.containsKey(start) || !crosses.containsKey(end))
             return null;
@@ -130,7 +130,7 @@ public class Model extends Observable implements Serializable //{{{
         return newLane;
     }//}}}
     
-    public Parking addParking(Lane lane_to_cross, Lane lane_to_parking)//{{{
+    public synchronized Parking addParking(Lane lane_to_cross, Lane lane_to_parking)//{{{
     {
         Parking parking = new Parking(lane_to_cross, lane_to_parking);
         parkings.add(parking);
@@ -140,7 +140,7 @@ public class Model extends Observable implements Serializable //{{{
         //this.notifyObservers(WhatHasChanged.Parkings);
     }//}}}
     
-    public void setAdjecent(Lane lane1, Lane lane2)//{{{
+    public synchronized void setAdjecent(Lane lane1, Lane lane2)//{{{
     {
         lane1.addAdjecent(lane2);
         lane2.addAdjecent(lane1);
@@ -148,32 +148,32 @@ public class Model extends Observable implements Serializable //{{{
         //this.notifyObservers(WhatHasChanged.Lanes);
     }//}}}
     
-    public LinkedList<Car> getCars()//{{{
+    public synchronized LinkedList<Car> getCars()//{{{
     {
         return cars;
     }//}}}
     
-    public LinkedList<Parking> getParkings()//{{{
+    public synchronized LinkedList<Parking> getParkings()//{{{
     {
         return parkings;
     }//}}}
     
-    public Hashtable<Integer, LanesCross> getLanesCrosses()//{{{
+    public synchronized Hashtable<Integer, LanesCross> getLanesCrosses()//{{{
     {
         return crosses;
     }//}}}
     
-    public LinkedList<Lane> getLanes()//{{{
+    public synchronized LinkedList<Lane> getLanes()//{{{
     {
         return lanes;
     }//}}}
     
-    public void updateCarsState(LinkedList<Car> cars)//{{{
+    public synchronized void updateCarsState(LinkedList<Car> cars)//{{{
     {
         
     }//}}}
      
-    public int newCar(int parkinId)//{{{
+    public synchronized int newCar(int parkinId)//{{{
     {
         if (!parkingById.keySet().contains(parkinId))
             return FAILED;
@@ -192,7 +192,7 @@ public class Model extends Observable implements Serializable //{{{
         return newCar.getId();
     }//}}}    
 
-    public void finishedTimeUpdate()//{{{
+    public synchronized void finishedTimeUpdate()//{{{
     {
         this.setChanged();
         this.notifyObservers(WhatHasChanged.TimeUpdate);
@@ -208,7 +208,7 @@ public class Model extends Observable implements Serializable //{{{
         return newModel;
     }
     
-    public void saveModel(String fileName) throws FileNotFoundException
+    public synchronized void saveModel(String fileName) throws FileNotFoundException
     {
         FileOutputStream os = new FileOutputStream(fileName);
         XMLEncoder encoder = new XMLEncoder(os);
@@ -216,7 +216,7 @@ public class Model extends Observable implements Serializable //{{{
         encoder.close();
     }
     
-    public void setPlannedRoute(int carId, LinkedList<Integer> route)
+    public synchronized void setPlannedRoute(int carId, LinkedList<Integer> route)
     {
         Car car;
         
@@ -231,47 +231,47 @@ public class Model extends Observable implements Serializable //{{{
         setChanged();
     }
 
-    public Hashtable<Integer, LanesCross> getCrosses() {
+    public synchronized Hashtable<Integer, LanesCross> getCrosses() {
         return crosses;
     }
 
-    public void setCrosses(Hashtable<Integer, LanesCross> crosses) {
+    public synchronized void setCrosses(Hashtable<Integer, LanesCross> crosses) {
         this.crosses = crosses;
     }
 
-    public void setLanes(LinkedList<Lane> lanes) {
+    public synchronized void setLanes(LinkedList<Lane> lanes) {
         this.lanes = lanes;
     }
 
-    public void setCars(LinkedList<Car> cars) {
+    public synchronized void setCars(LinkedList<Car> cars) {
         this.cars = cars;
     }
 
-    public void setParkings(LinkedList<Parking> parkings) {
+    public synchronized void setParkings(LinkedList<Parking> parkings) {
         this.parkings = parkings;
     }
         
-        public Car getCarById(int id)
+        public synchronized Car getCarById(int id)
         {
             return carsById.get(id);
         }
         
-        public Lane getLaneById (int id)
+        public synchronized Lane getLaneById (int id)
         {
             return lanesById.get(id);
         }
         
-        public Parking getParkingById (int id)
+        public synchronized Parking getParkingById (int id)
         {
             return parkingById.get(id);
         }
         
-        public void refresh()
+        public synchronized void refresh()
         {
             finishedTimeUpdate();
         }
         
-    void startMoving(int carId, int acceleration) 
+    synchronized void startMoving(int carId, int acceleration) 
     {
         Car c = carsById.get(carId);
         synchronized (c)
@@ -281,7 +281,7 @@ public class Model extends Observable implements Serializable //{{{
         setChanged();
     }
     
-    void setAcceleration(int carId, float acceleration)
+    synchronized void setAcceleration(int carId, float acceleration)
     {
         Car c = carsById.get(carId);
         synchronized(c)
@@ -291,7 +291,7 @@ public class Model extends Observable implements Serializable //{{{
         setChanged();
     }
     
-    void setRoute(int carId, LinkedList<Integer> route)
+    synchronized void setRoute(int carId, LinkedList<Integer> route)
     {
         LinkedList<Lane> newRoute = new LinkedList<Lane>();
         
@@ -310,13 +310,13 @@ public class Model extends Observable implements Serializable //{{{
     }
         
     @Override
-    public void setChanged()
+    public synchronized void setChanged()
     {
     	lastUpdate = System.nanoTime();
     	super.setChanged();
     }
 
-    void gotoParkingQueue(int id) { //{{{
+    synchronized void gotoParkingQueue(int id) { //{{{
         Car car = carsById.get(id);
         car.goToParkingOutQueue();
     } //}}}  
@@ -324,7 +324,7 @@ public class Model extends Observable implements Serializable //{{{
         
         
     /* TODO TO BE REMOVED WHEN COMMUNICATION IS ON*/
-    public int addCross(int X, int Y, int id)//{{{
+    public synchronized int addCross(int X, int Y, int id)//{{{
     {
         crosses.put(id, new LanesCross(id, X, Y) );
         this.setChanged();
@@ -333,7 +333,7 @@ public class Model extends Observable implements Serializable //{{{
     }//}}}
     
     /* TODO TO BE REMOVED WHEN COMMUNICATION IS ON*/
-    public Lane addLane(int start, int end, int maxSpeed, int id)//{{{
+    public synchronized Lane addLane(int start, int end, int maxSpeed, int id)//{{{
     {
         if (!crosses.containsKey(start) || !crosses.containsKey(end))
             return null;
@@ -355,7 +355,7 @@ public class Model extends Observable implements Serializable //{{{
     }//}}}
     
     /* TODO TO BE REMOVED WHEN COMMUNICATION IS ON*/
-    public Parking addParking(Lane lane_to_cross, Lane lane_to_parking, int id)  
+    public synchronized Parking addParking(Lane lane_to_cross, Lane lane_to_parking, int id)  
     {//{{{
         Parking parking = new Parking(lane_to_cross, lane_to_parking, id);
         parkings.add(parking);
@@ -365,11 +365,11 @@ public class Model extends Observable implements Serializable //{{{
         //this.notifyObservers(WhatHasChanged.Parkings);
     }//}}}  
 
-	public void update(Model updated) {
+	public synchronized void update(Model updated) {
 		// updates this model from updated model
 	}
     
-    public long getLastUpdate()
+    public synchronized long getLastUpdate()
     {
     	return lastUpdate;
     }

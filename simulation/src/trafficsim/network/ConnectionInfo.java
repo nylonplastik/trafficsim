@@ -36,6 +36,7 @@ public class ConnectionInfo implements Cloneable
     private long lastUpdate = 0;
     private InputStream inputStream = null;
 	private OutputStream outputStream = null;
+	private Object data = null;
 
 	private ConnectionInfo()
 	{	
@@ -107,6 +108,14 @@ public class ConnectionInfo implements Cloneable
 		ObjectInputStream ois = new ObjectInputStream(inputStream);
 		return ois.readObject();
     }
+
+	public synchronized void setData(Object data) {
+		this.data = data;
+	}
+
+	public synchronized Object getData() {
+		return data;
+	}
 
 };
 
