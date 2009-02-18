@@ -55,7 +55,7 @@ public class TimeController implements Runnable //{{{
     
     private void updateView() //{{{
     {
-        LinkedList<Car> cars  = (LinkedList<Car>) p_model.getCars().clone();
+        LinkedList<Car> cars  = (LinkedList<Car>) p_model.getCars();
         for (Car car : cars)
         {
             try
@@ -79,7 +79,7 @@ public class TimeController implements Runnable //{{{
         {
             while(true)
             {
-            updateView();
+            	updateView();
                 Thread.sleep(p_timeMilisecs);
             } 
         }

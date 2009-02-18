@@ -20,8 +20,6 @@
 
 package trafficsim.network;
 
-import java.io.IOException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class ConnectionProcessor extends ProcessorThread<ConnectionInfo>
@@ -36,12 +34,7 @@ public abstract class ConnectionProcessor extends ProcessorThread<ConnectionInfo
     
     @Override
     public void processEvent(ConnectionInfo client) {
-    	try {
-			if (client.isDataAvailable())
-				processRequest(client);
-		} catch (IOException e) {
-			s_log.log(Level.SEVERE,"IO Exception",e);
-		}
+		processRequest(client);
     }
         
 }

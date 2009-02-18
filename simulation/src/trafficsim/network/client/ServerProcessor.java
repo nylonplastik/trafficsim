@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import trafficsim.Model;
 import trafficsim.network.ConnectionInfo;
 import trafficsim.network.Packet;
 import trafficsim.network.PacketTypes;
@@ -33,31 +34,43 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
 {
 
 	private static Logger s_log = Logger.getLogger(ClientsProcessor.class.toString());
+	private Model model = null;
 	
+	public ServerProcessor(Model model)
+	{
+		this.model = model;
+	}
+
 	@Override
 	public void processRequest(ConnectionInfo client) {
 		try {
-			Object ansObject = client.readObject();
-			if (ansObject==null)
+			if (client.isDataAvailable())
 			{
-				addEvent((ConnectionInfo)client.clone());
-				return;
+				Object ansObject = client.readObject();
+				if (ansObject==null)
+				{
+					addEvent((ConnectionInfo)client.clone());
+					return;
+				}
+				Packet answer = (Packet)ansObject;
+				switch(answer.getType())
+				{
+					case PacketTypes.UPDATE_ANSWER_TYPEID:
+						// server sends model
+						model.update((Model)answer.getData());
+						break;
+				}
 			}
-			Packet answer = (Packet)ansObject;
-			switch(answer.getType())
-			{
-				case PacketTypes.UPDATE_ANSWER_TYPEID:
-					// server sends model
-					System.out.println("Updating model");
-					break;
-			}
-			addEvent((ConnectionInfo)client.clone());
 		} catch (IOException e) {
 			s_log.log(Level.SEVERE,"IO exception",e);
 		} catch (ClassNotFoundException e) {
 			s_log.log(Level.SEVERE,"Class not found exception",e);
 		} catch (InterruptedException e) {
 			s_log.log(Level.SEVERE,"ServerProcessor Interrupted",e);
+		}
+		try {
+			addEvent((ConnectionInfo)client.clone());
+		} catch (InterruptedException e) {
 		}
 	}
 }

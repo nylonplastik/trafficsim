@@ -358,6 +358,10 @@ public class Model extends Observable implements Serializable //{{{
         return parking;
         //this.notifyObservers(WhatHasChanged.Parkings);
     }//}}}  
+
+	public void update(Model updated) {
+		// updates this model from updated model
+	}
     
     
  

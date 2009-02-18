@@ -102,6 +102,8 @@ public class ConnectionInfo implements Cloneable
     
     public Object readObject() throws IOException, ClassNotFoundException
     {
+    	if (inputStream == null)
+    		 return null;
 		ObjectInputStream ois = new ObjectInputStream(inputStream);
 		return ois.readObject();
     }

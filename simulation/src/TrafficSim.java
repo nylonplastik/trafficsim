@@ -130,7 +130,7 @@ public class TrafficSim implements Runnable
         
         // Client
        
-        sp = new trafficsim.network.client.ServerProcessor();
+        sp = new trafficsim.network.client.ServerProcessor(clientModel);
         try {
             ct = new ClientThread(new InetSocketAddress(InetAddress.getByName("127.0.0.1"),23456));
             ct.setConnectionProcessor(sp);

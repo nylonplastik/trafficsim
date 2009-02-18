@@ -50,27 +50,30 @@ public class ClientsProcessor
 	public void processRequest(ConnectionInfo client) {
 		try
 		{
-			Object reqObject = client.readObject();
-			if (reqObject!=null)
+			if (client.isDataAvailable())
 			{
-				Packet request = (Packet)reqObject;
-				Object answer = null;
-				switch(request.getType())
+				Object reqObject = client.readObject();
+				if (reqObject!=null)
 				{
-					case PacketTypes.UPDATE_REQUEST_TYPEID:
-						System.out.println("Update request");
-						answer = new Packet(PacketTypes.UPDATE_ANSWER_TYPEID,getModel());
-						client.setLastUpdate(lastUpdate);
-						break;
-				}
-				if (answer!=null)
-				{
-					try
+					Packet request = (Packet)reqObject;
+					Object answer = null;
+					switch(request.getType())
 					{
-						client.writeObject(answer);
-					} catch(IOException e)
+						case PacketTypes.UPDATE_REQUEST_TYPEID:
+							System.out.println("Update request");
+							answer = new Packet(PacketTypes.UPDATE_ANSWER_TYPEID,getModel());
+							client.setLastUpdate(lastUpdate);
+							break;
+					}
+					if (answer!=null)
 					{
-						s_log.log(Level.SEVERE,"Can't send answer",e);
+						try
+						{
+							client.writeObject(answer);
+						} catch(IOException e)
+						{
+							s_log.log(Level.SEVERE,"Can't send answer",e);
+						}
 					}
 				}
 			}

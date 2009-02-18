@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<java version="1.6.0_12" class="java.beans.XMLDecoder"> 
+ <object class="trafficsim.Model"> 
+  <void property="cars"> 
+   <void method="add"> 
+    <object id="Car0" class="trafficsim.Car"> 
+     <void property="acceleration"> 
+      <float>3.0</float> 
+     </void> 
+     <void property="plannedRoute"> 
+      <object class="java.util.LinkedList"> 
+       <void method="add"> 
+        <object id="Lane0" class="trafficsim.Lane"> 
+         <void property="destination"> 
+          <object id="LanesCross0" class="trafficsim.LanesCross"> 
+           <void property="id"> 
+            <int>3</int> 
+           </void> 
+           <void property="x"> 
+            <int>125</int> 
+           </void> 
+           <void property="y"> 
+            <int>300</int> 
+           </void> 
+          </object> 
+         </void> 
+         <void property="source"> 
+          <object id="LanesCross1" class="trafficsim.LanesCross"> 
+           <void property="id"> 
+            <int>2</int> 
+           </void> 
+           <void property="x"> 
+            <int>375</int> 
+           </void> 
+           <void property="y"> 
+            <int>300</int> 
+           </void> 
+          </object> 
+         </void> 
+         <void property="speedLimit"> 
+          <int>20</int> 
+         </void> 
+        </object> 
+       </void> 
+      </object> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object id="Car1" class="trafficsim.Car"> 
+     <void property="acceleration"> 
+      <float>3.0</float> 
+     </void> 
+     <void property="plannedRoute"> 
+      <object class="java.util.LinkedList"> 
+       <void method="add"> 
+        <object idref="Lane0"/> 
+       </void> 
+      </object> 
+     </void> 
+    </object> 
+   </void> 
+   <void method="add"> 
+    <object id="Car2" class="trafficsim.Car"> 
+     <void property="plannedRoute"> 
+      <object class="java.util.LinkedList"> 
+       <void method="add"> 
+        <object id="Lane1" class="trafficsim.Lane"> 
+         <void property="carsOnLane"> 
+          <void method="put"> 
+           <int>3</int> 
+           <object idref="Car1"/> 
+          </void> 
+          <void method="put"> 
+           <int>17</int> 
+           <object idref="Car0"/> 
+          </void> 
+         </void> 
+         <void property="destination"> 
+          <object idref="LanesCross1"/> 
+         </void> 
+         <void property="source"> 
+          <object id="LanesCross2" class="trafficsim.LanesCross"> 
+           <void property="id"> 
+            <int>1</int> 
+           </void> 
+           <void property="x"> 
+            <int>250</int> 
+           </void> 
+           <void property="y"> 
+            <int>50</int> 
+           </void> 
+          </object> 
+         </void> 
+         <void property="speedLimit"> 
+          <int>20</int> 
+         </void> 
+        </object> 
+       </void> 
+      </object> 
+     </void> 
+    </object> 
+   </void> 
+  </void> 
+  <void property="crosses"> 
+   <void method="put"> 
+    <int>3</int> 
+    <object idref="LanesCross0"/> 
+   </void> 
+   <void method="put"> 
+    <int>2</int> 
+    <object idref="LanesCross1"/> 
+   </void> 
+   <void method="put"> 
+    <int>1</int> 
+    <object idref="LanesCross2"/> 
+   </void> 
+  </void> 
+  <void property="lanes"> 
+   <void method="add"> 
+    <object idref="Lane1"/> 
+   </void> 
+   <void method="add"> 
+    <object idref="Lane0"/> 
+   </void> 
+   <void method="add"> 
+    <object class="trafficsim.Lane"> 
+     <void property="destination"> 
+      <object idref="LanesCross2"/> 
+     </void> 
+     <void property="source"> 
+      <object idref="LanesCross0"/> 
+     </void> 
+     <void property="speedLimit"> 
+      <int>20</int> 
+     </void> 
+    </object> 
+   </void> 
+  </void> 
+  <void property="parkings"> 
+   <void method="add"> 
+    <object class="trafficsim.Parking"> 
+     <void property="carsLeavingParking"> 
+      <void method="add"> 
+       <object idref="Car2"/> 
+      </void> 
+     </void> 
+     <void property="carsOnParking"> 
+      <void method="add"> 
+       <object idref="Car2"/> 
+      </void> 
+     </void> 
+     <void property="laneToCross"> 
+      <object idref="Lane1"/> 
+     </void> 
+     <void property="laneToParking"> 
+      <object idref="Lane0"/> 
+     </void> 
+    </object> 
+   </void> 
+  </void> 
+ </object> 
+</java> 
