@@ -78,10 +78,10 @@ import trafficsim.data.*;
 							break;
 						case PacketTypes.REGISTER_CLIENT_TYPEID:
 							System.out.println("Register request");
-                            Integer newId = server.newClient();
-                            client.setClientId(newId);
+                                                        Integer newId = server.newClient();
+                                                        client.setClientId(newId);
 							Packet answer = new Packet(PacketTypes.REGISTRED_TYPEID, newId);
-                            client.writeObject(answer);
+                                                        client.writeObject(answer);
 							break;  
 						case PacketTypes.SPAWN_NEW_CAR:
                             System.out.println("Spawn car request");
@@ -91,24 +91,24 @@ import trafficsim.data.*;
                             client.writeObject(answer);
 							break;  
                         case PacketTypes.PUT_CAR_IN_QUEUE:
-                            System.out.println("Put car in queue request");
-                            m = getModel();
-                            m.gotoParkingQueue((Integer)request.getData());
-                            break;
+                                System.out.println("Put car in queue request");
+                                m = getModel();
+                                m.gotoParkingQueue((Integer)request.getData());
+                                break;
                         case PacketTypes.START_MOVING:
-                            startMovingData data = (startMovingData)request.getData();
-                            model.startMoving(data.carId, data.acceleration);
-                            break;
+                                startMovingData data = (startMovingData)request.getData();
+                                model.startMoving(data.carId, data.acceleration);
+                                break;
                         case PacketTypes.CHANGE_ACCELER_TYPEID:
-                            System.out.println("Change acceleration request");
-                            data = (startMovingData)request.getData();
-                            model.setAcceleration(data.carId, data.acceleration);
-                            break;
+                                System.out.println("Change acceleration request");
+                                data = (startMovingData)request.getData();
+                                model.setAcceleration(data.carId, data.acceleration);
+                                break;
                         case PacketTypes.CHANGE_ROUTE_TYPEID:
-                            System.out.println("Change route request");
-                            changePlannedRouteData routeData = (changePlannedRouteData)request.getData();
-                            model.setRoute(routeData.carId, routeData.plannedRoute);
-                            break;
+                                System.out.println("Change route request");
+                                changePlannedRouteData routeData = (changePlannedRouteData)request.getData();
+                                model.setRoute(routeData.carId, routeData.plannedRoute);
+                                break;
 					}
 				}
 			}
