@@ -74,7 +74,7 @@ public class Server {
         this.start();
     }
 
-    public void addObservedCar(int clientId, int newCarId) {
+    public synchronized void addObservedCar(int clientId, int newCarId) {
         clientsViews.get(clientId).addObservedCar(newCarId);
     }
 
@@ -92,18 +92,18 @@ public class Server {
         return this.model;
     }
 
-    public ClientViewData getViewData(int clientId) {
+    public synchronized ClientViewData getViewData(int clientId) {
         return clientsViews.get(clientId).getData();
     }
 
-    public Integer newClient() {
+    public synchronized Integer newClient() {
         int id = newClientId();
         ClientViewServerSide newView = new ClientViewServerSide(model);
         clientsViews.put(id, newView);
         return id;
     }
     
-    public void start()
+    public synchronized void start()
     {
         // Create time controller
         TimeController tc = TimeController.getTimeController(model);
@@ -111,11 +111,11 @@ public class Server {
         timeControlThread.start();
     }
     
-    private static int newClientId() {
+    private synchronized static int newClientId() {
         return clientsCount++;
     }
 
-    public boolean wasViewUpdated(int clientId) {
+    public synchronized boolean wasViewUpdated(int clientId) {
         return clientsViews.get(clientId).hasChanged();
     }
     

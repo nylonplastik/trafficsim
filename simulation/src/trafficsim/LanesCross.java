@@ -40,7 +40,7 @@ public class LanesCross extends Observable implements Serializable //{{{
     private int    Y_coordinate;
     
     private static int    s_count;
-    private int           p_id;
+    private final int     p_id;
     
     /* adjacent lane crosses with lanes to them */
     private Hashtable <Integer,Lane>    p_adjecentCrosses = new Hashtable<Integer, Lane>();
@@ -53,16 +53,21 @@ public class LanesCross extends Observable implements Serializable //{{{
         return p_outgoingLanes;
     }//}}}
     
+    private synchronized int getNewId()
+    {
+        return s_count++;
+    }
+    
     public LanesCross()//{{{
     {
-        setId(s_count++);
+        this.p_id =  getNewId();
         X_coordinate = 0;
         Y_coordinate = 0;
     }//}}}
     
     public LanesCross(int id, int X, int Y)//{{{
     {
-        setId(id);
+        this.p_id =  id;;
         X_coordinate = X;
         Y_coordinate = Y;        
         s_count++;
@@ -74,7 +79,7 @@ public class LanesCross extends Observable implements Serializable //{{{
      * @param lane
      * @return true if added connection, false if connection to destCross already exists
      */
-    public boolean addConnection(int destCross, Lane lane)//{{{
+    public synchronized  boolean addConnection(int destCross, Lane lane)//{{{
     {
         if (p_adjecentCrosses.containsKey(destCross))
             return false;
@@ -86,33 +91,29 @@ public class LanesCross extends Observable implements Serializable //{{{
      * add lane to list of lanes which destination is this crosss.
      * @param lane
      */
-    public void addIncoming(Lane lane)//{{{
+    public synchronized void addIncoming(Lane lane)//{{{
     {
        p_incomingLanes.add(lane);
     }//}}}
     
-    public void addOutgoing(Lane lane)
+    public synchronized void addOutgoing(Lane lane)
     {
         p_outgoingLanes.add(lane);
     }
-    public int getX() {
+    public synchronized int getX() {
         return X_coordinate;
     }
 
-    public void setX(int newX) {
+    public synchronized void setX(int newX) {
         X_coordinate = newX;
     }
 
-    public int getY() {
+    public synchronized int getY() {
         return Y_coordinate;
     }
 
-    public void setY(int newY) {
+    public synchronized void setY(int newY) {
         Y_coordinate = newY;
-    }
-
-    public void setId(int p_id) {
-        this.p_id = p_id;
     }
 
     public int getId() {

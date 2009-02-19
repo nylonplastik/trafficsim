@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import trafficsim.data.ClientViewData;
 import trafficsim.Model;
 import trafficsim.Server;
 import trafficsim.network.ConnectionInfo;
@@ -128,27 +127,6 @@ import trafficsim.data.*;
 			s_log.log(Level.SEVERE,"Clients processor IO exception",e);
 		}
                 
-
-                
-                /*
-		if (client.getLastUpdate()<model.getLastUpdate())
-		{
-			try
-			{
-				Model m = getModel();
-				synchronized(m)
-				{
-					long lastUpdate = m.getLastUpdate();
-					client.writeObject(new Packet(PacketTypes.UPDATE_ANSWER_TYPEID,m));
-					client.setLastUpdate(lastUpdate);
-				}
-			} catch(IOException e)
-			{
-				s_log.log(Level.SEVERE,"Can't send update",e);
-			}
-		}
-                 * */
-                
 		try {
 			addEvent((ConnectionInfo)client.clone());
 		} catch (InterruptedException e) {
@@ -157,16 +135,8 @@ import trafficsim.data.*;
 	}
 
 	public void setModel(Model model) {
-		/*
-		if (this.model != null)
-			this.model.deleteObserver(this);
-		*/
 		this.model = model;
-		/*
-		lastUpdate = System.nanoTime();
-		if (this.model != null)
-			this.model.addObserver(this);
-		*/
+
 	}
 
 	public Model getModel() {

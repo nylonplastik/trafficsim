@@ -43,7 +43,7 @@ public class Car implements Serializable //{{{
     private Position     position;
     private float        speed;
     private float        acceleration; 
-    private float        maxSpeed = 40;
+    private float        maxSpeed = 80;
     private final float  maxAcceleration;
     private boolean      collided = false;    // if there was a collision
     
@@ -70,15 +70,7 @@ public class Car implements Serializable //{{{
     {
         this.id              = getNewId();
         this.currentParking  = null;
-        this.maxAcceleration = 5;
-        this.position        = new Position();
-    } //}}}
-    
-    public Car(int id) //{{{
-    {
-        this.id              = id;
-        this.currentParking  = null;
-        this.maxAcceleration = 5;        
+        this.maxAcceleration = 10;
         this.position        = new Position();
     } //}}}
     

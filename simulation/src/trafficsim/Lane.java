@@ -73,22 +73,22 @@ public class Lane implements Serializable //{{{
     
     //}}}
     
-    public int getSpeedLimit() //{{{
+    public synchronized int getSpeedLimit() //{{{
     {
         return this.speedLimit;
     } //}}}
     
-    public int getLength() //{{{
+    public synchronized int getLength() //{{{
     {    
         return this.length;
     } //}}}
     
-    public SortedMap<Integer, Car> getCars() //{{{
+    public synchronized SortedMap<Integer, Car> getCars() //{{{
     {
         return this.carsOnLane;
     } //}}}
     
-    public boolean isVirtual() //{{{
+    public synchronized boolean isVirtual() //{{{
     {
         return this.isVirtual;
     } //}}}
@@ -321,16 +321,7 @@ public class Lane implements Serializable //{{{
         int y = c1.getY() - c2.getY();
         return (int) Math.sqrt(x*x+y*y);
     }
-    
-   /* TODO TO BE REMOVED WHEN COMMUNICATION IS ON*/
-    public Lane(int speedLimit, LanesCross source, LanesCross destination, int id) //{{{
-    {
-        this.speedLimit = speedLimit;
-        this.length = distance(source, destination);
-        this.destination = destination;
-        this.source = source;
-        this.id = id;
-    } //}}}
+
     
 } //}}}
 
