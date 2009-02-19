@@ -29,14 +29,12 @@ import java.util.logging.Logger;
 import trafficsim.ClientViewClientSide;
 import trafficsim.data.ClientViewData;
 import trafficsim.ICarController;
-import trafficsim.Lane;
 import trafficsim.Model;
 import trafficsim.network.ConnectionInfo;
 import trafficsim.network.Packet;
 import trafficsim.network.PacketTypes;
 import trafficsim.network.ProcessorThread;
 import trafficsim.network.server.ClientsProcessor;
-import trafficsim.data.startMovingData;
 import trafficsim.data.*;
 
 public class ServerProcessor extends trafficsim.network.ConnectionProcessor
@@ -129,7 +127,7 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
 		}
 	}
         
-        private void sendData (Serializable data, int packetType)
+        protected void sendData (Serializable data, int packetType)
         {
             ConnectionInfo server = getEvents().poll();
             if (server!=null)
@@ -152,7 +150,7 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
             }
         }
         
-        private void sendData (int packetType)
+        protected void sendData (int packetType)
         {
             
             ConnectionInfo server = getEvents().poll();
@@ -190,7 +188,7 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
             if (currentClient != null)
             {
                 startMovingData data = new startMovingData(newAcceleration, carId);
-                Packet packet = new Packet(PacketTypes.CHANGE_ACCELER_TYPEID, newAcceleration);
+                Packet packet = new Packet(PacketTypes.CHANGE_ACCELER_TYPEID, data);
                 try
                 {
                     currentClient.writeObject(packet);
@@ -205,7 +203,7 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
             if (currentClient != null)
             {
                 changePlannedRouteData data = new changePlannedRouteData(route, carId);
-                Packet packet = new Packet(PacketTypes.CHANGE_ROUTE_TYPEID, route);
+                Packet packet = new Packet(PacketTypes.CHANGE_ROUTE_TYPEID,data);
                 try
                 {
                     currentClient.writeObject(packet);
@@ -220,7 +218,7 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
             if (currentClient != null)
             {
                 startMovingData data = new startMovingData(initialAcceleration, id);
-                Packet packet = new Packet(PacketTypes.START_MOVING, data);
+                Packet packet = new Packet(PacketTypes.START_MOVING,data);
                 try
                 {
                     currentClient.writeObject(packet);

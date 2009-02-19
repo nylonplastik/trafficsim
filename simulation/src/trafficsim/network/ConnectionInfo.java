@@ -30,14 +30,14 @@ import java.util.logging.Logger;
 public class ConnectionInfo implements Cloneable
 {
     
+    @SuppressWarnings("unused")
     private static Logger s_log = Logger.getLogger(ConnectionInfo.class.toString());
     
     private Socket socket = null;
     private long lastUpdate = 0;
     private InputStream inputStream = null;
-    private int clientId;
-    
 	private OutputStream outputStream = null;
+    private int clientId;
 	private Object data = null;
 
 	private ConnectionInfo()
@@ -57,7 +57,8 @@ public class ConnectionInfo implements Cloneable
 	    	ConnectionInfo copy = new ConnectionInfo();
 	    	copy.setSocket(getSocket());
 	    	copy.setLastUpdate(getLastUpdate());
-                copy.setClientId(getClientId());
+            copy.setClientId(getClientId());
+            copy.setData(getData());
 	    	return copy;
 		} catch (IOException e) {
 			return null;
@@ -120,6 +121,15 @@ public class ConnectionInfo implements Cloneable
         this.clientId = clientId;
     }
 
+    public synchronized void setData(Object data)
+    {
+        this.data = data;
+    }
+
+    public synchronized Object getData()
+    {
+        return data;
+    }
 
 };
 

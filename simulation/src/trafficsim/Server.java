@@ -34,6 +34,9 @@ public class Server {
     Thread timeControlThread;
     private static int clientsCount = 0;
     
+    @SuppressWarnings("unused")
+    private ClientViewServerSide serverSideView = null;
+    
     public Server() 
     {
         this(23456);
@@ -57,7 +60,7 @@ public class Server {
             lane1.setDefaultNextLane(lane1);
 
         model.addParking(lane1, lane2);  
-        ClientViewServerSide v = new ClientViewServerSide(model);
+        serverSideView = new ClientViewServerSide(model);
         
         // Server
         try {

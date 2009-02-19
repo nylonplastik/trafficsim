@@ -11,7 +11,8 @@ import java.io.Serializable;
  *
  * @author Adam Rutkowski
  */
-public class startMovingData implements Serializable{
+@SuppressWarnings("serial")
+public class startMovingData implements Serializable {
     
     public startMovingData(float acc, int id)
     {

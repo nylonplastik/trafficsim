@@ -24,7 +24,8 @@ import java.util.logging.Logger;
 
 public abstract class ConnectionProcessor extends ProcessorThread<ConnectionInfo>
 {
-	private static Logger s_log = Logger.getLogger(ConnectionProcessor.class.toString());
+	@SuppressWarnings("unused")
+    private static Logger s_log = Logger.getLogger(ConnectionProcessor.class.toString());
 
     public ConnectionProcessor()
     {

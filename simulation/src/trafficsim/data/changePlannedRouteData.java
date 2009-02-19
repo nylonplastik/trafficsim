@@ -5,13 +5,15 @@
 
 package trafficsim.data;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
  *
  * @author Adam Rutkowski
  */
-public class changePlannedRouteData {
+@SuppressWarnings("serial")
+public class changePlannedRouteData implements Serializable {
     
     public changePlannedRouteData(LinkedList<Integer> route, int id)
     {

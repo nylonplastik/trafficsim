@@ -131,7 +131,7 @@ public class ClientController1 implements ICarController
             if (!carsInView.containsKey(carId))
                 break;
             car = carsInView.get(carId);
-            boolean routeHasChanged = false;
+            //boolean routeHasChanged = false;
             
             if (car.isParked())
             {
@@ -167,7 +167,7 @@ public class ClientController1 implements ICarController
                                         car.getPosition().getLane());
                     for (int i=0; i<=index; i++)
                     {
-                        routeHasChanged = true;
+                        //routeHasChanged = true;
                         car.getPlannedRoute().remove();
                     }
                     
@@ -302,7 +302,7 @@ public class ClientController1 implements ICarController
         return acccelerationToStopAt(speed, distance);
     }
     
-    private static float timeToReachPoint(float dist, float speed, float acc)
+    protected static float timeToReachPoint(float dist, float speed, float acc)
     {
         float delta = (2*speed-acc)*(2*speed-acc) + 4*acc*dist;
         float time = (acc - 2*speed + (float)Math.sqrt(delta)) / (2*acc);
@@ -397,7 +397,7 @@ public class ClientController1 implements ICarController
         this.registered = registered;
     }
 
-    private Model getModel() {
+    protected Model getModel() {
         return model;
     }
 

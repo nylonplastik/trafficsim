@@ -43,6 +43,7 @@ public class ClientViewServerSide implements Observer  //{{{
 {
     // Variables {{{
     
+    @SuppressWarnings("unused")
     private static final int     VIEW_RADIUS = 100;
     
     private ClientViewData       p_data;
@@ -93,7 +94,6 @@ public class ClientViewServerSide implements Observer  //{{{
     {
         if (! (o instanceof  Model))
             return;
-        Model model = (Model)o;
         
         /* Set information about current state of cars */
         p_data.setCarData(new Hashtable<Integer, CarData>());
