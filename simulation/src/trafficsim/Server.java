@@ -56,30 +56,30 @@ public class Server {
         int cross1 = model.addCross(x2,y1);
         int cross2 = model.addCross(x3,y1);
         int cross3 = model.addCross(x4, y1);
-        int cross4 = model.addCross(x1, y2);    
+        int cross4 = model.addCross(x1, y2-10);    
         int cross5 = model.addCross(x2,y2);
         int cross6 = model.addCross(x3,y2);
         int cross7 = model.addCross(x4, y2);
         int cross8 = model.addCross(x5, y2);  
-        int cross9 = model.addCross(x6,y2);
-        int cross10 = model.addCross(x1,y3);
+        int cross9 = model.addCross(x6,y2-10);
+        int cross10 = model.addCross(x1,y3+10);
         int cross11 = model.addCross(x2, y3);
         int cross12 = model.addCross(x3, y3);  
         int cross13 = model.addCross(x4, y3);
         int cross14 = model.addCross(x5,y3);
-        int cross15 = model.addCross(x6, y3);
-        int cross16 = model.addCross(x1, y4);  
+        int cross15 = model.addCross(x6, y3+10);
+        int cross16 = model.addCross(x1, y4-10);  
         int cross17 = model.addCross(x2,y4);
         int cross18 = model.addCross(x3,y4);
         int cross19 = model.addCross(x4, y4);
         int cross20 = model.addCross(x5, y4);  
-        int cross21 = model.addCross(x6,y4);
-        int cross22 = model.addCross(x1,y5);
+        int cross21 = model.addCross(x6,y4-10);
+        int cross22 = model.addCross(x1,y5+10);
         int cross23 = model.addCross(x2, y5);
         int cross24 = model.addCross(x3, y5);  
         int cross25 = model.addCross(x4,y5);
         int cross26 = model.addCross(x5,y5);
-        int cross27 = model.addCross(x6, y5);
+        int cross27 = model.addCross(x6, y5+10);
         int cross28 = model.addCross(x3, y6);  
         int cross29 = model.addCross(x4,y6);
         int cross30 = model.addCross(x5,y6);      
@@ -130,17 +130,9 @@ public class Server {
         Lane lane42 = model.addLane(cross30, cross26, speedLimit);        
         Lane lane43 = model.addLane(cross15, cross9, speedLimit);
         Lane lane44 = model.addLane(cross27, cross21, speedLimit);
-        
-    
-        
-        if (lane1 != null)
-            lane1.setDefaultNextLane(lane2);
-        if (lane2 != null)
-            lane2.setDefaultNextLane(lane3);
-        if (lane3 != null)
-            lane1.setDefaultNextLane(lane1);
 
-        model.addParking(lane1, lane2);  
+        model.addParking(lane23, lane27);  
+        model.addParking(lane42, lane38);  
         serverSideView = new ClientViewServerSide(model);
         
         // Server

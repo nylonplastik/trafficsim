@@ -94,11 +94,12 @@ public class ClientController1 implements ICarController
             {
                 System.out.println("Spawning cars");
                 // start one new cars on first available parking
+                int parkingsCount = parkings.size();
                 for (int i = 0; i <CONTROLLED_CARS; i++) 
                 {
                     System.out.println("Spawning car on parking 0");
                     // new car parked on first parking
-                    networkClient.newCar(parkings.get(0).getId());              
+                    networkClient.newCar(parkings.get(randomizer.nextInt(parkingsCount)).getId());              
                     System.out.println("done");
                 }
                 System.out.println("done");

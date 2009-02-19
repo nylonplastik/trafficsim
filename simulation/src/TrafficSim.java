@@ -28,7 +28,7 @@ import javax.swing.*;
 public class TrafficSim implements Runnable
 {
      static private Server server;
-     static private Client client;
+     Client client1, client2;
     /**
      * Simulation main
      *
@@ -54,7 +54,8 @@ public class TrafficSim implements Runnable
      */
     public void run()
     {         
-        client = new Client();
+        client1 = new Client();
+        client2 = new Client();
         
         MainFrame frame = new MainFrame("Simulation of road traffic");
         frame.setModel(server.getModel());
@@ -70,8 +71,10 @@ public class TrafficSim implements Runnable
             @Override
             public void windowClosed(WindowEvent e) 
             {
-                if (client!=null)
-                    client.close();
+                if (client1!=null)
+                    client1.close();
+                if (client2!=null)
+                    client2.close();                
                 if (server!=null)
                     server.close();
                 System.exit(0);
