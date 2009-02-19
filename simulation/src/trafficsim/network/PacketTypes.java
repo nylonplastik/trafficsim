@@ -35,6 +35,9 @@ public class PacketTypes
     public static final int SPAWN_NEW_CAR            = 10;
     public static final int NEW_CAR_SPAWNED          = 11;
     public static final int NEW_MODEL_DATA_TYPEID    = 12;
+    public static final int CHANGE_ACCELER_TYPEID    = 13; 
+    public static final int CHANGE_ROUTE_TYPEID      = 14; 
+    public static final int START_MOVING             = 15; 
 }
 
 /* vim: set ts=4 sts=4 sw=4 expandtab foldmethod=marker : */

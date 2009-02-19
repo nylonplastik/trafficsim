@@ -21,6 +21,7 @@
 package trafficsim;
 
 // imports {{{
+import trafficsim.data.CarData;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;

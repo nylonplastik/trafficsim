@@ -5,6 +5,7 @@
 
 package trafficsim;
 
+import trafficsim.data.ClientViewData;
 import java.io.FileNotFoundException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;

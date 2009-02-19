@@ -3,7 +3,8 @@
  * and open the template in the editor.
  */
 
-package trafficsim;
+package trafficsim.data;
+import trafficsim.*;
 import java.util.LinkedList;
 import trafficsim.Car;
 import trafficsim.Lane;

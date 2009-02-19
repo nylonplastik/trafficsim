@@ -269,7 +269,7 @@ public class Model extends Observable implements Serializable //{{{
         }
         
 
-    void startMoving(int carId, int acceleration) 
+    public void startMoving(int carId, float acceleration) 
     {
         Car c = carsById.get(carId);
         synchronized (c)
@@ -279,7 +279,7 @@ public class Model extends Observable implements Serializable //{{{
         setChanged();
     }
     
-    synchronized void setAcceleration(int carId, float acceleration)
+    public  synchronized void setAcceleration(int carId, float acceleration)
     {
         Car c = carsById.get(carId);
         synchronized(c)
@@ -289,7 +289,7 @@ public class Model extends Observable implements Serializable //{{{
         setChanged();
     }
     
-    synchronized void setRoute(int carId, LinkedList<Integer> route)
+    public  synchronized void setRoute(int carId, LinkedList<Integer> route)
     {
         LinkedList<Lane> newRoute = new LinkedList<Lane>();
         
