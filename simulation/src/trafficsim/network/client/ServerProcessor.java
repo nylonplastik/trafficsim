@@ -84,6 +84,7 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
 				switch(answer.getType())
 				{
 					case PacketTypes.NEW_MODEL_DATA:
+                                            System.out.println("Received model data");
                                             // server sends model
                                             model.update((Model)answer.getData());
                                             if (!isControllerStarted())
@@ -95,6 +96,7 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
                                             }
                                             break;
                                         case PacketTypes.REGISTRED_TYPEID:
+                                            System.out.println("Registered");
                                             // save assigned id number
                                             setClientId((int) (Integer)answer.getData());
                                             // send model update request
@@ -106,6 +108,7 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
                                             controller.newCarCallback((Integer)answer.getData());
                                             break;
                                         case PacketTypes.MODEL_DATA_UPDATE_TYPEID:
+                                            System.out.println("Update received");
                                             currentClient = client;
                                             view.viewChanged((ClientViewData)answer.getData());
                                             currentClient = null;
