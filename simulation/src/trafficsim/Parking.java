@@ -139,7 +139,7 @@ public class Parking implements Serializable //{{{
     
     public synchronized boolean canLeaveParking(Car car)//{{{
     {
-        if (this.carsLeavingParking.isEmpty())  // TODO: should be contains(..)
+        if (this.carsLeavingParking.isEmpty()) 
         {
             this.carsLeavingParking.add(car);
             return true;

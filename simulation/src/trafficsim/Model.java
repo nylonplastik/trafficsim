@@ -312,47 +312,25 @@ public class Model extends Observable implements Serializable //{{{
         car.goToParkingOutQueue();
     } //}}}  
         
-        
-        
-    /* TODO TO BE REMOVED WHEN COMMUNICATION IS ON*/
-    public synchronized int addCross(int X, int Y, int id)//{{{
-    {
-        crossesById.put(id, new LanesCross(id, X, Y) );
-        this.setChanged();
-        return id;
-        //this.notifyObservers(WhatHasChanged.Crosses);
-    }//}}}
- 
-    
-    /* TODO TO BE REMOVED WHEN COMMUNICATION IS ON*/
-    public synchronized Parking addParking(Lane lane_to_cross, Lane lane_to_parking, int id)  
-    {//{{{
-        Parking parking = new Parking(lane_to_cross, lane_to_parking, id);
-        parkings.add(parking);
-        parkingById.put(parking.getId(), parking);
-        this.setChanged();
-        return parking;
-        //this.notifyObservers(WhatHasChanged.Parkings);
-    }//}}}  
 
-	public synchronized void update(Model updated) {
-		// shallow copy of model
-                this.cars = updated.cars;
-                this.carsById = updated.carsById;
-                this.crossesById = updated.crossesById;
-                this.lanesById = updated.lanesById;
-                this.lanesById = updated.lanesById;
-                this.lastUpdate = updated.lastUpdate;
-                this.nextCrossId = updated.nextCrossId;
-                this.parkingById = updated.parkingById;
-                this.parkings = updated.parkings;      
-	}
-        
-        public void notifyObservers()
-        {
-            this.setChanged();
-            this.notify();
-        }
+    public synchronized void update(Model updated) {
+        // shallow copy of received model
+        this.cars = updated.cars;
+        this.carsById = updated.carsById;
+        this.crossesById = updated.crossesById;
+        this.lanesById = updated.lanesById;
+        this.lanesById = updated.lanesById;
+        this.lastUpdate = updated.lastUpdate;
+        this.nextCrossId = updated.nextCrossId;
+        this.parkingById = updated.parkingById;
+        this.parkings = updated.parkings;      
+    }
+
+    public void notifyObservers()
+    {
+        this.setChanged();
+        this.notify();
+    }
     
     public synchronized long getLastUpdate()
     {

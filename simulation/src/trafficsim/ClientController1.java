@@ -50,11 +50,19 @@ public class ClientController1 implements ICarController
     // treshold value of predicted distance between cars.
     private static final int           SAFE_MOVE_DISTANCE = 50;  
     
-    private static final int           CONTROLLED_CARS    = 10;
+    // Number of cars in control of this object
+    private static final int           CONTROLLED_CARS    = 60;
     
+    // Maximum speed on 90 degree corner. Used to calculate speed on other angles.
     private static final int           MAX_SPEED_ON_90_DEGREE_ANGLE = 3;
     
+    // Acceleration minimum change value.
     private static final float         ACCELERATION_ADJUSTMENT_ACCURACY = (float) 0.1;
+    
+    // Maximum acceleration when close to end of route.
+    private static final float         APPROACHING_END_MAX_ACCELERATION = (float) 3.0;
+    
+    private static final float         DEFAULT_ACCELERATION             = (float) 6.0;
         
     private Random                     randomizer;
     
@@ -109,18 +117,20 @@ public class ClientController1 implements ICarController
         else return false;
     }
     
+    // Server has registered this client.
     public synchronized void registered() 
     {
         setRegistered(true);
     }
 
+    // New car has been spawned on server.
     public void newCarCallback(int newCarId)
     {
          p_controlledCars.add(newCarId);   
     }
     
     /***
-     * Client's controller is notified about it's view change
+     * Client's controller is notified about view change
      */
     public void viewChanged()
     {
@@ -171,7 +181,6 @@ public class ClientController1 implements ICarController
                                         car.getPosition().getLane());
                     for (int i=0; i<=index; i++)
                     {
-                        //routeHasChanged = true;
                         car.getPlannedRoute().remove();
                     }
                     
@@ -200,6 +209,7 @@ public class ClientController1 implements ICarController
                 float newAcc;
                 if (nextCar != null)
                 {
+                    // Predicted distance to next car
                     float predictedDiscance =  distancePrediction(
                                                 car.getSpeed(), 
                                                 nextCar.getSpeed(), 
@@ -215,15 +225,15 @@ public class ClientController1 implements ICarController
                         newAcc = (float) (car.getAcceleration() - accCorection);
                         if (car.getSpeed() + newAcc < 0)
                             newAcc = (int) car.getSpeed();
-                        if (newAcc > 3)
-                            newAcc = 3;
+                        if (newAcc > APPROACHING_END_MAX_ACCELERATION)
+                            newAcc = APPROACHING_END_MAX_ACCELERATION;
                         car.setAcceleration(newAcc);
                     }
                 }
                 
               
                 // Determining if there is a need to reduce speed because
-                // we need to stop (end of route, red light, ...)
+                // we need to stop (end of route, red light, need to turn, ..)
 
                 
                 // get distance to the end of planned route
@@ -232,6 +242,7 @@ public class ClientController1 implements ICarController
                 float distanceToEnd = currentPosition.getLane().getLength()
                                                - currentPosition.getCoord();
                 
+                // If we approached the end of our planned route
                 if (distanceToEnd == 0)
                 {
                     if (car.getSpeed() > 0)
@@ -245,11 +256,13 @@ public class ClientController1 implements ICarController
                         distanceToEnd += l.getLength();
                 }
                 
+                // Suggested acceleration basing on distancce to end of route.
                 float accFactor1 = adjustAcceleration(distanceToEnd, 
                                                         car.getSpeed(), 
                                                         car.getAcceleration()
                                                         );
                 
+                // Suggested acceleration basing on angle of next corner.
                 float accFactor2 = adjustAccelerationToCornerAngle(
                                                         car.getSpeed(), 
                                                         car.getMaxSpeed(), 
@@ -257,6 +270,8 @@ public class ClientController1 implements ICarController
                                                         car.getPlannedRoute(), 
                                                         accFactor1
                                                         );
+                
+                // Get the minimum if all suggested accelerations.
                 float newAcceleration =accFactor2;
                 if (accFactor1 < accFactor2)
                     newAcceleration  = accFactor1;
@@ -267,7 +282,7 @@ public class ClientController1 implements ICarController
                 {
                     car.setAcceleration(newAcceleration);
                 }
-                else car.setAcceleration(6);
+                else car.setAcceleration(DEFAULT_ACCELERATION);// else keep speeeding up.
 
                 // When close enough, stop slowing down
                 if (distanceToEnd < car.getMaxAcceleration())
@@ -280,6 +295,7 @@ public class ClientController1 implements ICarController
                     car.setAcceleration(newAcc2);
                 }  
                 
+                // Set acceleration change request if neccessary.
                 if ( Math.abs(previousAcceleration - car.getAcceleration()) < 
                         ACCELERATION_ADJUSTMENT_ACCURACY)
                 {
@@ -307,6 +323,7 @@ public class ClientController1 implements ICarController
         return (int)( distance + speed2*timeFrame - speed1*timeFrame);
     }
     
+    // Suggested acceleration when it's possible that we have to stop in 'distance'
     private static float adjustAcceleration(float distance, 
                                             float speed, 
                                             float maxAcc                                      
@@ -315,12 +332,14 @@ public class ClientController1 implements ICarController
         return acccelerationToStopAt(speed, distance);
     }
     
+    // Calculation of time to reach point.
     protected static float timeToReachPoint(float dist, float speed, float acc)
     {
         float delta = (2*speed-acc)*(2*speed-acc) + 4*acc*dist;
         float time = (acc - 2*speed + (float)Math.sqrt(delta)) / (2*acc);
         return time;
     }
+    
     
     private static float acccelerationToStopAt(float speed, float dist)
     {
@@ -340,6 +359,7 @@ public class ClientController1 implements ICarController
         return 2*dist/(float)(time*time);
     }
     
+    // Calcilating angle given by three points.
     private static float angle(
                             int x1, int y1, 
                             int x2, int y2,
@@ -363,6 +383,7 @@ public class ClientController1 implements ICarController
         return angle;
     }
     
+    // Calculating angle given by two lanes.
     private float angle (Lane l1, Lane l2)
     {
         if (l1.getDestination() != l2.getSource())
@@ -375,6 +396,7 @@ public class ClientController1 implements ICarController
                 );
     }
     
+    // Calculate appropriate acceleration to slow down at the next corner.
     private float adjustAccelerationToCornerAngle (
                             float currentSpeed,
                             float maxSpeed,

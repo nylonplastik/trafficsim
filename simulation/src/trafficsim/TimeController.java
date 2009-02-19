@@ -64,12 +64,9 @@ public class TimeController implements Runnable //{{{
             }
             catch (Exception ex)
             {
-                // FIXME: should be break ?
                 break;
-                //return;
             }
         }
-        // TODO: update lights state
         p_model.finishedTimeUpdate();
     } //}}}
     

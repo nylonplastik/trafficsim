@@ -131,8 +131,6 @@ public class Car implements Serializable //{{{
        this.currentParking.goToLeavingQueue(this);
        if (currentParking.canLeaveParking(this))
        {
-           // TODO: check if lane out of parking is empty
-           // and set it as the only element of planned route
            this.currentParking.carIsLeaving(this);
            this.currentParking = null;
            this.position.setLane(this.plannedRoute.get(0));

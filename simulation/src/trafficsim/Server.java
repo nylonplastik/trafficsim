@@ -86,7 +86,7 @@ public class Server {
         
         int speedLimit = 20;
         
-        Lane lane1 = model.addLane(cross3, cross2, speedLimit);
+        Lane lane1 = model.addLane(cross2, cross3, speedLimit);
         Lane lane2 = model.addLane(cross5, cross4, speedLimit);
         Lane lane3 = model.addLane(cross6, cross5, speedLimit);
         Lane lane4 = model.addLane(cross7, cross6, speedLimit);        
