@@ -54,7 +54,7 @@ public class TrafficSim implements Runnable
      */
     public void run()
     {         
-        //client = new Client();
+        client = new Client();
         
         MainFrame frame = new MainFrame("Simulation of road traffic");
         frame.setModel(server.getModel());

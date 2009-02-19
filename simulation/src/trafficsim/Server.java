@@ -50,12 +50,89 @@ public class Server {
     {
         model=new Model();
         
-        int cross1 = model.addCross(250,50);
-        int cross2 = model.addCross(375,300);
-        int cross3 = model.addCross(125, 300);
-        Lane lane1 = model.addLane(cross1, cross2, 20);
-        Lane lane2 = model.addLane(cross2, cross3, 20);
-        Lane lane3 = model.addLane(cross3, cross1, 20);
+        int x1 = 20, x2 = 160, x3=164, x4=480, x5=484, x6=560;
+        int y1 = 20, y2=130, y3=134, y4=320, y5=324, y6=450;
+        
+        int cross1 = model.addCross(x2,y1);
+        int cross2 = model.addCross(x3,y1);
+        int cross3 = model.addCross(x4, y1);
+        int cross4 = model.addCross(x1, y2);    
+        int cross5 = model.addCross(x2,y2);
+        int cross6 = model.addCross(x3,y2);
+        int cross7 = model.addCross(x4, y2);
+        int cross8 = model.addCross(x5, y2);  
+        int cross9 = model.addCross(x6,y2);
+        int cross10 = model.addCross(x1,y3);
+        int cross11 = model.addCross(x2, y3);
+        int cross12 = model.addCross(x3, y3);  
+        int cross13 = model.addCross(x4, y3);
+        int cross14 = model.addCross(x5,y3);
+        int cross15 = model.addCross(x6, y3);
+        int cross16 = model.addCross(x1, y4);  
+        int cross17 = model.addCross(x2,y4);
+        int cross18 = model.addCross(x3,y4);
+        int cross19 = model.addCross(x4, y4);
+        int cross20 = model.addCross(x5, y4);  
+        int cross21 = model.addCross(x6,y4);
+        int cross22 = model.addCross(x1,y5);
+        int cross23 = model.addCross(x2, y5);
+        int cross24 = model.addCross(x3, y5);  
+        int cross25 = model.addCross(x4,y5);
+        int cross26 = model.addCross(x5,y5);
+        int cross27 = model.addCross(x6, y5);
+        int cross28 = model.addCross(x3, y6);  
+        int cross29 = model.addCross(x4,y6);
+        int cross30 = model.addCross(x5,y6);      
+        
+        int speedLimit = 20;
+        
+        Lane lane1 = model.addLane(cross3, cross2, speedLimit);
+        Lane lane2 = model.addLane(cross5, cross4, speedLimit);
+        Lane lane3 = model.addLane(cross6, cross5, speedLimit);
+        Lane lane4 = model.addLane(cross7, cross6, speedLimit);        
+        Lane lane5 = model.addLane(cross8, cross7, speedLimit);
+        Lane lane6 = model.addLane(cross9, cross8, speedLimit);   
+        Lane lane7 = model.addLane(cross10, cross11, speedLimit);
+        Lane lane8 = model.addLane(cross11, cross12, speedLimit);
+        Lane lane9 = model.addLane(cross12, cross13, speedLimit);
+        Lane lane10 = model.addLane(cross13, cross14, speedLimit);        
+        Lane lane11 = model.addLane(cross14, cross15, speedLimit);        
+        Lane lane12 = model.addLane(cross17, cross16, speedLimit);        
+        Lane lane13 = model.addLane(cross18, cross17, speedLimit);
+        Lane lane14 = model.addLane(cross19, cross18, speedLimit);
+        Lane lane15 = model.addLane(cross20, cross19, speedLimit);
+        Lane lane16 = model.addLane(cross21, cross20, speedLimit);      
+        Lane lane17 = model.addLane(cross22, cross23, speedLimit);
+        Lane lane18 = model.addLane(cross23, cross24, speedLimit);
+        Lane lane19 = model.addLane(cross24, cross25, speedLimit);
+        Lane lane20 = model.addLane(cross25, cross26, speedLimit);        
+        Lane lane21 = model.addLane(cross26, cross27, speedLimit);
+        Lane lane22 = model.addLane(cross29, cross28, speedLimit);
+        Lane lane23 = model.addLane(cross4, cross10, speedLimit);
+        Lane lane24 = model.addLane(cross16, cross22, speedLimit);
+        Lane lane25 = model.addLane(cross1, cross5, speedLimit);
+        Lane lane26 = model.addLane(cross5, cross11, speedLimit);
+        Lane lane27 = model.addLane(cross11, cross17, speedLimit);
+        Lane lane28 = model.addLane(cross17, cross23, speedLimit);           
+        Lane lane29 = model.addLane(cross6, cross2, speedLimit);
+        Lane lane30 = model.addLane(cross12, cross6, speedLimit);
+        Lane lane31 = model.addLane(cross18, cross12, speedLimit);
+        Lane lane32 = model.addLane(cross24, cross18, speedLimit);
+        Lane lane33 = model.addLane(cross28, cross24, speedLimit);        
+        Lane lane34 = model.addLane(cross3, cross7, speedLimit);
+        Lane lane35 = model.addLane(cross7, cross13, speedLimit);
+        Lane lane36 = model.addLane(cross13, cross19, speedLimit);        
+        Lane lane37 = model.addLane(cross19, cross25, speedLimit);
+        Lane lane38 = model.addLane(cross25, cross29, speedLimit);        
+        Lane lane39 = model.addLane(cross14, cross8, speedLimit);
+        Lane lane40 = model.addLane(cross20, cross14, speedLimit);
+        Lane lane41 = model.addLane(cross26, cross20, speedLimit);
+        Lane lane42 = model.addLane(cross30, cross26, speedLimit);        
+        Lane lane43 = model.addLane(cross15, cross9, speedLimit);
+        Lane lane44 = model.addLane(cross27, cross21, speedLimit);
+        
+    
+        
         if (lane1 != null)
             lane1.setDefaultNextLane(lane2);
         if (lane2 != null)
