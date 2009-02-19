@@ -33,7 +33,6 @@ import trafficsim.Model;
 import trafficsim.network.ConnectionInfo;
 import trafficsim.network.Packet;
 import trafficsim.network.PacketTypes;
-import trafficsim.network.ProcessorThread;
 import trafficsim.network.server.ClientsProcessor;
 import trafficsim.data.*;
 
@@ -42,30 +41,31 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
 
 	private static Logger s_log = Logger.getLogger(ClientsProcessor.class.toString());
 	private Model model = null;
-        private ICarController controller = null;
-        private ClientViewClientSide view = null;
-        private int clientId = 0;
-        private boolean registered;
-        private boolean controllerStarted = false;
-        private ConnectionInfo currentClient = null;
+    private ICarController controller = null;
+    private ClientViewClientSide view = null;
+    private int clientId = 0;
+    private boolean registered = false;
+    private boolean controllerStarted = false;
+    private ConnectionInfo currentClient = null;
 	
 	public ServerProcessor(ICarController controller, ClientViewClientSide view, Model model)
 	{
-                this.model = model;
-                this.view = view;
-                this.controller = controller;
+	    super();
+        this.model = model;
+        this.view = view;
+        this.controller = controller;
 	}
 
-	public ServerProcessor(ICarController controller, 
-                               ClientViewClientSide view,
-                               Model model,
-                               ProcessorThread<ConnectionInfo> p
-                               ) 
-        {
+	public ServerProcessor(ServerProcessor p) 
+    {
 		super(p);
-                this.model = model;
-                this.view = view;
-                this.controller = controller;                
+        this.model = p.model;
+        this.view = p.view;
+        this.controller = p.controller;
+        this.clientId = p.clientId;
+        this.registered = p.registered;
+        this.controllerStarted = p.controllerStarted;
+        this.currentClient = null;
 	}
 
 	
@@ -84,33 +84,32 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
 				switch(answer.getType())
 				{
 					case PacketTypes.NEW_MODEL_DATA:
-                                            // server sends model
-                                            model.update((Model)answer.getData());
-                                            if (!isControllerStarted())
-                                            {
-                                                setControllerStarted(true);
-                                                // tell the controller that
-                                                // we're ready to start
-                                                controller.registered();
-                                            }
-                                            break;
-                                        case PacketTypes.REGISTRED_TYPEID:
-                                            // save assigned id number
-                                            setClientId((int) (Integer)answer.getData());
-                                            // send model update request
-                                            Packet p = new Packet(PacketTypes.NEW_MODEL_DATA_TYPEID);
-                                            client.writeObject(p);
-                                            break;
-                                        case PacketTypes.NEW_CAR_SPAWNED:
-                                            System.out.println("New car spawned");
-                                            controller.newCarCallback((Integer)answer.getData());
-                                            break;
-                                        case PacketTypes.MODEL_DATA_UPDATE_TYPEID:
-                                            currentClient = client;
-                                            view.viewChanged((ClientViewData)answer.getData());
-                                            currentClient = null;
-                                            break;
-                                            
+                        // server sends model
+                        model.update((Model)answer.getData());
+                        if (!isControllerStarted())
+                        {
+                            setControllerStarted(true);
+                            // tell the controller that
+                            // we're ready to start
+                            controller.registered();
+                        }
+                        break;
+                    case PacketTypes.REGISTRED_TYPEID:
+                        // save assigned id number
+                        setClientId((int) (Integer)answer.getData());
+                        // send model update request
+                        Packet p = new Packet(PacketTypes.NEW_MODEL_DATA_TYPEID);
+                        client.writeObject(p);
+                        break;
+                    case PacketTypes.NEW_CAR_SPAWNED:
+                        System.out.println("New car spawned");
+                        controller.newCarCallback((Integer)answer.getData());
+                        break;
+                    case PacketTypes.MODEL_DATA_UPDATE_TYPEID:
+                        currentClient = client;
+                        view.viewChanged((ClientViewData)answer.getData());
+                        currentClient = null;
+                        break;
 				}
 			}
 		} catch (IOException e) {
@@ -127,110 +126,110 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
 		}
 	}
         
-        protected void sendData (Serializable data, int packetType)
+    protected void sendData (Serializable data, int packetType)
+    {
+        ConnectionInfo server = getEvents().poll();
+        if (server!=null)
         {
-            ConnectionInfo server = getEvents().poll();
-            if (server!=null)
+            Packet packet = new Packet(packetType, data);
+            try
             {
-                Packet packet = new Packet(packetType, data);
-                try
-                {
-                        server.writeObject(packet);
-                } catch(IOException e)
-                {
-                        s_log.log(Level.SEVERE,"Can't send data to server",e);
-                }
-                try
-                {
-                    addEvent((ConnectionInfo)server.clone());
-                } catch (InterruptedException e)
-                {
-                    s_log.log(Level.SEVERE,"Can't reinsert server",e);
-                }
+                    server.writeObject(packet);
+            } catch(IOException e)
+            {
+                    s_log.log(Level.SEVERE,"Can't send data to server",e);
+            }
+            try
+            {
+                addEvent((ConnectionInfo)server.clone());
+            } catch (InterruptedException e)
+            {
+                s_log.log(Level.SEVERE,"Can't reinsert server",e);
             }
         }
+    }
+    
+    protected void sendData (int packetType)
+    {
         
-        protected void sendData (int packetType)
+        ConnectionInfo server = getEvents().poll();
+        if (server!=null)
         {
-            
-            ConnectionInfo server = getEvents().poll();
-            if (server!=null)
+            Packet packet = new Packet(packetType);
+            try
             {
-                Packet packet = new Packet(packetType);
-                try
-                {
-                        server.writeObject(packet);
-                } catch(IOException e)
-                {
-                        s_log.log(Level.SEVERE,"Can't send data to server",e);
-                }
-                try
-                {
-                    addEvent((ConnectionInfo)server.clone());
-                } catch (InterruptedException e)
-                {
-                    s_log.log(Level.SEVERE,"Can't reinsert server",e);
-                }
+                    server.writeObject(packet);
+            } catch(IOException e)
+            {
+                    s_log.log(Level.SEVERE,"Can't send data to server",e);
             }
-        }        
-        
-        public void register()
-        {
-            sendData(new Integer(0), PacketTypes.REGISTER_CLIENT_TYPEID);
-        }
-        
-        public void gotoParkingQueue(int newCarId) {
-            sendData(newCarId, PacketTypes.PUT_CAR_IN_QUEUE);
-        }
-        
-        public void changeAcceleration(float newAcceleration, int carId)
-        {
-            if (currentClient != null)
+            try
             {
-                startMovingData data = new startMovingData(newAcceleration, carId);
-                Packet packet = new Packet(PacketTypes.CHANGE_ACCELER_TYPEID, data);
-                try
-                {
-                    currentClient.writeObject(packet);
-                }
-                catch (IOException e)
-                {}
+                addEvent((ConnectionInfo)server.clone());
+            } catch (InterruptedException e)
+            {
+                s_log.log(Level.SEVERE,"Can't reinsert server",e);
             }
         }
-        
-        public void changePlanneRoute(LinkedList<Integer> route, int carId)
+    }        
+    
+    public void register()
+    {
+        sendData(new Integer(0), PacketTypes.REGISTER_CLIENT_TYPEID);
+    }
+    
+    public void gotoParkingQueue(int newCarId) {
+        sendData(newCarId, PacketTypes.PUT_CAR_IN_QUEUE);
+    }
+    
+    public void changeAcceleration(float newAcceleration, int carId)
+    {
+        if (currentClient != null)
         {
-            if (currentClient != null)
+            startMovingData data = new startMovingData(newAcceleration, carId);
+            Packet packet = new Packet(PacketTypes.CHANGE_ACCELER_TYPEID, data);
+            try
             {
-                changePlannedRouteData data = new changePlannedRouteData(route, carId);
-                Packet packet = new Packet(PacketTypes.CHANGE_ROUTE_TYPEID, data);
-                try
-                {
-                    currentClient.writeObject(packet);
-                }
-                catch (IOException e)
-                {}
+                currentClient.writeObject(packet);
             }
-        }    
-        
-        public void startMoving(float initialAcceleration, int id)
+            catch (IOException e)
+            {}
+        }
+    }
+    
+    public void changePlanneRoute(LinkedList<Integer> route, int carId)
+    {
+        if (currentClient != null)
         {
-            if (currentClient != null)
+            changePlannedRouteData data = new changePlannedRouteData(route, carId);
+            Packet packet = new Packet(PacketTypes.CHANGE_ROUTE_TYPEID, data);
+            try
             {
-                startMovingData data = new startMovingData(initialAcceleration, id);
-                Packet packet = new Packet(PacketTypes.START_MOVING,data);
-                try
-                {
-                    currentClient.writeObject(packet);
-                }
-                catch (IOException e)
-                {}
+                currentClient.writeObject(packet);
             }
-        }        
+            catch (IOException e)
+            {}
+        }
+    }    
+    
+    public void startMoving(float initialAcceleration, int id)
+    {
+        if (currentClient != null)
+        {
+            startMovingData data = new startMovingData(initialAcceleration, id);
+            Packet packet = new Packet(PacketTypes.START_MOVING,data);
+            try
+            {
+                currentClient.writeObject(packet);
+            }
+            catch (IOException e)
+            {}
+        }
+    }        
 
-        public void newCar(int parkingId) {
-            sendData(parkingId,PacketTypes.SPAWN_NEW_CAR);
-        }
+    public void newCar(int parkingId) {
+        sendData(parkingId,PacketTypes.SPAWN_NEW_CAR);
+    }
 
     public synchronized int getClientId() {
         return clientId;

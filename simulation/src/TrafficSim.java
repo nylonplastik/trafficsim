@@ -68,9 +68,12 @@ public class TrafficSim implements Runnable
             }
 
             @Override
-            public void windowClosed(WindowEvent e) {
-                client.close();
-                server.close();
+            public void windowClosed(WindowEvent e) 
+            {
+                if (client!=null)
+                    client.close();
+                if (server!=null)
+                    server.close();
                 System.exit(0);
             }
 

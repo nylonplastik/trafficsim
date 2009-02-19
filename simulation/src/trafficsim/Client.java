@@ -26,6 +26,7 @@ import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import trafficsim.network.ClientThread;
+import trafficsim.network.client.ServerProcessor;
 
 /**
  *
@@ -41,10 +42,15 @@ public class Client //{{{
     private static Logger s_log = Logger.getLogger(Client.class.toString());
     
     private ClientThread ct = null;
-    private trafficsim.network.client.ServerProcessor sp = null;
+    private ServerProcessor sp = null;
     //}}}
 
-    public Client()//{{{
+    public Client()
+    {
+        this(0);
+    }
+ 
+    public Client(int nAdditionalProcessors)//{{{
     {
         p_model = new Model();
         p_view = new ClientViewClientSide(p_model);
@@ -53,7 +59,7 @@ public class Client //{{{
         
         // Client
       
-        sp = new trafficsim.network.client.ServerProcessor(p_controller, p_view, p_model);
+        sp = new ServerProcessor(p_controller, p_view, p_model);
         
         try {
             ct = new ClientThread(new InetSocketAddress(InetAddress.getByName("127.0.0.1"),23456));
@@ -64,6 +70,8 @@ public class Client //{{{
         }
 
         new Thread(sp).start();
+        for(int i=0;i<nAdditionalProcessors;++i)
+            new Thread(new ServerProcessor(sp));
         //new Thread(ct).start();
         ct.run();
 
@@ -86,7 +94,7 @@ public class Client //{{{
     
     public static void main(String []args)
     {
-        new Client();
+        new Client(5);
     }
     
     

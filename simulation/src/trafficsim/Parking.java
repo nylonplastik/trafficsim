@@ -24,9 +24,7 @@ package trafficsim;
 
 import trafficsim.data.ParkingData;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Collections.*;
 import java.util.Hashtable;
 import java.util.LinkedList;
 

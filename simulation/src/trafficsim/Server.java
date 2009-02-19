@@ -25,7 +25,6 @@ public class Server {
     
     private static Logger s_log = Logger.getLogger(Server.class.toString());
 
-
     private ServerThread st = null;
     private trafficsim.network.server.ClientsProcessor cp = null;
     Model model = null;
@@ -43,6 +42,11 @@ public class Server {
     }
     
     public Server(int port)
+    {
+        this(port,0);
+    }
+
+    public Server(int port, int nAdditionalProcessors)
     {
         model=new Model();
         
@@ -73,6 +77,8 @@ public class Server {
         }
         
         new Thread(cp).start();
+        for(int i=0;i<nAdditionalProcessors;++i)
+            new Thread(new ClientsProcessor(cp)).start();
         new Thread(st).start();   
         this.start();
     }
@@ -127,7 +133,7 @@ public class Server {
     
     public static void main(String []args)
     {
-        new Server();
+        new Server(5);
     }
     
 }
