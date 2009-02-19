@@ -37,7 +37,7 @@ import trafficsim.data.*;
 
 	private static Logger s_log = Logger.getLogger(ClientsProcessor.class.toString());
 
-	private Model model = null;
+	private Model  model  = null;
     private Server server = null;
 	
 	public ClientsProcessor(Model model, Server server)

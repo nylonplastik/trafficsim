@@ -43,9 +43,9 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
 	private Model model = null;
     private ICarController controller = null;
     private ClientViewClientSide view = null;
-    private int clientId = 0;
-    private boolean registered = false;
-    private boolean controllerStarted = false;
+    private Integer clientId = 0;
+    private Boolean registered = false;
+    private Boolean controllerStarted = false;
     private ConnectionInfo currentClient = null;
 	
 	public ServerProcessor(ICarController controller, ClientViewClientSide view, Model model)
