@@ -4,14 +4,16 @@
  */
 
 package trafficsim.data;
+
+import java.io.Serializable;
 import java.util.LinkedList;
-import trafficsim.network.Packet;
 
 /**
  *
  * @author Adam Rutkowski
  */
-public class changePlannedRouteData extends Packet {
+@SuppressWarnings("serial")
+public class changePlannedRouteData implements Serializable {
     
     private static int count = 0;
 

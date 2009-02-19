@@ -74,17 +74,7 @@ public class LightsState //{{{
      */
     public void setState(final State state)//{{{
     {
-        boolean changed = false;
-        if (p_state!=state) changed=true;
         p_state = state;
-        
-/*        
-        if (changed)
-        {
-            setChanged();
-            notifyObservers();
-        }
- */
     }//}}}
 
     /**

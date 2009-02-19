@@ -78,10 +78,10 @@ import trafficsim.data.*;
 							break;
 						case PacketTypes.REGISTER_CLIENT_TYPEID:
 							System.out.println("Register request");
-                                                        Integer newId = server.newClient();
-                                                        client.setClientId(newId);
+                            Integer newId = server.newClient();
+                            client.setClientId(newId);
 							Packet answer = new Packet(PacketTypes.REGISTRED_TYPEID, newId);
-                                                        client.writeObject(answer);
+                            client.writeObject(answer);
 							break;  
 						case PacketTypes.SPAWN_NEW_CAR:
                                                         System.out.println("Spawn car request");
@@ -107,7 +107,6 @@ import trafficsim.data.*;
                                                         changePlannedRouteData routeData = (changePlannedRouteData)request.getData();
                                                         model.setRoute(routeData.carId, routeData.plannedRoute);
                                                         break;
-                                                        
 					}
 				}
 			}

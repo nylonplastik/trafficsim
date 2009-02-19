@@ -108,7 +108,7 @@ public class ClientViewClientSide { //{{{
         return p_cars;
     }
 
-    private synchronized Model getMmodel() {
+    protected synchronized Model getModel() {
         return p_model;
     }
 

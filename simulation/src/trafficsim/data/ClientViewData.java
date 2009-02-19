@@ -24,18 +24,16 @@
  */
 
 package trafficsim.data;
-import trafficsim.*;
+
+import java.io.Serializable;
 import java.util.Hashtable;
-import trafficsim.data.CarData;
-import trafficsim.data.ParkingData;
-import trafficsim.network.Packet;
 
 /**
  *
  * @author Adam Rutkowski
  */
 @SuppressWarnings("serial")
-public class ClientViewData extends Packet { //{{{
+public class ClientViewData implements Serializable { //{{{
     
    // Variables {{{ 
     

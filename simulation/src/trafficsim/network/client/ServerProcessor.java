@@ -29,14 +29,12 @@ import java.util.logging.Logger;
 import trafficsim.ClientViewClientSide;
 import trafficsim.data.ClientViewData;
 import trafficsim.ICarController;
-import trafficsim.Lane;
 import trafficsim.Model;
 import trafficsim.network.ConnectionInfo;
 import trafficsim.network.Packet;
 import trafficsim.network.PacketTypes;
 import trafficsim.network.ProcessorThread;
 import trafficsim.network.server.ClientsProcessor;
-import trafficsim.data.startMovingData;
 import trafficsim.data.*;
 
 public class ServerProcessor extends trafficsim.network.ConnectionProcessor
@@ -104,6 +102,7 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
                                             client.writeObject(p);
                                             break;
                                         case PacketTypes.NEW_CAR_SPAWNED:
+                                            System.out.println("New car spawned");
                                             controller.newCarCallback((Integer)answer.getData());
                                             break;
                                         case PacketTypes.MODEL_DATA_UPDATE_TYPEID:
@@ -128,32 +127,51 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
 		}
 	}
         
-        private void sendData (Serializable data, int packetType)
+        protected void sendData (Serializable data, int packetType)
         {
-            if (getEvents().isEmpty())
-                return;
-            ConnectionInfo server = getEvents().getFirst();
-            Packet packet = new Packet(packetType, data);
-            try
+            ConnectionInfo server = getEvents().poll();
+            if (server!=null)
             {
-                    server.writeObject(packet);
-            } catch(IOException e)
-            {
-                    s_log.log(Level.SEVERE,"Can't send data to server",e);
-            }           
+                Packet packet = new Packet(packetType, data);
+                try
+                {
+                        server.writeObject(packet);
+                } catch(IOException e)
+                {
+                        s_log.log(Level.SEVERE,"Can't send data to server",e);
+                }
+                try
+                {
+                    addEvent((ConnectionInfo)server.clone());
+                } catch (InterruptedException e)
+                {
+                    s_log.log(Level.SEVERE,"Can't reinsert server",e);
+                }
+            }
         }
         
-        private void sendData (int packetType)
+        protected void sendData (int packetType)
         {
-            ConnectionInfo server = getEvents().getFirst();
-            Packet packet = new Packet(packetType);
-            try
+            
+            ConnectionInfo server = getEvents().poll();
+            if (server!=null)
             {
-                    server.writeObject(packet);
-            } catch(IOException e)
-            {
-                    s_log.log(Level.SEVERE,"Can't send data to server",e);
-            }           
+                Packet packet = new Packet(packetType);
+                try
+                {
+                        server.writeObject(packet);
+                } catch(IOException e)
+                {
+                        s_log.log(Level.SEVERE,"Can't send data to server",e);
+                }
+                try
+                {
+                    addEvent((ConnectionInfo)server.clone());
+                } catch (InterruptedException e)
+                {
+                    s_log.log(Level.SEVERE,"Can't reinsert server",e);
+                }
+            }
         }        
         
         public void register()
@@ -200,7 +218,7 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
             if (currentClient != null)
             {
                 startMovingData data = new startMovingData(initialAcceleration, id);
-                Packet packet = new Packet(PacketTypes.START_MOVING, data);
+                Packet packet = new Packet(PacketTypes.START_MOVING,data);
                 try
                 {
                     currentClient.writeObject(packet);
@@ -211,7 +229,7 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
         }        
 
         public void newCar(int parkingId) {
-            sendData(parkingId, PacketTypes.SPAWN_NEW_CAR);
+            sendData(parkingId,PacketTypes.SPAWN_NEW_CAR);
         }
 
     public synchronized int getClientId() {

@@ -34,6 +34,9 @@ public class Server {
     Thread timeControlThread;
     private static int clientsCount = 0;
     
+    @SuppressWarnings("unused")
+    private ClientViewServerSide serverSideView = null;
+    
     public Server() 
     {
         this(23456);
@@ -57,7 +60,7 @@ public class Server {
             lane1.setDefaultNextLane(lane1);
 
         model.addParking(lane1, lane2);  
-        ClientViewServerSide v = new ClientViewServerSide(model);
+        serverSideView = new ClientViewServerSide(model);
         
         // Server
         try {
@@ -81,7 +84,8 @@ public class Server {
     public void close() {
         st.setRunning(false);
         cp.setProcessing(false);
-        timeControlThread.interrupt();
+        if (timeControlThread!=null)
+            timeControlThread.interrupt();
         try {
             model.saveModel("model.xml");
         } catch (FileNotFoundException e1) {
@@ -123,7 +127,7 @@ public class Server {
     
     public static void main(String []args)
     {
-        Server server = new Server();
+        new Server();
     }
     
 }

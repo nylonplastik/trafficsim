@@ -6,24 +6,21 @@
 package trafficsim.data;
 
 import trafficsim.*;
+
+import java.io.Serializable;
 import java.util.LinkedList;
-import trafficsim.Car;
-import trafficsim.Parking;
-import trafficsim.network.Packet;
-import trafficsim.network.PacketTypes;
 
 /**
  *
  * @author Adam Rutkowski
  */
 @SuppressWarnings("serial")
-public class ParkingData extends Packet {
+public class ParkingData implements Serializable {
     public LinkedList<Integer>  carsOnParking;
     public LinkedList<Integer>  carsLeavingParking;
     public int              id;
 
     public ParkingData(Parking p) {
-        super(PacketTypes.PARKING_DATA_TYPEID);
         carsOnParking      = new LinkedList<Integer>();
         carsLeavingParking = new LinkedList<Integer>();
                 

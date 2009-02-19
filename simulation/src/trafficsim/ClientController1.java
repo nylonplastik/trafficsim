@@ -80,18 +80,28 @@ public class ClientController1 implements ICarController
     {
         if (networkClient != null)
         {
+            System.out.println("Registering client");
             networkClient.register();
+            System.out.println("Waiting for answer");
             while(!isRegistered())
-                try {Thread.sleep(100);} catch (Exception e) {}
+                try {Thread.sleep(100);} catch (Exception e) 
+                {
+                    e.printStackTrace();
+                }
+            System.out.println("done");
             LinkedList<Parking> parkings;            
             if (!(parkings = model.getParkings()).isEmpty())
             {
+                System.out.println("Spawning cars");
                 // start one new cars on first available parking
                 for (int i = 0; i <CONTROLLED_CARS; i++) 
                 {
+                    System.out.println("Spawning car on parking 0");
                     // new car parked on first parking
                     networkClient.newCar(parkings.get(0).getId());              
+                    System.out.println("done");
                 }
+                System.out.println("done");
             }
             return true;
         }
@@ -123,8 +133,7 @@ public class ClientController1 implements ICarController
             if (!carsInView.containsKey(carId))
                 break;
             car = carsInView.get(carId);
-            boolean routeHasChanged = false;
-                      
+            //boolean routeHasChanged = false;
             if (car.isParked())
             {
                  // if car is parked, try to leave the parking
@@ -161,7 +170,7 @@ public class ClientController1 implements ICarController
                                         car.getPosition().getLane());
                     for (int i=0; i<=index; i++)
                     {
-                        routeHasChanged = true;
+                        //routeHasChanged = true;
                         car.getPlannedRoute().remove();
                     }
                     
@@ -305,7 +314,7 @@ public class ClientController1 implements ICarController
         return acccelerationToStopAt(speed, distance);
     }
     
-    private static float timeToReachPoint(float dist, float speed, float acc)
+    protected static float timeToReachPoint(float dist, float speed, float acc)
     {
         float delta = (2*speed-acc)*(2*speed-acc) + 4*acc*dist;
         float time = (acc - 2*speed + (float)Math.sqrt(delta)) / (2*acc);
@@ -400,7 +409,7 @@ public class ClientController1 implements ICarController
         this.registered = registered;
     }
 
-    private Model getModel() {
+    protected Model getModel() {
         return model;
     }
 

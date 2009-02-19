@@ -4,13 +4,15 @@
  */
 
 package trafficsim.data;
-import trafficsim.network.Packet;
+
+import java.io.Serializable;
 
 /**
  *
  * @author Adam Rutkowski
  */
-public class startMovingData extends Packet{
+@SuppressWarnings("serial")
+public class startMovingData implements Serializable {
     
     private static int count = 0;
 

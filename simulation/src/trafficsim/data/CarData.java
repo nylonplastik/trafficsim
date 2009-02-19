@@ -5,19 +5,16 @@
 
 package trafficsim.data;
 import trafficsim.*;
+
+import java.io.Serializable;
 import java.util.LinkedList;
-import trafficsim.Car;
-import trafficsim.Lane;
-import trafficsim.Position;
-import trafficsim.network.Packet;
-import trafficsim.network.PacketTypes;
 
 /**
  *
  * @author Adam Rutkowski
  */
 @SuppressWarnings("serial")
-public class CarData extends Packet {
+public class CarData implements Serializable {
 
     public int          id;
     public int          positionLane;
@@ -33,8 +30,6 @@ public class CarData extends Packet {
     
     public CarData(Car car)
     {
-        super(PacketTypes.CAR_DATA_TYPEID);
-        
         synchronized(car)
         {
             this.id              = car.getId();
