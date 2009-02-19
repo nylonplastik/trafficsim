@@ -21,18 +21,18 @@
 package trafficsim;
 
 // imports {{{
+
 import trafficsim.data.ClientViewData;
 import trafficsim.data.CarData;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
-//}}}
 import java.util.SortedMap;
-import java.util.concurrent.ConcurrentHashMap;
 import trafficsim.Position.e_info;
 import trafficsim.data.ParkingData;
 
+//}}}
 
 
 

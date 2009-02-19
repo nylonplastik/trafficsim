@@ -27,7 +27,7 @@ public abstract class ProcessorThread<T extends Cloneable> implements Runnable
 
     private static final int POLLING_TIME_MS = 15;
 
-    private boolean processing = false;
+    private Boolean processing = false;
     private LinkedBlockingDeque<T> events = null;
     
     public ProcessorThread()

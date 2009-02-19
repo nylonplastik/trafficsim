@@ -29,7 +29,6 @@ import trafficsim.Server;
 import trafficsim.network.ConnectionInfo;
 import trafficsim.network.Packet;
 import trafficsim.network.PacketTypes;
-import trafficsim.network.ProcessorThread;
 import trafficsim.data.*;
 
  public class ClientsProcessor
@@ -38,19 +37,20 @@ import trafficsim.data.*;
 
 	private static Logger s_log = Logger.getLogger(ClientsProcessor.class.toString());
 
-	private Model model = null;
-        private Server server = null;
+	private Model  model  = null;
+    private Server server = null;
 	
 	public ClientsProcessor(Model model, Server server)
 	{
+	    super();
 		setModel(model);
-                this.server = server;
+        this.server = server;
 	}
 
-	public ClientsProcessor(Model model, Server server, ProcessorThread<ConnectionInfo> p) {
+	public ClientsProcessor(ClientsProcessor p) {
 		super(p);
-		setModel(model);
-                this.server = server;
+		setModel(p.getModel());
+        this.server = p.server;
 	}
 
 	@Override
@@ -84,42 +84,42 @@ import trafficsim.data.*;
                                                         client.writeObject(answer);
 							break;  
 						case PacketTypes.SPAWN_NEW_CAR:
-                                                        System.out.println("Spawn car request");
-                                                        int newCarId = model.newCar((Integer)request.getData());
-                                                        server.addObservedCar(client.getClientId(), newCarId);
-                                                        answer = new Packet(PacketTypes.NEW_CAR_SPAWNED, newCarId);
-                                                        client.writeObject(answer);
+                            System.out.println("Spawn car request");
+                            int newCarId = model.newCar((Integer)request.getData());
+                            server.addObservedCar(client.getClientId(), newCarId);
+                            answer = new Packet(PacketTypes.NEW_CAR_SPAWNED, newCarId);
+                            client.writeObject(answer);
 							break;  
-                                                case PacketTypes.PUT_CAR_IN_QUEUE:
-                                                        System.out.println("Put car in queue request");
-                                                        m = getModel();
-                                                        m.gotoParkingQueue((Integer)request.getData());
-                                                        break;
-                                                case PacketTypes.START_MOVING:
-                                                        startMovingData data = (startMovingData)request.getData();
-                                                        model.startMoving(data.carId, data.acceleration);
-                                                        break;
-                                                case PacketTypes.CHANGE_ACCELER_TYPEID:
-                                                        System.out.println("Change acceleration request");
-                                                        data = (startMovingData)request.getData();
-                                                        model.setAcceleration(data.carId, data.acceleration);
-                                                        break;
-                                                case PacketTypes.CHANGE_ROUTE_TYPEID:
-                                                        System.out.println("Change route request");
-                                                        changePlannedRouteData routeData = (changePlannedRouteData)request.getData();
-                                                        model.setRoute(routeData.carId, routeData.plannedRoute);
-                                                        break;
+                        case PacketTypes.PUT_CAR_IN_QUEUE:
+                                System.out.println("Put car in queue request");
+                                m = getModel();
+                                m.gotoParkingQueue((Integer)request.getData());
+                                break;
+                        case PacketTypes.START_MOVING:
+                                startMovingData data = (startMovingData)request.getData();
+                                model.startMoving(data.carId, data.acceleration);
+                                break;
+                        case PacketTypes.CHANGE_ACCELER_TYPEID:
+                                System.out.println("Change acceleration request");
+                                data = (startMovingData)request.getData();
+                                model.setAcceleration(data.carId, data.acceleration);
+                                break;
+                        case PacketTypes.CHANGE_ROUTE_TYPEID:
+                                System.out.println("Change route request");
+                                changePlannedRouteData routeData = (changePlannedRouteData)request.getData();
+                                model.setRoute(routeData.carId, routeData.plannedRoute);
+                                break;
 					}
 				}
 			}
 
-                    boolean bRet = server.wasViewUpdated(client.getClientId());
-                    if (bRet)
-                    {
-                        ClientViewData data = server.getViewData(client.getClientId());
-                        Packet update = new Packet(PacketTypes.MODEL_DATA_UPDATE_TYPEID, data);
-                        client.writeObject(update);
-                    }                        
+            boolean bRet = server.wasViewUpdated(client.getClientId());
+            if (bRet)
+            {
+                ClientViewData data = server.getViewData(client.getClientId());
+                Packet update = new Packet(PacketTypes.MODEL_DATA_UPDATE_TYPEID, data);
+                client.writeObject(update);
+            }                        
                         
 		} catch(ClassNotFoundException e)
 		{
@@ -137,7 +137,6 @@ import trafficsim.data.*;
 
 	public void setModel(Model model) {
 		this.model = model;
-
 	}
 
 	public Model getModel() {
