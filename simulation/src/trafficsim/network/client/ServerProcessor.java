@@ -130,6 +130,8 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
         
         private void sendData (Serializable data, int packetType)
         {
+            if (getEvents().isEmpty())
+                return;
             ConnectionInfo server = getEvents().getFirst();
             Packet packet = new Packet(packetType, data);
             try

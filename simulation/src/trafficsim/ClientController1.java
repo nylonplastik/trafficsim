@@ -50,7 +50,7 @@ public class ClientController1 implements ICarController
     // treshold value of predicted distance between cars.
     private static final int           SAFE_MOVE_DISTANCE = 50;  
     
-    private static final int           CONTROLLED_CARS    = 7;
+    private static final int           CONTROLLED_CARS    = 1;
     
     private static final int           MAX_SPEED_ON_90_DEGREE_ANGLE = 3;
     

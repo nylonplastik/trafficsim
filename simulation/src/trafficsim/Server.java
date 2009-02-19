@@ -116,7 +116,14 @@ public class Server {
     }
 
     public synchronized boolean wasViewUpdated(int clientId) {
-        return clientsViews.get(clientId).hasChanged();
+        if (clientsViews.containsKey(clientId))
+            return clientsViews.get(clientId).hasChanged();
+        else return false;
+    }
+    
+    public static void main(String []args)
+    {
+        Server server = new Server();
     }
     
 }

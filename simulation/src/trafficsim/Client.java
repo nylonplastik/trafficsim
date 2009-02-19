@@ -84,6 +84,11 @@ public class Client //{{{
     public void close() {
     }
     
+    public static void main(String []args)
+    {
+        Client client = new Client();
+    }
+    
     
 }//}}}
 
