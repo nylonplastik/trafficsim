@@ -28,6 +28,9 @@ import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 //}}}
+import java.util.SortedMap;
+import java.util.concurrent.ConcurrentHashMap;
+import trafficsim.Position.e_info;
 import trafficsim.data.ParkingData;
 
 
@@ -92,6 +95,7 @@ public class ClientViewServerSide implements Observer  //{{{
     
     public synchronized void update(Observable o, Object arg) //{{{
     {
+        System.out.println("Starting view update, view id = ");
         synchronized (p_data)
         {  
             if (! (o instanceof  Model))
@@ -102,8 +106,60 @@ public class ClientViewServerSide implements Observer  //{{{
             Hashtable<Integer, CarData> carData = p_data.getCarData();
             for (Car c : p_observedCars)
             {
-                carData.put(c.getId(), new CarData(c));
+                synchronized(c)
+                {
+                    carData.put(c.getId(), new CarData(c));
+
+                    // copy data about cars on this car current lane
+                    if (c.getPosition().getLane() != null && c.getPosition().getInfo() == e_info.OK)
+                    {                    
+                           Lane current = c.getPosition().getLane(); 
+                           SortedMap<Integer, Car> carsOnLane = current.getCars();
+                           synchronized(carsOnLane)
+                           {
+                               if (carsOnLane != null)
+                               {
+                                   for (Car car : carsOnLane.values())
+                                   {
+                                       if (car != null)
+                                       synchronized(car)
+                                       {
+                                            if (!carData.containsKey(car.getId()))
+                                            carData.put(car.getId(), new CarData(car));
+                                       }
+                                   }
+                               }
+                           }
+                    }
+
+                    // copy data about cars on next line planned to visit
+                    Lane nextLane = null;
+                    if (c.getPlannedRoute() != null)
+                    {
+                        if (!c.getPlannedRoute().isEmpty())
+                            nextLane = c.getPlannedRoute().getFirst();
+                    }
+                    if (nextLane != null)
+                    {
+                       SortedMap<Integer, Car> carsOnLane = nextLane.getCars();
+                       if (carsOnLane != null)
+                       {
+                           for (Integer position : carsOnLane.keySet())
+                           {
+                               Car car = carsOnLane.get(position);
+                               if (car!=null)
+                               {
+                                    if (!carData.containsKey(car.getId()))     
+                                    carData.put(car.getId(), new CarData(car));
+                               }
+                           }
+                       }                    
+                    }
+                }
+                System.out.println("Finished view update, view id = ");
             }
+            
+            
             p_data.setCarData(carData);
 
             /* Set information about current state of parkings */

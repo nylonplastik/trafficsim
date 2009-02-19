@@ -45,15 +45,8 @@ public class Model extends Observable implements Serializable //{{{
     private int nextCrossId = 1;
     private long lastUpdate = 0;
 
-    /**
-     * Hashtable of all lane crosses.
-     */
-    private Hashtable<Integer, LanesCross>            crosses;
-    
-    /***
-     * List of all lanes.
-     */
-    private LinkedList<Lane>                          lanes;
+ 
+ //   private Hashtable<Integer, LanesCross>            crosses;
     
     /***
      * List of all cars on the map
@@ -65,10 +58,25 @@ public class Model extends Observable implements Serializable //{{{
      */
     private LinkedList<Parking>                       parkings;
     
-    
+    /***
+     * List of all cars on the map
+     */        
     private ConcurrentHashMap<Integer, Car>                   carsById;
+    
+    /***
+     * List of all lanes.
+     */
     private ConcurrentHashMap<Integer, Lane>                  lanesById;  
+    
+    /**
+     * List of all parkings.
+     */    
     private ConcurrentHashMap<Integer, Parking>               parkingById;
+  
+    /**
+     * Hashtable of all lane crosses.
+     */    
+    private ConcurrentHashMap<Integer, LanesCross>            crossesById;
     
     private static final int            FAILED = -1;
 
@@ -90,19 +98,19 @@ public class Model extends Observable implements Serializable //{{{
 
     public Model()//{{{
     {
-        crosses     = new Hashtable<Integer, LanesCross>();
-        lanes       = new LinkedList<Lane>();
+        lanesById   = new ConcurrentHashMap<Integer, Lane>();
         cars        = new LinkedList<Car>();
         parkings    = new LinkedList<Parking>();
         carsById    = new ConcurrentHashMap<Integer, Car>();
         lanesById   = new ConcurrentHashMap<Integer, Lane>(); 
         parkingById = new ConcurrentHashMap<Integer, Parking>(); 
+        crossesById = new ConcurrentHashMap<Integer, LanesCross>();
     }//}}}
     
     public synchronized int addCross(int X, int Y)//{{{
     {
         int crossId = nextCrossId++;
-        crosses.put(crossId, new LanesCross(crossId, X, Y) );
+        crossesById.put(crossId, new LanesCross(crossId, X, Y) );
         this.setChanged();
         return crossId;
         //this.notifyObservers(WhatHasChanged.Crosses);
@@ -110,11 +118,11 @@ public class Model extends Observable implements Serializable //{{{
     
     public synchronized Lane addLane(int start, int end, int maxSpeed)//{{{
     {
-        if (!crosses.containsKey(start) || !crosses.containsKey(end))
+        if (!crossesById.containsKey(start) || !crossesById.containsKey(end))
             return null;
         
-        LanesCross cStart = crosses.get(start);
-        LanesCross cEnd = crosses.get(end);
+        LanesCross cStart = crossesById.get(start);
+        LanesCross cEnd = crossesById.get(end);
         
         Lane newLane = new Lane(maxSpeed, cStart, cEnd);
         
@@ -122,7 +130,7 @@ public class Model extends Observable implements Serializable //{{{
         cEnd.addIncoming(newLane);
         cStart.addOutgoing(newLane);
         
-        lanes.add(newLane);
+        lanesById.put(newLane.getId(), newLane);
         lanesById.put(newLane.getId(), newLane);
         this.setChanged();
         //this.notifyObservers(WhatHasChanged.Lanes);
@@ -158,14 +166,14 @@ public class Model extends Observable implements Serializable //{{{
         return parkings;
     }//}}}
     
-    public synchronized Hashtable<Integer, LanesCross> getLanesCrosses()//{{{
+    public synchronized ConcurrentHashMap<Integer, LanesCross> getLanesCrosses()//{{{
     {
-        return crosses;
+        return crossesById;
     }//}}}
     
-    public synchronized LinkedList<Lane> getLanes()//{{{
+    public synchronized ConcurrentHashMap<Integer, Lane> getLanes()//{{{
     {
-        return lanes;
+        return lanesById;
     }//}}}
     
     public synchronized void updateCarsState(LinkedList<Car> cars)//{{{
@@ -233,21 +241,10 @@ public class Model extends Observable implements Serializable //{{{
         setChanged();
     }
 
-    public synchronized Hashtable<Integer, LanesCross> getCrosses() {
-        return crosses;
+    public synchronized ConcurrentHashMap<Integer, LanesCross> getCrosses() {
+        return crossesById;
     }
 
-    public synchronized void setCrosses(Hashtable<Integer, LanesCross> crosses) {
-        this.crosses = crosses;
-    }
-
-    public synchronized void setLanes(LinkedList<Lane> lanes) {
-        this.lanes = lanes;
-    }
-
-    public synchronized void setCars(LinkedList<Car> cars) {
-        this.cars = cars;
-    }
 
     public synchronized void setParkings(LinkedList<Parking> parkings) {
         this.parkings = parkings;
@@ -321,7 +318,7 @@ public class Model extends Observable implements Serializable //{{{
     /* TODO TO BE REMOVED WHEN COMMUNICATION IS ON*/
     public synchronized int addCross(int X, int Y, int id)//{{{
     {
-        crosses.put(id, new LanesCross(id, X, Y) );
+        crossesById.put(id, new LanesCross(id, X, Y) );
         this.setChanged();
         return id;
         //this.notifyObservers(WhatHasChanged.Crosses);
@@ -343,8 +340,8 @@ public class Model extends Observable implements Serializable //{{{
 		// shallow copy of model
                 this.cars = updated.cars;
                 this.carsById = updated.carsById;
-                this.crosses = updated.crosses;
-                this.lanes = updated.lanes;
+                this.crossesById = updated.crossesById;
+                this.lanesById = updated.lanesById;
                 this.lanesById = updated.lanesById;
                 this.lastUpdate = updated.lastUpdate;
                 this.nextCrossId = updated.nextCrossId;

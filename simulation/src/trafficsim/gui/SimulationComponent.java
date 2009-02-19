@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.Observable;
 import java.util.Observer;
 
+import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.JComponent;
 
 import trafficsim.Car;
@@ -69,9 +70,9 @@ public class SimulationComponent extends JComponent implements Observer {
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
         //g.clearRect(0, 0, this.getWidth(), this.getHeight());
         if (m == null) return;
-        Collection<Lane> lanes = m.getLanes();
+        ConcurrentHashMap<Integer, Lane> lanes = m.getLanes();
         g.setColor(Color.BLACK);
-        for(Lane l : lanes)
+        for(Lane l : lanes.values())
         {
             g.drawLine(l.getLaneSource().getX(),
                        l.getLaneSource().getY(), 

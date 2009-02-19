@@ -24,9 +24,9 @@ package trafficsim;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.Collections;
 
 //}}}
-
 /**
  * Represents a single lane on fragment of road with no other lanes 
  *  crossing through it.
@@ -64,7 +64,8 @@ public class Lane implements Serializable //{{{
     /**
      * List of cars on this lane. The key is each car's coordinate on the lane.
      */
-    private SortedMap<Integer, Car>  carsOnLane = new TreeMap<Integer, Car>();
+    private SortedMap<Integer, Car>  _carsOnLane = new TreeMap<Integer, Car>();
+    private SortedMap<Integer, Car>  carsOnLane;
             
     /**
      * List of lights.
@@ -88,7 +89,7 @@ public class Lane implements Serializable //{{{
         return this.carsOnLane;
     } //}}}
     
-    public synchronized boolean isVirtual() //{{{
+    public boolean isVirtual() //{{{
     {
         return this.isVirtual;
     } //}}}
@@ -104,6 +105,7 @@ public class Lane implements Serializable //{{{
         this.length = Lane.DEFAULT_LENGTH;
         this.destination = null;
         this.source = null;
+        carsOnLane = Collections.synchronizedSortedMap(_carsOnLane);
         this.id = getNewId();
     }
     
@@ -113,6 +115,7 @@ public class Lane implements Serializable //{{{
         this.length = distance(source, destination);
         this.destination = destination;
         this.source = source;
+        carsOnLane = Collections.synchronizedSortedMap(_carsOnLane);
         this.id = getNewId();
     } //}}}
     
@@ -122,6 +125,7 @@ public class Lane implements Serializable //{{{
         this.length = distance(source, destination);
         this.destination = destination;
         this.source = source;
+        carsOnLane = Collections.synchronizedSortedMap(_carsOnLane);
         this.id = getNewId();
     } //}}}
     
@@ -179,6 +183,8 @@ public class Lane implements Serializable //{{{
         int coordinate = (int) coord;
         if (coordinate > this.length)
             return false;
+        if (carsOnLane.keySet().contains(coordinate))
+            return false;
         this.carsOnLane.put(coordinate, car);
         return true;
     } //}}}
@@ -192,27 +198,37 @@ public class Lane implements Serializable //{{{
 
     public synchronized boolean moveCar(float coord1, float coord2) 
     {
-        int coordinate1 = (int) coord1;
-        int coordinate2 = (int) coord2;
-        // if start and end position are the same, we're done.
-        if (coordinate1 == coordinate2 && this.carsOnLane.containsKey(coordinate1))
-            return true;
-
-        if (coordinate1 > coordinate2)
-            return false;
-
-        // check if all coords from coord1+1 to coord2 are free
-        for(Integer d : carsOnLane.keySet())
+        synchronized(carsOnLane)
         {
-            if ((d>coordinate1)&&(d<=coordinate2))
+            int coordinate1 = (int) coord1;
+            int coordinate2 = (int) coord2;
+            // if start and end position are the same, we're done.
+            if (coordinate1 == coordinate2 && this.carsOnLane.containsKey(coordinate1))
+            {
+                return true;
+            }
+
+            if (coordinate1 > coordinate2)
+            {
                 return false;
-            if (d>coordinate2)
-                break;
+            }
+
+
+            // check if all coords from coord1+1 to coord2 are free
+            for(Integer d : carsOnLane.keySet())
+            {
+                if ((d>coordinate1)&&(d<=coordinate2))
+                {
+                    return false;
+                }
+                if (d>coordinate2)
+                    break;
+            }
+            // They are so put car on coord2
+            carsOnLane.put(coordinate2, carsOnLane.get(coordinate1));
+            carsOnLane.remove(coordinate1);
+            return true;
         }
-        // They are so put car on coord2
-        carsOnLane.put(coordinate2, carsOnLane.get(coordinate1));
-        carsOnLane.remove(coordinate1);
-        return true;
     }
 
     /**

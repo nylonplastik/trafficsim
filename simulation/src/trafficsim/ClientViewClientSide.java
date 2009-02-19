@@ -54,10 +54,6 @@ public class ClientViewClientSide { //{{{
         p_controller = controller;
     }    
 
-    
-    // TODO: eventually this class should be made private when interprocess
-    // communication is implemented. It should be invoked by communication 
-    // routine upon receiving data from server.
     public void viewChanged(ClientViewData data)
     { //{{{
         

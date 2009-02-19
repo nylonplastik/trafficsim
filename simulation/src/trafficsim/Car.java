@@ -185,7 +185,7 @@ public class Car implements Serializable //{{{
     
     
     // Not synchronized - id is a final field
-    public int getId() //{{{
+     public int getId() //{{{
     {
         return this.id;
     } //}}}

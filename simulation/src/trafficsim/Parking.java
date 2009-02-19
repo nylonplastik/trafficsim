@@ -24,10 +24,14 @@ package trafficsim;
 
 import trafficsim.data.ParkingData;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Collections.*;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
 // }}}
+import java.util.List;
 
 /**
  * Entry/Exit point for cars
@@ -49,8 +53,12 @@ public class Parking implements Serializable //{{{
      */
     private Lane laneToParking;
 
-    private LinkedList<Car>  carsOnParking;
-    private LinkedList<Car>  carsLeavingParking;
+    private LinkedList<Car>  _carsOnParking;
+    private LinkedList<Car>  _carsLeavingParking;
+    
+    private List<Car>  carsOnParking;
+    private List<Car>  carsLeavingParking;
+    
     
     private final int        id;
     static int               parkingsCount;
@@ -61,8 +69,10 @@ public class Parking implements Serializable //{{{
     {
         this.laneToCross = null;
         this.laneToParking = null;
-        this.carsLeavingParking = new LinkedList<Car>();
-        this.carsOnParking = new LinkedList<Car>();
+        this._carsLeavingParking = new LinkedList<Car>();
+        this._carsOnParking = new LinkedList<Car>();
+        this.carsOnParking = Collections.synchronizedList(_carsOnParking);
+        this.carsLeavingParking = Collections.synchronizedList(_carsLeavingParking);
         this.id = getNewId();
     } 
 
@@ -73,8 +83,10 @@ public class Parking implements Serializable //{{{
     {
         this.laneToCross = lane_to_cross;
         this.laneToParking = lane_to_parking;
-        this.carsLeavingParking = new LinkedList<Car>();
-        this.carsOnParking = new LinkedList<Car>();
+        this._carsLeavingParking = new LinkedList<Car>();
+        this._carsOnParking = new LinkedList<Car>();
+        this.carsOnParking = Collections.synchronizedList(_carsOnParking);
+        this.carsLeavingParking = Collections.synchronizedList(_carsLeavingParking);
         this.id = getNewId();
     }//}}}
     
@@ -82,8 +94,10 @@ public class Parking implements Serializable //{{{
     {
         this.laneToCross = lane_to_cross;
         this.laneToParking = lane_to_parking;
-        this.carsLeavingParking = new LinkedList<Car>();
-        this.carsOnParking = new LinkedList<Car>();
+        this._carsLeavingParking = new LinkedList<Car>();
+        this._carsOnParking = new LinkedList<Car>();
+        this.carsOnParking = Collections.synchronizedList(_carsOnParking);
+        this.carsLeavingParking = Collections.synchronizedList(_carsLeavingParking);
         this.id = id;
     }//}}}
     
@@ -132,9 +146,14 @@ public class Parking implements Serializable //{{{
             this.carsLeavingParking.add(car);
             return true;
         }
-        if (this.carsLeavingParking.getFirst().getId() == car.getId())
-            return true;
-        else return false;
+        
+        // how to get the first element in other way?
+        for (Car c : carsLeavingParking)
+            if (c!=null)
+            if (c.getId() == car.getId())
+                return true;
+            else return false;
+        return false;
     }//}}}
     
     
@@ -168,25 +187,14 @@ public class Parking implements Serializable //{{{
             this.laneToParking = laneToParking;
     }
 
-    public LinkedList<Car> getCarsOnParking() {
+    public synchronized List<Car> getCarsOnParking() {
             return carsOnParking;
     }
 
-    public synchronized void setCarsOnParking(LinkedList<Car> carsOnParking) 
-    {
-            this.carsOnParking = carsOnParking;
-    }
-
-    public synchronized LinkedList<Car> getCarsLeavingParking() {
+    public synchronized List<Car> getCarsLeavingParking() {
             return carsLeavingParking;
     }
 
-    public synchronized void setCarsLeavingParking(
-            LinkedList<Car> carsLeavingParking
-            ) 
-    {
-            this.carsLeavingParking = carsLeavingParking;
-    }
 
     public int getId() {
         return id;
