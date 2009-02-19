@@ -108,7 +108,7 @@ public class Model extends Observable implements Serializable //{{{
         //this.notifyObservers(WhatHasChanged.Crosses);
     }//}}}
     
-    public Lane addLane(int start, int end, int maxSpeed)//{{{
+    public synchronized Lane addLane(int start, int end, int maxSpeed)//{{{
     {
         if (!crosses.containsKey(start) || !crosses.containsKey(end))
             return null;
@@ -173,7 +173,7 @@ public class Model extends Observable implements Serializable //{{{
         
     }//}}}
      
-    public int newCar(int parkinId)//{{{
+    public synchronized int newCar(int parkinId)//{{{
     {
         if (!parkingById.keySet().contains(parkinId))
             return FAILED;
@@ -279,13 +279,10 @@ public class Model extends Observable implements Serializable //{{{
         setChanged();
     }
     
-    public  synchronized void setAcceleration(int carId, float acceleration)
+    public synchronized void setAcceleration(int carId, float acceleration)
     {
         Car c = carsById.get(carId);
-        synchronized(c)
-        {
-            c.setAcceleration(acceleration);
-        }
+        c.setAcceleration(acceleration);
         setChanged();
     }
     
@@ -329,29 +326,7 @@ public class Model extends Observable implements Serializable //{{{
         return id;
         //this.notifyObservers(WhatHasChanged.Crosses);
     }//}}}
-    
-    /* TODO TO BE REMOVED WHEN COMMUNICATION IS ON*/
-    public Lane addLane(int start, int end, int maxSpeed, int id)//{{{
-    {
-        if (!crosses.containsKey(start) || !crosses.containsKey(end))
-            return null;
-        
-        LanesCross cStart = crosses.get(start);
-        LanesCross cEnd = crosses.get(end);
-        
-        Lane newLane = new Lane(maxSpeed, cStart, cEnd, id);
-        
-        cStart.addConnection(end, newLane );
-        cEnd.addIncoming(newLane);
-        cStart.addOutgoing(newLane);
-        
-        lanes.add(newLane);
-        lanesById.put(newLane.getId(), newLane);
-        this.setChanged();
-        //this.notifyObservers(WhatHasChanged.Lanes);
-        
-        return newLane;
-    }//}}}
+ 
     
     /* TODO TO BE REMOVED WHEN COMMUNICATION IS ON*/
     public synchronized Parking addParking(Lane lane_to_cross, Lane lane_to_parking, int id)  

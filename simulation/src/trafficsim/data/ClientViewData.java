@@ -35,26 +35,38 @@ import java.util.Hashtable;
 @SuppressWarnings("serial")
 public class ClientViewData implements Serializable { //{{{
     
-   // Variables {{{    
+   // Variables {{{ 
+    
+    public void updateId()
+    {
+        this.id = getCount();
+    }
+    
+    private static int count = 0;
+    public int id;
+
+    private synchronized static int getCount() {
+        return count++;
+    }    
     
     private Hashtable<Integer, CarData>     carData;
     protected Hashtable<Integer, ParkingData> parkingData;
     
     // }}}
     
-    public Hashtable<Integer, CarData> getCarData() {
+    public synchronized Hashtable<Integer, CarData> getCarData() {
         return carData;
     }
 
-    public void setCarData(Hashtable<Integer, CarData> carData) {
+    public synchronized void setCarData(Hashtable<Integer, CarData> carData) {
         this.carData = carData;
     }
 
-    public Hashtable<Integer, ParkingData> getParkingData() {
+    public synchronized Hashtable<Integer, ParkingData> getParkingData() {
         return parkingData;
     }
 
-    public void setParkingData(Hashtable<Integer, ParkingData> parkingData) {
+    public synchronized void setParkingData(Hashtable<Integer, ParkingData> parkingData) {
         this.parkingData = parkingData;
     }
 

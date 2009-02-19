@@ -203,7 +203,7 @@ public class ServerProcessor extends trafficsim.network.ConnectionProcessor
             if (currentClient != null)
             {
                 changePlannedRouteData data = new changePlannedRouteData(route, carId);
-                Packet packet = new Packet(PacketTypes.CHANGE_ROUTE_TYPEID,data);
+                Packet packet = new Packet(PacketTypes.CHANGE_ROUTE_TYPEID, data);
                 try
                 {
                     currentClient.writeObject(packet);

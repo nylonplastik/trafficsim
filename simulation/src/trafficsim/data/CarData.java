@@ -30,32 +30,35 @@ public class CarData implements Serializable {
     
     public CarData(Car car)
     {
-        this.id              = car.getId();
-        this.collided        = car.isCollided();
-        this.acceleration    = car.getAcceleration();
-        this.maxAcceleration = car.getMaxAcceleration();
-        this.maxSpeed        = car.getMaxSpeed();
-        if (car.getCurrentParking() == null)
-            this.parkingId = -1;
-        else this.parkingId = car.getCurrentParking().getId();
-        this.positionCoord   = car.getPosition().getCoord();
+        synchronized(car)
+        {
+            this.id              = car.getId();
+            this.collided        = car.isCollided();
+            this.acceleration    = car.getAcceleration();
+            this.maxAcceleration = car.getMaxAcceleration();
+            this.maxSpeed        = car.getMaxSpeed();
+            if (car.getCurrentParking() == null)
+                this.parkingId = -1;
+            else this.parkingId = car.getCurrentParking().getId();
+            this.positionCoord   = car.getPosition().getCoord();
 
-        this.positionInfo    = car.getPosition().getInfo();
-        
-        if (car.getPosition().getLane() == null)
-        {
-            this.positionLane    = -1;
-        }
-        else
-        {
-            this.positionLane    = car.getPosition().getLane().getId();
-        }        
-        
-        this.speed           = car.getSpeed();
-        plannedRoute         = new LinkedList<Integer>();
-        for(Lane l : car.getPlannedRoute())
-        {
-            plannedRoute.add(l.getId());
+            this.positionInfo    = car.getPosition().getInfo();
+
+            if (car.getPosition().getLane() == null)
+            {
+                this.positionLane    = -1;
+            }
+            else
+            {
+                this.positionLane    = car.getPosition().getLane().getId();
+            }        
+
+            this.speed           = car.getSpeed();
+            plannedRoute         = new LinkedList<Integer>();
+            for(Lane l : car.getPlannedRoute())
+            {
+                plannedRoute.add(l.getId());
+            }
         }
     }
 }

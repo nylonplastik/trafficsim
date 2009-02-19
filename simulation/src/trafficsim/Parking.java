@@ -132,7 +132,7 @@ public class Parking implements Serializable //{{{
             this.carsLeavingParking.add(car);
             return true;
         }
-        if (this.carsLeavingParking.get(0).getId() == car.getId())
+        if (this.carsLeavingParking.getFirst().getId() == car.getId())
             return true;
         else return false;
     }//}}}

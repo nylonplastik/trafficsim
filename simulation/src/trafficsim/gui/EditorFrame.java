@@ -115,7 +115,7 @@ public class EditorFrame extends JFrame
             if ((last_selected_cross != null)&&
                 (last_selected_cross != selected_cross))
             {
-                sim_component.getModel().addLane(last_selected_cross.getId(), selected_cross.getId(), 70, 700);
+                sim_component.getModel().addLane(last_selected_cross.getId(), selected_cross.getId(), 70);
             }
         }
         e.consume();

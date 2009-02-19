@@ -50,9 +50,11 @@ public class ClientController1 implements ICarController
     // treshold value of predicted distance between cars.
     private static final int           SAFE_MOVE_DISTANCE = 50;  
     
-    private static final int           CONTROLLED_CARS    = 3;
+    private static final int           CONTROLLED_CARS    = 1;
     
     private static final int           MAX_SPEED_ON_90_DEGREE_ANGLE = 3;
+    
+    private static final float         ACCELERATION_ADJUSTMENT_ACCURACY = (float) 0.1;
         
     private Random                     randomizer;
     
@@ -132,7 +134,6 @@ public class ClientController1 implements ICarController
                 break;
             car = carsInView.get(carId);
             //boolean routeHasChanged = false;
-            
             if (car.isParked())
             {
                  // if car is parked, try to leave the parking
@@ -153,13 +154,15 @@ public class ClientController1 implements ICarController
                     {
                         // there is enough space on lane to move and we know 
                         // where to go.
-                        networkClient.startMoving(3, car.getId());
+                        networkClient.startMoving(6, car.getId());
                     }  
                 }
                 continue;
             }
             else  // if (car.isParked()) 
-            {
+            {   
+                 float previousAcceleration = car.getAcceleration();
+                         
                 // remove used lanes from planned route
                 if(car.getPlannedRoute().contains(car.getPosition().getLane()))
                 {
@@ -263,7 +266,7 @@ public class ClientController1 implements ICarController
                 {
                     car.setAcceleration(newAcceleration);
                 }
-                else car.setAcceleration(3);
+                else car.setAcceleration(6);
 
                 // When close enough, stop slowing down
                 if (distanceToEnd < car.getMaxAcceleration())
@@ -276,9 +279,18 @@ public class ClientController1 implements ICarController
                     car.setAcceleration(newAcc2);
                 }  
                 
+                if ( Math.abs(previousAcceleration - car.getAcceleration()) < 
+                        ACCELERATION_ADJUSTMENT_ACCURACY)
+                {
+                    car.setAcceleration(previousAcceleration);
+                }
+                else
+                {    
+                    networkClient.changeAcceleration(car.getAcceleration(),car.getId());
+                }
+                
             }        
-            
-            networkClient.changeAcceleration(car.getAcceleration(),car.getId());
+           
         }
     }
   

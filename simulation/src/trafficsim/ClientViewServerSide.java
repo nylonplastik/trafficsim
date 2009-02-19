@@ -90,38 +90,41 @@ public class ClientViewServerSide implements Observer  //{{{
         }
     } //}}}
     
-    public void update(Observable o, Object arg) //{{{
+    public synchronized void update(Observable o, Object arg) //{{{
     {
-        if (! (o instanceof  Model))
-            return;
-        
-        /* Set information about current state of cars */
-        p_data.setCarData(new Hashtable<Integer, CarData>());
-        Hashtable<Integer, CarData> carData = p_data.getCarData();
-        for (Car c : p_observedCars)
-        {
-            carData.put(c.getId(), new CarData(c));
+        synchronized (p_data)
+        {  
+            if (! (o instanceof  Model))
+                return;
+
+            /* Set information about current state of cars */
+            p_data.setCarData(new Hashtable<Integer, CarData>());
+            Hashtable<Integer, CarData> carData = p_data.getCarData();
+            for (Car c : p_observedCars)
+            {
+                carData.put(c.getId(), new CarData(c));
+            }
+            p_data.setCarData(carData);
+
+            /* Set information about current state of parkings */
+            p_data.setParkingData(new Hashtable<Integer, trafficsim.data.ParkingData>());
+            Hashtable<Integer, ParkingData> parkingData  = p_data.getParkingData();
+
+            /* find parkings that our cars are parked at */
+            LinkedList<Parking> observedParkings = new LinkedList<Parking>();
+            for (Car c : p_observedCars)
+                if (c.isParked())
+                    if (!observedParkings.contains(c.getCurrentParking()))
+                        observedParkings.add(c.getCurrentParking());
+
+            /* copy data about parkings */
+            for (Parking p : observedParkings)
+            {
+                parkingData.put(p.getId(),  new ParkingData(p));
+            }
+            p_data.updateId();
+            setChanged();
         }
-        p_data.setCarData(carData);
-        
-        /* Set information about current state of parkings */
-        p_data.setParkingData(new Hashtable<Integer, trafficsim.data.ParkingData>());
-        Hashtable<Integer, ParkingData> parkingData  = p_data.getParkingData();
-        
-        /* find parkings that our cars are parked at */
-        LinkedList<Parking> observedParkings = new LinkedList<Parking>();
-        for (Car c : p_observedCars)
-            if (c.isParked())
-                if (!observedParkings.contains(c.getCurrentParking()))
-                    observedParkings.add(c.getCurrentParking());
-        
-        /* copy data about parkings */
-        for (Parking p : observedParkings)
-        {
-            parkingData.put(p.getId(),  new ParkingData(p));
-        }
-        
-        setChanged();
     } //}}}
     
     
